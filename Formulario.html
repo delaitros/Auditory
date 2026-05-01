@@ -3,403 +3,583 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Constancia de Visita</title>
+<title>Constancia de Visita — Félix Raúl Vidal</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  :root {
+    --teal:      #00ACC1;
+    --teal-dark: #007C91;
+    --navy:      #1a237e;
+    --text:      #212121;
+    --muted:     #757575;
+    --border:    #E0E0E0;
+    --bg:        #F5F7FA;
+    --white:     #ffffff;
+    --error:     #E53935;
+    --success:   #43A047;
+    --chip-on:   #E0F7FA;
+    --act-on:    #E8EAF6;
+  }
+
   body {
-    font-family: 'Google Sans', Roboto, Arial, sans-serif;
-    background: #f0f4f8;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
-    padding: 24px 16px 48px;
-    color: #202124;
+    padding: 0 0 60px;
   }
 
-  .page { max-width: 640px; margin: 0 auto; }
-
-  /* Encabezado principal */
-  .card-header {
-    background: white;
-    border-radius: 8px 8px 0 0;
-    border-top: 8px solid #2e7d32;
-    padding: 24px 24px 20px;
-    margin-bottom: 2px;
+  /* ── Header ─────────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #283593 60%, #1565C0 100%);
+    color: white;
+    padding: 32px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
   }
-  .card-header h1 {
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 32px;
+    background: var(--bg);
+    border-radius: 32px 32px 0 0;
+  }
+  .hero-logo {
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--teal);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .hero h1 {
     font-size: 26px;
-    font-weight: 400;
-    color: #202124;
+    font-weight: 700;
+    letter-spacing: 1px;
     margin-bottom: 6px;
   }
-  .card-header p {
+  .hero p {
     font-size: 13px;
-    color: #5f6368;
-    text-transform: uppercase;
+    opacity: .7;
     letter-spacing: .5px;
   }
-  .required-note {
-    font-size: 13px;
-    color: #d93025;
-    margin-top: 14px;
-  }
 
-  /* Tarjetas de sección */
-  .card {
-    background: white;
-    border-radius: 8px;
-    padding: 20px 24px;
-    margin-bottom: 12px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.06);
-  }
+  /* ── Contenedor ─────────────────────────────── */
+  .container { max-width: 660px; margin: 0 auto; padding: 0 16px; }
 
-  .field { margin-bottom: 20px; }
-  .field:last-child { margin-bottom: 0; }
-
-  label.field-label {
-    display: block;
-    font-size: 14px;
-    color: #202124;
-    margin-bottom: 10px;
-    font-weight: 400;
+  /* ── Sección ─────────────────────────────────── */
+  .section {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
   }
-  label.field-label .req { color: #d93025; margin-left: 3px; }
-
-  /* Inputs de texto */
-  input[type=text], input[type=date], input[type=time], textarea {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid #dadce0;
-    padding: 4px 0 6px;
-    font-size: 14px;
-    color: #202124;
-    background: transparent;
-    outline: none;
-    transition: border-color .15s;
-    font-family: inherit;
-  }
-  input[type=text]:focus, input[type=date]:focus,
-  input[type=time]:focus, textarea:focus {
-    border-bottom: 2px solid #2e7d32;
-  }
-  textarea { resize: vertical; min-height: 64px; }
-
-  /* Radios y checkboxes */
-  .options { display: flex; flex-direction: column; gap: 10px; }
-  .option {
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--teal);
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    padding: 4px 0;
+    gap: 8px;
   }
-  .option input { width: 18px; height: 18px; accent-color: #2e7d32; cursor: pointer; flex-shrink: 0; }
-  .option span { font-size: 14px; color: #202124; }
-
-  /* Campo "Otros" inline */
-  .otros-input {
+  .section-label::after {
+    content: '';
     flex: 1;
-    border: none;
-    border-bottom: 1px solid #dadce0;
-    padding: 2px 0 4px;
-    font-size: 14px;
-    outline: none;
-    background: transparent;
+    height: 1px;
+    background: var(--border);
   }
-  .otros-input:focus { border-bottom: 2px solid #2e7d32; }
 
-  /* Botón enviar */
-  .actions {
+  /* ── Campos de texto ─────────────────────────── */
+  .field { margin-bottom: 20px; }
+  .field:last-child { margin-bottom: 0; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 8px;
+  }
+  .field label .req { color: var(--error); margin-left: 2px; }
+
+  .field input[type=text],
+  .field input[type=date],
+  .field input[type=time],
+  .field textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 15px;
+    color: var(--text);
+    font-family: inherit;
+    background: #FAFAFA;
+    outline: none;
+    transition: border-color .2s, background .2s, box-shadow .2s;
+  }
+  .field input:focus,
+  .field textarea:focus {
+    border-color: var(--teal);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(0,172,193,.1);
+  }
+  .field textarea { resize: vertical; min-height: 90px; }
+  .field-error {
+    font-size: 12px;
+    color: var(--error);
+    margin-top: 5px;
+    display: none;
+  }
+  .field.has-error input,
+  .field.has-error textarea {
+    border-color: var(--error);
+  }
+  .field.has-error .field-error { display: block; }
+
+  /* ── Actividades — tarjetas ──────────────────── */
+  .act-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  .act-card {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .18s;
+    background: #FAFAFA;
+    user-select: none;
+  }
+  .act-card:hover { border-color: var(--teal); background: #E0F7FA44; }
+  .act-card.selected {
+    border-color: var(--navy);
+    background: var(--act-on);
+    box-shadow: 0 2px 8px rgba(26,35,126,.12);
+  }
+  .act-card .icon { font-size: 24px; margin-bottom: 6px; }
+  .act-card .label { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.3; }
+  .act-card input { display: none; }
+  .act-otros { margin-top: 12px; display: none; }
+  .act-otros.visible { display: block; }
+
+  /* ── Desvíos — chips ─────────────────────────── */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px;
+    border: 2px solid var(--border);
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .18s;
+    background: #FAFAFA;
+    user-select: none;
+    color: var(--text);
+  }
+  .chip:hover { border-color: var(--teal); background: #E0F7FA44; }
+  .chip.selected {
+    border-color: var(--teal);
+    background: var(--chip-on);
+    color: var(--teal-dark);
+  }
+  .chip .check { font-size: 14px; opacity: 0; transition: opacity .15s; }
+  .chip.selected .check { opacity: 1; }
+  .chip input { display: none; }
+
+  .desvios-libre label { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+  .desvios-libre input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    background: #FAFAFA;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .desvios-libre input:focus {
+    border-color: var(--teal);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(0,172,193,.1);
+  }
+
+  /* ── Auditor + fecha + hora ──────────────────── */
+  .field-three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 520px) { .field-three { grid-template-columns: 1fr; } }
+
+  /* ── Botón enviar ────────────────────────────── */
+  .submit-wrap {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 8px;
+    padding: 6px 0;
   }
-  .btn-submit {
-    background: #2e7d32;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 28px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background .15s;
-  }
-  .btn-submit:hover:not(:disabled) { background: #1b5e20; }
-  .btn-submit:disabled { background: #a8d5aa; cursor: not-allowed; }
-
   .btn-limpiar {
-    background: transparent;
-    color: #5f6368;
-    border: none;
-    font-size: 13px;
-    cursor: pointer;
-    font-family: inherit;
+    background: none; border: none;
+    font-size: 13px; color: var(--muted);
+    cursor: pointer; font-family: inherit;
     padding: 10px 0;
+    transition: color .15s;
   }
-  .btn-limpiar:hover { color: #202124; }
+  .btn-limpiar:hover { color: var(--text); }
 
-  /* Estados de envío */
+  .btn-submit {
+    display: flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+    color: white; border: none; border-radius: 12px;
+    padding: 14px 32px; font-size: 15px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    box-shadow: 0 4px 14px rgba(0,172,193,.35);
+    transition: all .2s;
+  }
+  .btn-submit:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0,172,193,.45);
+  }
+  .btn-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+  /* ── Error banner ────────────────────────────── */
+  #error-banner {
+    display: none;
+    background: #FFEBEE;
+    color: var(--error);
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--error);
+  }
+
+  /* ── Loading ─────────────────────────────────── */
   #loading {
     display: none;
     text-align: center;
-    padding: 40px 24px;
-    background: white;
-    border-radius: 8px;
+    padding: 60px 24px;
   }
+  .spinner-wrap { margin-bottom: 20px; }
   .spinner-big {
-    width: 40px; height: 40px;
-    border: 4px solid #e8f5e9;
-    border-top-color: #2e7d32;
+    width: 48px; height: 48px;
+    border: 4px solid #E0F7FA;
+    border-top-color: var(--teal);
     border-radius: 50%;
     animation: spin .8s linear infinite;
-    margin: 0 auto 16px;
+    margin: 0 auto;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+  #loading p { color: var(--muted); font-size: 15px; }
 
+  /* ── Éxito ───────────────────────────────────── */
   #exito {
     display: none;
     text-align: center;
-    padding: 48px 24px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.06);
+    padding: 60px 24px;
   }
-  .check-icon {
-    width: 56px; height: 56px;
-    background: #e8f5e9;
+  .exito-icon {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 20px;
-    font-size: 28px;
+    margin: 0 auto 24px;
+    font-size: 32px;
+    box-shadow: 0 8px 24px rgba(0,172,193,.3);
+    animation: popIn .4s cubic-bezier(.175,.885,.32,1.275);
   }
-  #exito h2 { font-size: 20px; font-weight: 400; color: #202124; margin-bottom: 10px; }
-  #exito p  { font-size: 14px; color: #5f6368; margin-bottom: 24px; }
-
+  @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  #exito h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+  #exito p  { font-size: 14px; color: var(--muted); margin-bottom: 32px; }
   .btn-doc {
-    display: inline-block;
-    background: #2e7d32;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    padding: 10px 24px;
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 12px;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--navy);
+    color: white; text-decoration: none;
+    border-radius: 12px; padding: 14px 28px;
+    font-size: 15px; font-weight: 600;
+    box-shadow: 0 4px 14px rgba(26,35,126,.25);
+    transition: all .2s; margin-bottom: 16px;
   }
+  .btn-doc:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,35,126,.35); }
   .btn-nuevo {
-    display: block;
-    font-size: 13px;
-    color: #1a73e8;
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-family: inherit;
-    margin-top: 12px;
+    display: block; background: none; border: none;
+    font-size: 14px; color: var(--teal); cursor: pointer;
+    font-family: inherit; margin-top: 4px;
+    font-weight: 600;
   }
-
-  #error-banner {
-    display: none;
-    background: #fce8e6;
-    color: #c5221f;
-    padding: 12px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    margin-bottom: 12px;
-  }
-
-  .field-error { color: #d93025; font-size: 12px; margin-top: 4px; display: none; }
+  .btn-nuevo:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
-<div class="page">
 
-  <!-- Formulario -->
+<div class="hero">
+  <div class="hero-logo">Servicio de Higiene y Seguridad</div>
+  <h1>Félix Raúl Vidal</h1>
+  <p>Ingeniero Químico &nbsp;·&nbsp; Mat. CPIT 1461 / CPIQ 2848</p>
+</div>
+
+<div class="container">
+
   <div id="vista-form">
-
-    <div class="card-header">
-      <h1>Constancia de Visita</h1>
-      <p>Registro de Actuaciones — Servicio de Higiene y Seguridad</p>
-      <div class="required-note">* Indica que la pregunta es obligatoria</div>
-    </div>
-
     <div id="error-banner"></div>
 
-    <form id="form" novalidate>
-
-      <div class="card">
+    <!-- Identificación -->
+    <div class="section">
+      <div class="section-label">Identificación</div>
+      <div class="field">
+        <label>Empresa <span class="req">*</span></label>
+        <input type="text" id="empresa" placeholder="Nombre de la empresa">
+        <div class="field-error">Campo obligatorio.</div>
+      </div>
+      <div class="field-row">
         <div class="field">
-          <label class="field-label">Empresa <span class="req">*</span></label>
-          <input type="text" id="empresa" placeholder="Tu respuesta" required>
-          <div class="field-error" id="err-empresa">Este campo es obligatorio.</div>
+          <label>Establecimiento <span class="req">*</span></label>
+          <input type="text" id="establecimiento" placeholder="Establecimiento">
+          <div class="field-error">Campo obligatorio.</div>
         </div>
         <div class="field">
-          <label class="field-label">Establecimiento <span class="req">*</span></label>
-          <input type="text" id="establecimiento" placeholder="Tu respuesta" required>
-          <div class="field-error" id="err-establecimiento">Este campo es obligatorio.</div>
-        </div>
-        <div class="field">
-          <label class="field-label">Sector</label>
-          <input type="text" id="sector" placeholder="Tu respuesta">
+          <label>Sector</label>
+          <input type="text" id="sector" placeholder="Sector">
         </div>
       </div>
+    </div>
 
-      <div class="card">
+    <!-- Actividades -->
+    <div class="section">
+      <div class="section-label">Actividades desarrolladas <span style="color:var(--error);font-size:13px;text-transform:none;letter-spacing:0;margin-left:2px">*</span></div>
+      <div class="act-grid" id="act-grid">
+        <label class="act-card" onclick="selAct(this)">
+          <input type="radio" name="actividades" value="auditoria">
+          <div class="icon">🔍</div>
+          <div class="label">Auditoría</div>
+        </label>
+        <label class="act-card" onclick="selAct(this)">
+          <input type="radio" name="actividades" value="capacitacion">
+          <div class="icon">📚</div>
+          <div class="label">Capacitación</div>
+        </label>
+        <label class="act-card" onclick="selAct(this)">
+          <input type="radio" name="actividades" value="reunión">
+          <div class="icon">🤝</div>
+          <div class="label">Reunión</div>
+        </label>
+        <label class="act-card" onclick="selAct(this)">
+          <input type="radio" name="actividades" value="mediciones ambientales">
+          <div class="icon">🌡️</div>
+          <div class="label">Mediciones ambientales</div>
+        </label>
+        <label class="act-card" onclick="selAct(this)">
+          <input type="radio" name="actividades" value="preparacion de informes">
+          <div class="icon">📋</div>
+          <div class="label">Preparación de informes</div>
+        </label>
+        <label class="act-card" onclick="selAct(this)">
+          <input type="radio" name="actividades" value="acompañamiento ART SRT">
+          <div class="icon">🏛️</div>
+          <div class="label">Acompañamiento ART / SRT</div>
+        </label>
+        <label class="act-card" id="act-otros-card" onclick="selAct(this)">
+          <input type="radio" name="actividades" value="otros">
+          <div class="icon">✏️</div>
+          <div class="label">Otros</div>
+        </label>
+      </div>
+      <div class="act-otros field" id="act-otros-input">
+        <label>Especificar actividad</label>
+        <input type="text" id="actividades-otros" placeholder="Describí la actividad">
+      </div>
+      <div class="field-error" id="err-actividades" style="margin-top:10px">Seleccioná una actividad.</div>
+    </div>
+
+    <!-- Desvíos -->
+    <div class="section">
+      <div class="section-label">Desvíos observados</div>
+      <div class="chips" id="chips-desvios">
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" name="desvios" value="actos inseguros">
+          <span class="check">✓</span> Actos inseguros
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" name="desvios" value="condiciones inseguras">
+          <span class="check">✓</span> Condiciones inseguras
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" name="desvios" value="falta o mal uso de EPP">
+          <span class="check">✓</span> Falta / mal uso de EPP
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" name="desvios" value="falta de orden y limpieza">
+          <span class="check">✓</span> Orden y limpieza
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" name="desvios" value="mal uso de maquinas y herramientas">
+          <span class="check">✓</span> Mal uso de máquinas
+        </label>
+      </div>
+      <div class="desvios-libre">
+        <label>Otros desvíos (opcional)</label>
+        <input type="text" id="desvios-libre" placeholder="Ej: falta de señalización, sin botiquín…">
+      </div>
+    </div>
+
+    <!-- Comentarios -->
+    <div class="section">
+      <div class="section-label">Comentarios</div>
+      <div class="field">
+        <label>Observaciones <span class="req">*</span></label>
+        <textarea id="comentarios" placeholder="Describí las observaciones de la visita…"></textarea>
+        <div class="field-error">Campo obligatorio.</div>
+      </div>
+    </div>
+
+    <!-- Auditor + fecha + hora -->
+    <div class="section">
+      <div class="section-label">Datos de la visita</div>
+      <div class="field-three">
         <div class="field">
-          <label class="field-label">Actividades desarrolladas <span class="req">*</span></label>
-          <div class="options" id="actividades">
-            <label class="option"><input type="radio" name="actividades" value="auditoria"><span>Auditoría</span></label>
-            <label class="option"><input type="radio" name="actividades" value="capacitacion"><span>Capacitación</span></label>
-            <label class="option"><input type="radio" name="actividades" value="reunión"><span>Reunión</span></label>
-            <label class="option"><input type="radio" name="actividades" value="mediciones ambientales"><span>Mediciones ambientales</span></label>
-            <label class="option"><input type="radio" name="actividades" value="preparacion de informes"><span>Preparación de informes</span></label>
-            <label class="option"><input type="radio" name="actividades" value="acompañamiento ART SRT"><span>Acompañamiento ART / SRT</span></label>
-            <label class="option">
-              <input type="radio" name="actividades" value="otros">
-              <span>Otros: </span>
-              <input type="text" class="otros-input" id="actividades-otros" placeholder="especificar"
-                     onfocus="document.querySelector('[name=actividades][value=otros]').checked=true">
-            </label>
-          </div>
-          <div class="field-error" id="err-actividades">Seleccioná una opción.</div>
+          <label>Auditor <span class="req">*</span></label>
+          <input type="text" id="auditor" placeholder="Nombre">
+          <div class="field-error">Obligatorio.</div>
+        </div>
+        <div class="field">
+          <label>Fecha <span class="req">*</span></label>
+          <input type="date" id="fecha-visita">
+          <div class="field-error">Obligatorio.</div>
+        </div>
+        <div class="field">
+          <label>Hora <span class="req">*</span></label>
+          <input type="time" id="hora-visita">
+          <div class="field-error">Obligatorio.</div>
         </div>
       </div>
+    </div>
 
-      <div class="card">
-        <div class="field">
-          <label class="field-label">Desvíos observados</label>
-          <div class="options">
-            <label class="option"><input type="checkbox" name="desvios" value="actos inseguros"><span>Actos inseguros</span></label>
-            <label class="option"><input type="checkbox" name="desvios" value="condiciones inseguras"><span>Condiciones inseguras</span></label>
-            <label class="option"><input type="checkbox" name="desvios" value="falta o mal uso de EPP"><span>Falta o mal uso de EPP</span></label>
-            <label class="option"><input type="checkbox" name="desvios" value="falta de orden y limpieza"><span>Falta de orden y limpieza</span></label>
-            <label class="option"><input type="checkbox" name="desvios" value="mal uso de maquinas y herramientas"><span>Mal uso de máquinas y herramientas</span></label>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="field">
-          <label class="field-label">Comentarios <span class="req">*</span></label>
-          <textarea id="comentarios" placeholder="Tu respuesta" required></textarea>
-          <div class="field-error" id="err-comentarios">Este campo es obligatorio.</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="field">
-          <label class="field-label">Auditor <span class="req">*</span></label>
-          <input type="text" id="auditor" placeholder="Nombre del auditor" required>
-          <div class="field-error" id="err-auditor">Este campo es obligatorio.</div>
-        </div>
-        <div class="field">
-          <label class="field-label">Fecha de la visita <span class="req">*</span></label>
-          <input type="date" id="fecha-visita" required>
-          <div class="field-error" id="err-fecha">Este campo es obligatorio.</div>
-        </div>
-        <div class="field">
-          <label class="field-label">Hora de la visita <span class="req">*</span></label>
-          <input type="time" id="hora-visita" required>
-          <div class="field-error" id="err-hora">Este campo es obligatorio.</div>
-        </div>
-      </div>
-
-      <div class="card actions">
+    <!-- Enviar -->
+    <div class="section" style="padding:16px 24px">
+      <div class="submit-wrap">
         <button type="button" class="btn-limpiar" onclick="limpiarFormulario()">Limpiar formulario</button>
-        <button type="submit" class="btn-submit" id="btn-enviar">Enviar</button>
+        <button class="btn-submit" id="btn-enviar" onclick="enviar()">
+          <span>Generar constancia</span>
+          <span>→</span>
+        </button>
       </div>
+    </div>
 
-    </form>
-  </div>
+  </div><!-- /vista-form -->
 
   <!-- Cargando -->
   <div id="loading">
-    <div class="spinner-big"></div>
-    <p style="color:#5f6368;font-size:14px">Guardando registro y generando documento…</p>
+    <div class="section" style="padding:60px 24px">
+      <div class="spinner-wrap"><div class="spinner-big"></div></div>
+      <p>Generando el documento…</p>
+    </div>
   </div>
 
   <!-- Éxito -->
   <div id="exito">
-    <div class="check-icon">✓</div>
-    <h2>Constancia generada correctamente</h2>
-    <p>El registro fue guardado y el documento está listo para imprimir.</p>
-    <a id="link-doc" class="btn-doc" href="#" target="_blank">Abrir documento</a>
-    <br>
-    <button class="btn-nuevo" onclick="nuevaConstancia()">Cargar otra constancia</button>
+    <div class="section" style="padding:60px 24px">
+      <div class="exito-icon">✓</div>
+      <h2>¡Constancia generada!</h2>
+      <p>El registro fue guardado y el documento está listo para imprimir.</p>
+      <a id="link-doc" class="btn-doc" href="#" target="_blank">📄 Abrir documento</a>
+      <br>
+      <button class="btn-nuevo" onclick="nuevaConstancia()">+ Cargar otra constancia</button>
+    </div>
   </div>
 
-</div>
+</div><!-- /container -->
 
 <script>
-  document.getElementById('form').addEventListener('submit', function(e) {
-    e.preventDefault();
+  function selAct(card) {
+    document.querySelectorAll('.act-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    const esOtros = card.querySelector('input').value === 'otros';
+    document.getElementById('act-otros-input').classList.toggle('visible', esOtros);
+  }
+
+  function toggleChip(chip) {
+    chip.classList.toggle('selected');
+  }
+
+  function enviar() {
     if (!validar()) return;
 
-    const activRadio = document.querySelector('[name=actividades]:checked');
-    let activVal = activRadio ? activRadio.value : '';
-    if (activVal === 'otros') {
-      activVal = document.getElementById('actividades-otros').value.trim() || 'Otros';
+    const radioAct = document.querySelector('[name=actividades]:checked');
+    let actividades = radioAct ? radioAct.value : '';
+    if (actividades === 'otros') {
+      actividades = document.getElementById('actividades-otros').value.trim() || 'Otros';
     }
 
-    const desvios = Array.from(document.querySelectorAll('[name=desvios]:checked'))
-                         .map(cb => cb.value).join(', ');
+    const desviosChips = Array.from(document.querySelectorAll('[name=desvios]:checked'))
+                              .map(cb => cb.value);
+    const desviosLibre = document.getElementById('desvios-libre').value.trim();
+    if (desviosLibre) desviosChips.push(desviosLibre);
+    const desvios = desviosChips.join(', ');
 
     const datos = {
-      empresa:        document.getElementById('empresa').value.trim(),
+      empresa:         document.getElementById('empresa').value.trim(),
       establecimiento: document.getElementById('establecimiento').value.trim(),
-      sector:         document.getElementById('sector').value.trim(),
-      actividades:    activVal,
-      desvios:        desvios,
-      comentarios:    document.getElementById('comentarios').value.trim(),
-      auditor:        document.getElementById('auditor').value.trim(),
-      fechaVisita:    document.getElementById('fecha-visita').value,
-      horaVisita:     document.getElementById('hora-visita').value,
+      sector:          document.getElementById('sector').value.trim(),
+      actividades:     actividades,
+      desvios:         desvios,
+      comentarios:     document.getElementById('comentarios').value.trim(),
+      auditor:         document.getElementById('auditor').value.trim(),
+      fechaVisita:     document.getElementById('fecha-visita').value,
+      horaVisita:      document.getElementById('hora-visita').value,
     };
 
     mostrarEstado('loading');
 
     google.script.run
-      .withSuccessHandler(function(res) {
+      .withSuccessHandler(res => {
         document.getElementById('link-doc').href = res.urlDoc;
         mostrarEstado('exito');
       })
-      .withFailureHandler(function(err) {
+      .withFailureHandler(err => {
         mostrarEstado('form');
         mostrarError(err.message || 'Ocurrió un error. Intentá de nuevo.');
       })
       .procesarFormulario(datos);
-  });
+  }
 
   function validar() {
     let ok = true;
-    const requeridos = [
-      ['empresa',          'err-empresa'],
-      ['establecimiento',  'err-establecimiento'],
-      ['comentarios',      'err-comentarios'],
-      ['auditor',          'err-auditor'],
-      ['fecha-visita',     'err-fecha'],
-      ['hora-visita',      'err-hora'],
-    ];
-    requeridos.forEach(([id, errId]) => {
+    document.getElementById('error-banner').style.display = 'none';
+
+    [
+      ['empresa', 'Empresa es obligatorio.'],
+      ['establecimiento', 'Establecimiento es obligatorio.'],
+      ['comentarios', 'Los comentarios son obligatorios.'],
+      ['auditor', 'El nombre del auditor es obligatorio.'],
+      ['fecha-visita', 'La fecha es obligatoria.'],
+      ['hora-visita', 'La hora es obligatoria.'],
+    ].forEach(([id, msg]) => {
       const campo = document.getElementById(id);
-      const err   = document.getElementById(errId);
+      const wrap  = campo.closest('.field');
       if (!campo.value.trim()) {
-        err.style.display = 'block';
-        campo.style.borderBottomColor = '#d93025';
+        wrap.classList.add('has-error');
+        wrap.querySelector('.field-error').textContent = msg;
         ok = false;
       } else {
-        err.style.display = 'none';
-        campo.style.borderBottomColor = '';
+        wrap.classList.remove('has-error');
       }
     });
 
-    if (!document.querySelector('[name=actividades]:checked')) {
-      document.getElementById('err-actividades').style.display = 'block';
-      ok = false;
-    } else {
-      document.getElementById('err-actividades').style.display = 'none';
-    }
+    const radioAct = document.querySelector('[name=actividades]:checked');
+    const errAct = document.getElementById('err-actividades');
+    if (!radioAct) { errAct.style.display = 'block'; ok = false; }
+    else            { errAct.style.display = 'none'; }
 
     return ok;
   }
@@ -412,21 +592,28 @@
 
   function mostrarError(msg) {
     const el = document.getElementById('error-banner');
-    el.textContent = msg;
+    el.textContent = '⚠ ' + msg;
     el.style.display = 'block';
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function limpiarFormulario() {
-    document.getElementById('form').reset();
-    document.querySelectorAll('.field-error').forEach(el => el.style.display = 'none');
-    document.querySelectorAll('input[type=text], textarea').forEach(el => el.style.borderBottomColor = '');
+    document.querySelectorAll('input[type=text], input[type=date], input[type=time], textarea')
+            .forEach(el => el.value = '');
+    document.querySelectorAll('[name=actividades]').forEach(r => r.checked = false);
+    document.querySelectorAll('[name=desvios]').forEach(cb => cb.checked = false);
+    document.querySelectorAll('.act-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+    document.getElementById('act-otros-input').classList.remove('visible');
+    document.querySelectorAll('.field').forEach(f => f.classList.remove('has-error'));
+    document.getElementById('err-actividades').style.display = 'none';
     document.getElementById('error-banner').style.display = 'none';
   }
 
   function nuevaConstancia() {
     limpiarFormulario();
     mostrarEstado('form');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 </script>
 </body>
