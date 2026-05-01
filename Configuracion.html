@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Google Sans', Arial, sans-serif;
+    font-size: 13px;
+    color: #202124;
+    background: #fff;
+    padding: 0;
+  }
+
+  .header {
+    background: #1a73e8;
+    color: white;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .body { padding: 16px 20px 0; overflow-y: auto; max-height: 440px; }
+
+  .section {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: #1a73e8;
+    margin-bottom: 12px;
+  }
+
+  label {
+    display: block;
+    font-size: 12px;
+    color: #5f6368;
+    margin-bottom: 3px;
+    margin-top: 10px;
+  }
+  label:first-of-type { margin-top: 0; }
+
+  input[type=text], select {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #202124;
+    outline: none;
+    transition: border .15s;
+  }
+  input[type=text]:focus, select:focus { border-color: #1a73e8; }
+
+  .hint {
+    font-size: 11px;
+    color: #80868b;
+    margin-top: 3px;
+  }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .checkbox-row input { width: auto; }
+  .checkbox-row label { margin: 0; color: #202124; font-size: 13px; }
+
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 12px 20px;
+    border-top: 1px solid #e0e0e0;
+    background: #f8f9fa;
+  }
+
+  button {
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-cancel {
+    background: transparent;
+    color: #1a73e8;
+    border: 1px solid #dadce0;
+  }
+  .btn-save {
+    background: #1a73e8;
+    color: white;
+  }
+  .btn-save:hover { background: #1557b0; }
+  .btn-cancel:hover { background: #f1f3f4; }
+
+  #status {
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    display: none;
+    margin: 0 20px 10px;
+  }
+  #status.ok  { background: #e6f4ea; color: #137333; display: block; }
+  #status.err { background: #fce8e6; color: #c5221f; display: block; }
+
+  .spinner {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border: 2px solid #fff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="header">⚙️ Configuración de Auditorias</div>
+
+<div class="body">
+
+  <div class="section">
+    <div class="section-title">Plantilla y carpeta de destino</div>
+
+    <label for="templateUrl">URL del Google Doc plantilla *</label>
+    <input type="text" id="templateUrl" placeholder="https://docs.google.com/document/d/…/edit">
+    <div class="hint">Pegá la URL completa del documento que usás como plantilla.</div>
+
+    <label for="folderUrl">URL de la carpeta de destino *</label>
+    <input type="text" id="folderUrl" placeholder="https://drive.google.com/drive/folders/…">
+    <div class="hint">Los documentos generados se guardarán en esta carpeta de Drive.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Origen de datos</div>
+
+    <label for="sheetName">Pestaña con las respuestas</label>
+    <select id="sheetName"></select>
+
+    <label for="nombreColumna">Columna para nombrar el archivo</label>
+    <select id="nombreColumna"></select>
+    <div class="hint">El nombre del documento generado será: Prefijo — [valor de esta columna] — Fecha</div>
+
+    <label for="prefijoArchivo">Prefijo del nombre de archivo</label>
+    <input type="text" id="prefijoArchivo" placeholder="Constancia de Visita">
+  </div>
+
+  <div class="section">
+    <div class="section-title">Opciones</div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="generarPdf">
+      <label for="generarPdf">Generar también un PDF por cada documento</label>
+    </div>
+
+    <div class="checkbox-row" style="margin-top:10px">
+      <input type="checkbox" id="marcarProcesadas">
+      <label for="marcarProcesadas">Marcar en el Sheet las filas ya procesadas</label>
+    </div>
+
+    <label for="columnaEstado" style="margin-top:12px">Nombre de la columna de estado</label>
+    <input type="text" id="columnaEstado" placeholder="Documento generado">
+  </div>
+
+</div>
+
+<div id="status"></div>
+
+<div class="footer">
+  <button class="btn-cancel" onclick="google.script.host.close()">Cancelar</button>
+  <button class="btn-save" id="btnGuardar" onclick="guardar()">Guardar</button>
+</div>
+
+<script>
+  // Cargar configuración actual al abrir el formulario
+  google.script.run
+    .withSuccessHandler(precargar)
+    .withFailureHandler(mostrarError)
+    .obtenerConfiguracionActual();
+
+  function precargar(cfg) {
+    document.getElementById('templateUrl').value    = cfg.templateUrl    || '';
+    document.getElementById('folderUrl').value      = cfg.folderUrl      || '';
+    document.getElementById('prefijoArchivo').value = cfg.prefijoArchivo || '';
+    document.getElementById('generarPdf').checked      = cfg.generarPdf;
+    document.getElementById('marcarProcesadas').checked = cfg.marcarProcesadas;
+    document.getElementById('columnaEstado').value  = cfg.columnaEstado  || '';
+
+    // Poblar dropdowns de hojas
+    const selHoja = document.getElementById('sheetName');
+    selHoja.innerHTML = '';
+    (cfg.hojas || []).forEach(h => {
+      const opt = document.createElement('option');
+      opt.value = opt.textContent = h;
+      if (h === cfg.sheetName) opt.selected = true;
+      selHoja.appendChild(opt);
+    });
+
+    // Poblar columnas
+    poblarColumnas(cfg.columnas, cfg.nombreColumna);
+
+    // Cuando cambia la hoja, recargar columnas
+    selHoja.addEventListener('change', function() {
+      google.script.run
+        .withSuccessHandler(cols => poblarColumnas(cols, null))
+        .listarColumnas(this.value);
+    });
+  }
+
+  function poblarColumnas(columnas, seleccionada) {
+    const sel = document.getElementById('nombreColumna');
+    sel.innerHTML = '';
+    (columnas || []).forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = opt.textContent = c;
+      if (c === seleccionada) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  function guardar() {
+    const templateUrl = document.getElementById('templateUrl').value.trim();
+    const folderUrl   = document.getElementById('folderUrl').value.trim();
+
+    if (!templateUrl) { mostrarError('Ingresá la URL de la plantilla.'); return; }
+    if (!folderUrl)   { mostrarError('Ingresá la URL de la carpeta de destino.'); return; }
+
+    const btn = document.getElementById('btnGuardar');
+    btn.innerHTML = '<span class="spinner"></span>Guardando…';
+    btn.disabled = true;
+
+    const datos = {
+      templateUrl:      templateUrl,
+      folderUrl:        folderUrl,
+      sheetName:        document.getElementById('sheetName').value,
+      nombreColumna:    document.getElementById('nombreColumna').value,
+      prefijoArchivo:   document.getElementById('prefijoArchivo').value.trim() || 'Constancia de Visita',
+      generarPdf:       document.getElementById('generarPdf').checked,
+      marcarProcesadas: document.getElementById('marcarProcesadas').checked,
+      columnaEstado:    document.getElementById('columnaEstado').value.trim() || 'Documento generado',
+    };
+
+    google.script.run
+      .withSuccessHandler(() => {
+        btn.innerHTML = 'Guardar';
+        btn.disabled = false;
+        mostrarOk('¡Configuración guardada correctamente!');
+        setTimeout(() => google.script.host.close(), 1500);
+      })
+      .withFailureHandler(err => {
+        btn.innerHTML = 'Guardar';
+        btn.disabled = false;
+        mostrarError(err.message || 'Error al guardar.');
+      })
+      .guardarConfiguracion(datos);
+  }
+
+  function mostrarOk(msg) {
+    const el = document.getElementById('status');
+    el.textContent = '✓ ' + msg;
+    el.className = 'ok';
+  }
+  function mostrarError(err) {
+    const el = document.getElementById('status');
+    el.textContent = '✗ ' + (err.message || err);
+    el.className = 'err';
+  }
+</script>
+</body>
+</html>
