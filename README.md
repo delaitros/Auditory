@@ -105,25 +105,29 @@ A partir de ahí, cada nueva respuesta genera su documento de forma automática.
 
 ---
 
-## Ejemplo de plantilla
+## Plantilla para Constancia de Visita
 
-```
-ACTA DE AUDITORÍA
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Empresa:          {{empresa}}
-Fecha de visita:  {{fecha_de_visita}}
-Auditor:          {{auditor}}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+El archivo `plantilla_constancia_de_visita.txt` contiene el texto exacto a copiar en el Google Doc plantilla.
 
-Observaciones:
-{{observaciones}}
+Los marcadores corresponden a los campos del formulario así:
 
-Resultado:  {{resultado}}
+| Campo en el formulario | Marcador en la plantilla |
+|---|---|
+| Empresa | `{{empresa}}` |
+| Establecimiento | `{{establecimiento}}` |
+| Sector | `{{sector}}` |
+| actividades desarrolladas | `{{actividades_desarrolladas}}` |
+| desvios observados | `{{desvios_observados}}` |
+| comentarios | `{{comentarios}}` |
+| auditor | `{{auditor}}` |
+| fecha de la visita | `{{fecha_de_la_visita}}` |
+| hora de la visita | `{{hora_de_la_visita}}` |
+| Nro. de registro | `{{__fila__}}` |
+| Fecha/hora de generación | `{{__fecha_generacion__}}` |
 
-─────────────────────────────
-Nro. de registro: {{__fila__}}
-Generado: {{__fecha_generacion__}}
-```
+> **Regla de conversión:** el nombre de la columna del Sheet se convierte a minúsculas,
+> las tildes se eliminan y los espacios se reemplazan por guiones bajos.
+> Ejemplo: `"fecha de la visita"` → `{{fecha_de_la_visita}}`
 
 ---
 

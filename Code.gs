@@ -26,7 +26,7 @@ const CONFIG = {
   NOMBRE_COLUMNA: 'Empresa',
 
   // Prefijo para el nombre del archivo generado.
-  PREFIJO_ARCHIVO: 'Auditoria',
+  PREFIJO_ARCHIVO: 'Constancia de Visita',
 
   // Si es true, también genera un PDF además del Google Doc.
   GENERAR_PDF: true,
