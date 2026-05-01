@@ -111,19 +111,27 @@ El archivo `plantilla_constancia_de_visita.txt` contiene el texto exacto a copia
 
 Los marcadores corresponden a los campos del formulario así:
 
-| Campo en el formulario | Marcador en la plantilla |
-|---|---|
-| Empresa | `{{empresa}}` |
-| Establecimiento | `{{establecimiento}}` |
-| Sector | `{{sector}}` |
-| actividades desarrolladas | `{{actividades_desarrolladas}}` |
-| desvios observados | `{{desvios_observados}}` |
-| comentarios | `{{comentarios}}` |
-| auditor | `{{auditor}}` |
-| fecha de la visita | `{{fecha_de_la_visita}}` |
-| hora de la visita | `{{hora_de_la_visita}}` |
-| Nro. de registro | `{{__fila__}}` |
-| Fecha/hora de generación | `{{__fecha_generacion__}}` |
+| Columna en el Sheet | Marcador en la plantilla | Ejemplo de valor |
+|---|---|---|
+| Marca temporal | `{{marca_temporal}}` | 9/09/2025 23:06:46 |
+| Empresa | `{{empresa}}` | Fuhrmann SA |
+| Establecimiento | `{{establecimiento}}` | Peinaduria |
+| Sector | `{{sector}}` | Mantenimiento |
+| actividades desarrolladas | `{{actividades_desarrolladas}}` | auditoria |
+| desvios observados | `{{desvios_observados}}` | condiciones inseguras, falta de orden y limpieza |
+| comentarios | `{{comentarios}}` | Herramientas fuera de lugar |
+| fecha de la visita | `{{fecha_de_la_visita}}` | 5/09/2025 |
+| auditor | `{{auditor}}` | Felix |
+| hora de la visita | `{{hora_de_la_visita}}` | 14:00:00 |
+| Nro. de registro | `{{__fila__}}` | 5 |
+| Fecha/hora de generación | `{{__fecha_generacion__}}` | 01/05/2026 13:00 |
+
+> **Nota sobre `Puntuación`:** Google Forms agrega esta columna automáticamente cuando el formulario
+> tiene puntuación habilitada. Podés incluirla con `{{puntuacion}}` o ignorarla en la plantilla.
+
+> **Nota sobre checkboxes (desvios observados):** cuando se marcan varias opciones, Google Forms
+> las guarda separadas por coma en una misma celda. El marcador `{{desvios_observados}}` las
+> mostrará todas juntas: `condiciones inseguras, falta de orden y limpieza`.
 
 > **Regla de conversión:** el nombre de la columna del Sheet se convierte a minúsculas,
 > las tildes se eliminan y los espacios se reemplazan por guiones bajos.

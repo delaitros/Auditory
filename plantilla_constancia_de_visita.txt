@@ -37,4 +37,4 @@ COMENTARIOS
                                         {{auditor}}
 
 
-Nro. de registro: {{__fila__}}          Generado: {{__fecha_generacion__}}
+Nro. de registro: {{__fila__}}          Fecha de envío: {{marca_temporal}}
