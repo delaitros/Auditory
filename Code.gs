@@ -226,8 +226,13 @@ function normalizarClave(texto) {
 }
 
 function formatearValor(valor) {
-  if (valor instanceof Date)
-    return Utilities.formatDate(valor, Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm');
+  if (valor instanceof Date) {
+    // Google Sheets almacena valores de solo hora como 30/12/1899 + fracción del día
+    if (valor.getFullYear() <= 1899) {
+      return Utilities.formatDate(valor, Session.getScriptTimeZone(), 'HH:mm');
+    }
+    return Utilities.formatDate(valor, Session.getScriptTimeZone(), 'dd/MM/yyyy');
+  }
   return valor == null ? '' : String(valor);
 }
 
