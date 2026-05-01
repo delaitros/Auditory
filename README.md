@@ -79,6 +79,7 @@ Auditor abre la URL → llena el formulario → Enviar
 |---|---|
 | Google Doc plantilla | `1BhVRm-XSz8a3koPOA9QnQLAL2E2cqATIvqXnwShA3yU` |
 | Carpeta de destino | `1_r1u39-DyCuqg3fhYGARKISQ0hsiaAC4` |
+| Google Sheet | `1xHVDVMcgaSD8h56poDS01KXopMy6Fq9IehOYJRCICXs` |
 
 Estos valores están pre-cargados en el script. Si en el futuro necesitás cambiarlos,
 ir a **Auditorias → ⚙️ Configuración** dentro del Sheet generado.
