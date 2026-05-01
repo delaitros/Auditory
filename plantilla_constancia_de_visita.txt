@@ -1,0 +1,40 @@
+CONSTANCIA DE VISITA
+REGISTRO DE ACTUACIONES — SERVICIO DE HIGIENE Y SEGURIDAD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Empresa:              {{empresa}}
+Establecimiento:      {{establecimiento}}
+Sector:               {{sector}}
+
+Fecha de la visita:   {{fecha_de_la_visita}}
+Hora de la visita:    {{hora_de_la_visita}}
+Auditor:              {{auditor}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ACTIVIDADES DESARROLLADAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{{actividades_desarrolladas}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DESVÍOS OBSERVADOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{{desvios_observados}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COMENTARIOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{{comentarios}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+                                        Firma del auditor
+
+
+                              ________________________________
+                                        {{auditor}}
+
+
+Nro. de registro: {{__fila__}}          Fecha de envío: {{marca_temporal}}
