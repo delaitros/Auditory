@@ -26,7 +26,11 @@ function procesarFormulario(datos) {
   const numFila = sheet.getLastRow();
 
   const urlDoc = generarDocumento(numFila, cfg, sheet);
-  return { ok: true, urlDoc: urlDoc };
+  return {
+    ok: true,
+    urlDoc:    urlDoc,
+    urlCarpeta: 'https://drive.google.com/drive/folders/' + cfg.OUTPUT_FOLDER_ID,
+  };
 }
 
 // -----------------------------------------------------------

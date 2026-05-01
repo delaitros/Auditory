@@ -302,16 +302,27 @@
   @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   #exito h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
   #exito p  { font-size: 14px; color: var(--muted); margin-bottom: 32px; }
-  .btn-doc {
+  .exito-botones {
+    display: flex; gap: 12px; justify-content: center;
+    flex-wrap: wrap; margin-bottom: 16px;
+  }
+  .btn-doc, .btn-carpeta {
     display: inline-flex; align-items: center; gap: 8px;
-    background: var(--navy);
-    color: white; text-decoration: none;
-    border-radius: 12px; padding: 14px 28px;
-    font-size: 15px; font-weight: 600;
+    border-radius: 12px; padding: 14px 24px;
+    font-size: 15px; font-weight: 600; text-decoration: none;
+    transition: all .2s;
+  }
+  .btn-doc {
+    background: var(--navy); color: white;
     box-shadow: 0 4px 14px rgba(26,35,126,.25);
-    transition: all .2s; margin-bottom: 16px;
   }
   .btn-doc:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,35,126,.35); }
+  .btn-carpeta {
+    background: white; color: var(--teal-dark);
+    border: 2px solid var(--teal);
+    box-shadow: 0 4px 14px rgba(0,172,193,.15);
+  }
+  .btn-carpeta:hover { transform: translateY(-1px); background: var(--chip-on); box-shadow: 0 6px 20px rgba(0,172,193,.25); }
   .btn-nuevo {
     display: block; background: none; border: none;
     font-size: 14px; color: var(--teal); cursor: pointer;
@@ -492,8 +503,10 @@
       <div class="exito-icon">✓</div>
       <h2>¡Constancia generada!</h2>
       <p>El registro fue guardado y el documento está listo para imprimir.</p>
-      <a id="link-doc" class="btn-doc" href="#" target="_blank">📄 Abrir documento</a>
-      <br>
+      <div class="exito-botones">
+        <a id="link-doc" class="btn-doc" href="#" target="_blank">📄 Abrir documento</a>
+        <a id="link-carpeta" class="btn-carpeta" href="#" target="_blank">🗂 Ver carpeta</a>
+      </div>
       <button class="btn-nuevo" onclick="nuevaConstancia()">+ Cargar otra constancia</button>
     </div>
   </div>
@@ -543,7 +556,8 @@
 
     google.script.run
       .withSuccessHandler(res => {
-        document.getElementById('link-doc').href = res.urlDoc;
+        document.getElementById('link-doc').href     = res.urlDoc;
+        document.getElementById('link-carpeta').href = res.urlCarpeta;
         mostrarEstado('exito');
       })
       .withFailureHandler(err => {
