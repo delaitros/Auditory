@@ -132,7 +132,7 @@
 <div class="body">
 
   <div class="section">
-    <div class="section-title">Plantilla y carpeta de destino</div>
+    <div class="section-title">Plantilla y destino</div>
 
     <label for="templateUrl">URL del Google Doc plantilla *</label>
     <input type="text" id="templateUrl" placeholder="https://docs.google.com/document/d/…/edit">
@@ -141,6 +141,10 @@
     <label for="folderUrl">URL de la carpeta de destino *</label>
     <input type="text" id="folderUrl" placeholder="https://drive.google.com/drive/folders/…">
     <div class="hint">Los documentos generados se guardarán en esta carpeta de Drive.</div>
+
+    <label for="spreadsheetUrl">URL de la hoja de cálculo *</label>
+    <input type="text" id="spreadsheetUrl" placeholder="https://docs.google.com/spreadsheets/d/…/edit">
+    <div class="hint">Google Sheet donde se guardan los registros de cada constancia.</div>
   </div>
 
   <div class="section">
@@ -191,12 +195,13 @@
     .obtenerConfiguracionActual();
 
   function precargar(cfg) {
-    document.getElementById('templateUrl').value    = cfg.templateUrl    || '';
-    document.getElementById('folderUrl').value      = cfg.folderUrl      || '';
-    document.getElementById('prefijoArchivo').value = cfg.prefijoArchivo || '';
+    document.getElementById('templateUrl').value       = cfg.templateUrl     || '';
+    document.getElementById('folderUrl').value         = cfg.folderUrl       || '';
+    document.getElementById('spreadsheetUrl').value    = cfg.spreadsheetUrl  || '';
+    document.getElementById('prefijoArchivo').value    = cfg.prefijoArchivo  || '';
     document.getElementById('generarPdf').checked      = cfg.generarPdf;
     document.getElementById('marcarProcesadas').checked = cfg.marcarProcesadas;
-    document.getElementById('columnaEstado').value  = cfg.columnaEstado  || '';
+    document.getElementById('columnaEstado').value     = cfg.columnaEstado   || '';
 
     // Poblar dropdowns de hojas
     const selHoja = document.getElementById('sheetName');
@@ -234,8 +239,11 @@
     const templateUrl = document.getElementById('templateUrl').value.trim();
     const folderUrl   = document.getElementById('folderUrl').value.trim();
 
-    if (!templateUrl) { mostrarError('Ingresá la URL de la plantilla.'); return; }
-    if (!folderUrl)   { mostrarError('Ingresá la URL de la carpeta de destino.'); return; }
+    const spreadsheetUrl = document.getElementById('spreadsheetUrl').value.trim();
+
+    if (!templateUrl)    { mostrarError('Ingresá la URL de la plantilla.'); return; }
+    if (!folderUrl)      { mostrarError('Ingresá la URL de la carpeta de destino.'); return; }
+    if (!spreadsheetUrl) { mostrarError('Ingresá la URL de la hoja de cálculo.'); return; }
 
     const btn = document.getElementById('btnGuardar');
     btn.innerHTML = '<span class="spinner"></span>Guardando…';
@@ -244,6 +252,7 @@
     const datos = {
       templateUrl:      templateUrl,
       folderUrl:        folderUrl,
+      spreadsheetUrl:   spreadsheetUrl,
       sheetName:        document.getElementById('sheetName').value,
       nombreColumna:    document.getElementById('nombreColumna').value,
       prefijoArchivo:   document.getElementById('prefijoArchivo').value.trim() || 'Constancia de Visita',

@@ -53,6 +53,7 @@ function guardarConfiguracion(datos) {
   PropertiesService.getScriptProperties().setProperties({
     TEMPLATE_DOC_ID:   extraerId(datos.templateUrl),
     OUTPUT_FOLDER_ID:  extraerId(datos.folderUrl),
+    SPREADSHEET_ID:    extraerId(datos.spreadsheetUrl),
     SHEET_NAME:        datos.sheetName,
     NOMBRE_COLUMNA:    datos.nombreColumna,
     PREFIJO_ARCHIVO:   datos.prefijoArchivo,
@@ -71,6 +72,7 @@ function obtenerConfiguracionActual() {
   return {
     templateUrl:      `https://docs.google.com/document/d/${cfg.TEMPLATE_DOC_ID}/edit`,
     folderUrl:        `https://drive.google.com/drive/folders/${cfg.OUTPUT_FOLDER_ID}`,
+    spreadsheetUrl:   cfg.SPREADSHEET_ID ? `https://docs.google.com/spreadsheets/d/${cfg.SPREADSHEET_ID}/edit` : '',
     sheetName:        cfg.SHEET_NAME,
     nombreColumna:    cfg.NOMBRE_COLUMNA,
     prefijoArchivo:   cfg.PREFIJO_ARCHIVO,
