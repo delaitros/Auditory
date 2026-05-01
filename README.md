@@ -1,141 +1,105 @@
-# Auditory — Generador de documentos desde Google Forms
+# Auditory — Constancia de Visita
 
-Genera automáticamente un Google Doc (y opcionalmente un PDF) por cada respuesta de auditoría recibida en Google Forms, listo para imprimir y archivar físicamente.
-
----
-
-## Cómo funciona
-
-```
-Google Form → Google Sheet (una fila por respuesta)
-                    ↓  Apps Script
-         Google Doc por fila (desde plantilla)
-                    ↓
-                  PDF  →  imprimir y archivar
-```
+Web app que reemplaza Google Forms: el auditor llena el formulario en el navegador,
+el sistema guarda el registro en Google Sheets y genera un Google Doc listo para imprimir.
 
 ---
 
-## Instalación paso a paso
+## Instalación (5 pasos)
 
-### 1. Crear la plantilla
+### 1. Crear el proyecto en Apps Script
 
-1. Creá un **Google Doc** nuevo con el diseño del documento que querés imprimir (membrete, logotipo, campos, etc.).
-2. Donde quieras insertar datos del formulario, escribí el nombre de la columna entre llaves dobles:
-   - Si la columna se llama `Empresa` → escribí `{{empresa}}`
-   - Si la columna se llama `Razón Social` → escribí `{{razon_social}}`
-   - Si la columna se llama `Fecha de visita` → escribí `{{fecha_de_visita}}`
-3. Anotá el **ID del documento** (está en la URL entre `/d/` y `/edit`).
+1. Ir a **[script.google.com](https://script.google.com)**
+2. Clic en **Nuevo proyecto**
+3. Ponerle un nombre: `Auditorias`
 
-**Marcadores especiales disponibles:**
-| Marcador | Contenido |
+---
+
+### 2. Copiar los archivos
+
+En el editor de Apps Script hay un archivo `Código.gs` por defecto. Reemplazarlo con el contenido de cada archivo:
+
+| Archivo del repo | Qué crear en Apps Script |
 |---|---|
-| `{{__fila__}}` | Número de registro |
-| `{{__fecha_generacion__}}` | Fecha y hora en que se generó el documento |
+| `Code.gs` | Reemplazar el contenido de `Código.gs` |
+| `Formulario.html` | **+** Archivo HTML nuevo → nombrar `Formulario` |
+| `Configuracion.html` | **+** Archivo HTML nuevo → nombrar `Configuracion` |
+
+Para agregar un archivo HTML: clic en el **+** junto a "Archivos" → seleccionar **HTML**.
+
+> El archivo `appsscript.json` se actualiza yendo a
+> **Configuración del proyecto** (ícono ⚙️) → activar "Mostrar archivo de manifiesto"
+> y reemplazar el contenido con el de `appsscript.json`.
 
 ---
 
-### 2. Preparar la carpeta de destino
+### 3. Guardar
 
-1. Creá una carpeta en Google Drive donde se guardarán los documentos generados.
-2. Anotá el **ID de la carpeta** (está al final de la URL de la carpeta).
-
----
-
-### 3. Instalar el script en el Google Sheet
-
-1. Abrí el Google Sheet con las respuestas del formulario.
-2. Andá a **Extensiones → Apps Script**.
-3. Borrá el contenido del archivo `Código.gs` y pegá el contenido de `Code.gs` de este repositorio.
-4. Creá un archivo nuevo llamado `appsscript.json` (o editá el existente habilitando "Mostrar archivo de manifiesto" en la configuración del proyecto) y pegá el contenido de `appsscript.json`.
+`Ctrl + S` o el ícono de guardar. Google puede pedir que le pongas nombre al proyecto.
 
 ---
 
-### 4. Configurar
+### 4. Publicar como web app
 
-Al inicio de `Code.gs` completá el bloque `CONFIG`:
+1. Clic en **Implementar** → **Nueva implementación**
+2. Tipo: **Aplicación web**
+3. Configurar:
+   - **Ejecutar como:** Yo (`tu-correo@gmail.com`)
+   - **Quién tiene acceso:** Cualquier persona
+4. Clic en **Implementar**
+5. Aceptar los permisos que pide Google
+6. **Copiar la URL** que aparece — esa es la dirección del formulario
 
-```javascript
-const CONFIG = {
-  TEMPLATE_DOC_ID: 'ID_DE_TU_PLANTILLA',      // ← ID del Google Doc plantilla
-  OUTPUT_FOLDER_ID: 'ID_DE_TU_CARPETA',        // ← ID de la carpeta de Drive
-  SHEET_NAME: 'Respuestas de formulario 1',    // ← Nombre de la pestaña del Sheet
-  NOMBRE_COLUMNA: 'Empresa',                   // ← Columna para nombrar el archivo
-  PREFIJO_ARCHIVO: 'Auditoria',                // ← Prefijo del nombre del archivo
-  GENERAR_PDF: true,                           // ← true: también genera PDF
-  MARCAR_PROCESADAS: true,                     // ← true: marca filas ya procesadas
-  COLUMNA_ESTADO: 'Documento generado',        // ← Nombre de la columna de estado
-};
+---
+
+### 5. Listo
+
+Compartir la URL con los auditores. La primera vez que alguien envía una constancia,
+el sistema crea automáticamente la hoja de cálculo dentro de la carpeta de Drive configurada.
+
+---
+
+## Lo que hace el sistema automáticamente
+
+```
+Auditor abre la URL → llena el formulario → Enviar
+         ↓
+  Guarda fila en Google Sheets  (se crea solo la primera vez)
+         ↓
+  Genera Google Doc desde la plantilla
+         ↓
+  "Abrir documento" → imprimir / archivar
 ```
 
 ---
 
-### 5. Autorizar el script
+## IDs configurados
 
-1. Guardá el script (Ctrl+S).
-2. Ejecutá cualquier función (por ejemplo `onOpen`) y aceptá los permisos que pide Google.
-
----
-
-### 6. Usar
-
-Al volver al Sheet aparece el menú **Auditorias** con las opciones:
-
-| Opción | Qué hace |
+| Recurso | ID |
 |---|---|
-| Generar documentos (filas nuevas) | Solo procesa filas que todavía no tienen documento |
-| Generar documento — fila seleccionada | Procesa solo la fila donde está el cursor |
-| Generar TODOS los documentos | Reprocesa todas las filas |
-| Ver instrucciones | Abre la ayuda dentro del Sheet |
+| Google Doc plantilla | `1BhVRm-XSz8a3koPOA9QnQLAL2E2cqATIvqXnwShA3yU` |
+| Carpeta de destino | `1_r1u39-DyCuqg3fhYGARKISQ0hsiaAC4` |
+
+Estos valores están pre-cargados en el script. Si en el futuro necesitás cambiarlos,
+ir a **Auditorias → ⚙️ Configuración** dentro del Sheet generado.
 
 ---
 
-### 7. Automatizar (opcional)
+## Marcadores para la plantilla Google Doc
 
-Para generar el documento automáticamente cada vez que alguien completa el formulario:
-
-1. En Apps Script andá a **Disparadores** (ícono de reloj).
-2. Creá un disparador nuevo:
-   - Función: `onFormSubmit`
-   - Origen del evento: **Desde hoja de cálculo**
-   - Tipo de evento: **Al enviar formulario**
-3. Guardá.
-
-A partir de ahí, cada nueva respuesta genera su documento de forma automática.
-
----
-
-## Plantilla para Constancia de Visita
-
-El archivo `plantilla_constancia_de_visita.txt` contiene el texto exacto a copiar en el Google Doc plantilla.
-
-Los marcadores corresponden a los campos del formulario así:
-
-| Columna en el Sheet | Marcador en la plantilla | Ejemplo de valor |
-|---|---|---|
-| Marca temporal | `{{marca_temporal}}` | 9/09/2025 23:06:46 |
-| Empresa | `{{empresa}}` | Fuhrmann SA |
-| Establecimiento | `{{establecimiento}}` | Peinaduria |
-| Sector | `{{sector}}` | Mantenimiento |
-| actividades desarrolladas | `{{actividades_desarrolladas}}` | auditoria |
-| desvios observados | `{{desvios_observados}}` | condiciones inseguras, falta de orden y limpieza |
-| comentarios | `{{comentarios}}` | Herramientas fuera de lugar |
-| fecha de la visita | `{{fecha_de_la_visita}}` | 5/09/2025 |
-| auditor | `{{auditor}}` | Felix |
-| hora de la visita | `{{hora_de_la_visita}}` | 14:00:00 |
-| Nro. de registro | `{{__fila__}}` | 5 |
-| Fecha/hora de generación | `{{__fecha_generacion__}}` | 01/05/2026 13:00 |
-
-> **Nota sobre `Puntuación`:** Google Forms agrega esta columna automáticamente cuando el formulario
-> tiene puntuación habilitada. Podés incluirla con `{{puntuacion}}` o ignorarla en la plantilla.
-
-> **Nota sobre checkboxes (desvios observados):** cuando se marcan varias opciones, Google Forms
-> las guarda separadas por coma en una misma celda. El marcador `{{desvios_observados}}` las
-> mostrará todas juntas: `condiciones inseguras, falta de orden y limpieza`.
-
-> **Regla de conversión:** el nombre de la columna del Sheet se convierte a minúsculas,
-> las tildes se eliminan y los espacios se reemplazan por guiones bajos.
-> Ejemplo: `"fecha de la visita"` → `{{fecha_de_la_visita}}`
+| Campo | Marcador |
+|---|---|
+| Empresa | `{{empresa}}` |
+| Establecimiento | `{{establecimiento}}` |
+| Sector | `{{sector}}` |
+| Actividades desarrolladas | `{{actividades_desarrolladas}}` |
+| Desvíos observados | `{{desvios_observados}}` |
+| Comentarios | `{{comentarios}}` |
+| Auditor | `{{auditor}}` |
+| Fecha de la visita | `{{fecha_de_la_visita}}` |
+| Hora de la visita | `{{hora_de_la_visita}}` |
+| Nro. de registro | `{{__fila__}}` |
+| Fecha de generación | `{{__fecha_generacion__}}` |
 
 ---
 
@@ -143,6 +107,6 @@ Los marcadores corresponden a los campos del formulario así:
 
 | Problema | Solución |
 |---|---|
-| "No se encontró la pestaña..." | Verificar que `SHEET_NAME` coincida exactamente con el nombre de la pestaña |
-| El marcador no se reemplaza | Verificar que el nombre de la columna, normalizado (minúsculas, sin tildes, espacios → guión bajo), coincida con el marcador en la plantilla |
-| Error de permisos | Volver a ejecutar el script y aceptar los permisos de Google |
+| Error al publicar | Asegurarse de aceptar todos los permisos que pide Google |
+| El marcador no se reemplaza | Verificar que esté escrito exactamente igual (minúsculas, sin tildes, espacios → guiones bajos) |
+| No genera PDF | Verificar que `GENERAR_PDF` esté en `true` en la configuración |
