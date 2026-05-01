@@ -180,7 +180,7 @@
   .chip.selected { border-color: #00ACC1; background: #E0F7FA; color: #006064; }
   .chip .chk { font-size: 13px; opacity: 0; transition: opacity .15s; }
   .chip.selected .chk { opacity: 1; }
-  .chip input { display: none; }
+  /* sin input oculto — chips usan data-value */
 
   .desvios-extra label {
     font-size: 12px; font-weight: 600; color: #616161;
@@ -346,34 +346,27 @@
     <div class="section">
       <div class="section-label">Actividades desarrolladas <span class="req">*</span></div>
       <div class="act-grid">
-        <label class="act-card" onclick="selAct(this,'auditoria')">
-          <input type="radio" name="actividades" value="auditoria">
+        <div class="act-card" onclick="selAct(this,'auditoria')">
           <span class="icon">🔍</span><span class="lbl">Auditoría</span>
-        </label>
-        <label class="act-card" onclick="selAct(this,'capacitacion')">
-          <input type="radio" name="actividades" value="capacitacion">
+        </div>
+        <div class="act-card" onclick="selAct(this,'capacitacion')">
           <span class="icon">📚</span><span class="lbl">Capacitación</span>
-        </label>
-        <label class="act-card" onclick="selAct(this,'reunión')">
-          <input type="radio" name="actividades" value="reunión">
+        </div>
+        <div class="act-card" onclick="selAct(this,'reunión')">
           <span class="icon">🤝</span><span class="lbl">Reunión</span>
-        </label>
-        <label class="act-card" onclick="selAct(this,'mediciones ambientales')">
-          <input type="radio" name="actividades" value="mediciones ambientales">
+        </div>
+        <div class="act-card" onclick="selAct(this,'mediciones ambientales')">
           <span class="icon">🌡️</span><span class="lbl">Mediciones ambientales</span>
-        </label>
-        <label class="act-card" onclick="selAct(this,'preparacion de informes')">
-          <input type="radio" name="actividades" value="preparacion de informes">
+        </div>
+        <div class="act-card" onclick="selAct(this,'preparacion de informes')">
           <span class="icon">📋</span><span class="lbl">Preparación de informes</span>
-        </label>
-        <label class="act-card" onclick="selAct(this,'acompañamiento ART SRT')">
-          <input type="radio" name="actividades" value="acompañamiento ART SRT">
+        </div>
+        <div class="act-card" onclick="selAct(this,'acompañamiento ART SRT')">
           <span class="icon">🏛️</span><span class="lbl">Acompañamiento ART/SRT</span>
-        </label>
-        <label class="act-card" id="card-otros" onclick="selAct(this,'otros')">
-          <input type="radio" name="actividades" value="otros">
+        </div>
+        <div class="act-card" id="card-otros" onclick="selAct(this,'otros')">
           <span class="icon">✏️</span><span class="lbl">Otros</span>
-        </label>
+        </div>
       </div>
       <div class="act-otros field" id="act-otros-wrap">
         <label>Especificar actividad</label>
@@ -386,26 +379,21 @@
     <div class="section">
       <div class="section-label">Desvíos observados</div>
       <div class="chips">
-        <label class="chip" onclick="toggleChip(this)">
-          <input type="checkbox" name="desvios" value="actos inseguros">
+        <div class="chip" onclick="toggleChip(this)" data-value="actos inseguros">
           <span class="chk">✓</span> Actos inseguros
-        </label>
-        <label class="chip" onclick="toggleChip(this)">
-          <input type="checkbox" name="desvios" value="condiciones inseguras">
+        </div>
+        <div class="chip" onclick="toggleChip(this)" data-value="condiciones inseguras">
           <span class="chk">✓</span> Condiciones inseguras
-        </label>
-        <label class="chip" onclick="toggleChip(this)">
-          <input type="checkbox" name="desvios" value="falta o mal uso de EPP">
+        </div>
+        <div class="chip" onclick="toggleChip(this)" data-value="falta o mal uso de EPP">
           <span class="chk">✓</span> Falta / mal uso de EPP
-        </label>
-        <label class="chip" onclick="toggleChip(this)">
-          <input type="checkbox" name="desvios" value="falta de orden y limpieza">
+        </div>
+        <div class="chip" onclick="toggleChip(this)" data-value="falta de orden y limpieza">
           <span class="chk">✓</span> Orden y limpieza
-        </label>
-        <label class="chip" onclick="toggleChip(this)">
-          <input type="checkbox" name="desvios" value="mal uso de maquinas y herramientas">
+        </div>
+        <div class="chip" onclick="toggleChip(this)" data-value="mal uso de maquinas y herramientas">
           <span class="chk">✓</span> Mal uso de máquinas
-        </label>
+        </div>
       </div>
       <div class="desvios-extra">
         <label>Otros desvíos (opcional)</label>
@@ -483,23 +471,31 @@
 
 </div><!-- /container -->
 
+<!-- Link permanente a la carpeta -->
+<div style="text-align:center; padding:24px 16px 8px;">
+  <a href="https://drive.google.com/drive/folders/1_r1u39-DyCuqg3fhYGARKISQ0hsiaAC4"
+     target="_blank"
+     style="display:inline-flex;align-items:center;gap:6px;color:#00838F;font-size:13px;font-weight:600;text-decoration:none;padding:10px 20px;border:2px solid #B2EBF2;border-radius:100px;background:#E0F7FA;transition:background .15s;"
+     onmouseover="this.style.background='#B2EBF2'"
+     onmouseout="this.style.background='#E0F7FA'">
+    🗂 &nbsp;Ver carpeta de constancias en Drive
+  </a>
+</div>
+
 <script>
   var actSeleccionada = '';
 
   function selAct(card, valor) {
     document.querySelectorAll('.act-card').forEach(function(c){ c.classList.remove('selected'); });
     card.classList.add('selected');
-    card.querySelector('input').checked = true;
     actSeleccionada = valor;
     var wrap = document.getElementById('act-otros-wrap');
-    if (valor === 'otros') { wrap.classList.add('visible'); }
-    else { wrap.classList.remove('visible'); }
+    wrap.classList[valor === 'otros' ? 'add' : 'remove']('visible');
     document.getElementById('err-actividades').style.display = 'none';
   }
 
   function toggleChip(chip) {
     chip.classList.toggle('selected');
-    chip.querySelector('input').checked = chip.classList.contains('selected');
   }
 
   function enviar() {
@@ -510,9 +506,10 @@
       actividades = document.getElementById('actividades-otros').value.trim() || 'Otros';
     }
 
+    // Recoger desvíos desde data-value de chips seleccionados
     var desviosArr = [];
-    document.querySelectorAll('[name=desvios]:checked').forEach(function(cb){
-      desviosArr.push(cb.value);
+    document.querySelectorAll('.chip.selected').forEach(function(chip){
+      desviosArr.push(chip.getAttribute('data-value'));
     });
     var libre = document.getElementById('desvios-libre').value.trim();
     if (libre) desviosArr.push(libre);
@@ -533,13 +530,15 @@
 
     google.script.run
       .withSuccessHandler(function(res) {
-        document.getElementById('link-doc').href     = res.urlDoc;
-        document.getElementById('link-carpeta').href = res.urlCarpeta;
+        document.getElementById('link-doc').href     = res.urlDoc     || '#';
+        document.getElementById('link-carpeta').href = res.urlCarpeta || 'https://drive.google.com/drive/folders/1_r1u39-DyCuqg3fhYGARKISQ0hsiaAC4';
         mostrarEstado('exito');
       })
       .withFailureHandler(function(err) {
         mostrarEstado('form');
-        mostrarError(err.message || 'Ocurrió un error. Intentá de nuevo.');
+        var msg = (err && err.message) ? err.message : 'Ocurrió un error. Revisá la configuración del script.';
+        mostrarError(msg);
+        alert('Error: ' + msg);
       })
       .procesarFormulario(datos);
   }
@@ -548,18 +547,16 @@
     var ok = true;
     document.getElementById('error-banner').style.display = 'none';
 
-    var campos = [
-      ['empresa',       'Empresa es obligatoria.'],
+    [
+      ['empresa',        'Empresa es obligatoria.'],
       ['establecimiento','Establecimiento es obligatorio.'],
-      ['comentarios',   'Los comentarios son obligatorios.'],
-      ['auditor',       'El nombre del auditor es obligatorio.'],
-      ['fecha-visita',  'La fecha es obligatoria.'],
-      ['hora-visita',   'La hora es obligatoria.'],
-    ];
-
-    campos.forEach(function(par) {
+      ['comentarios',    'Los comentarios son obligatorios.'],
+      ['auditor',        'El nombre del auditor es obligatorio.'],
+      ['fecha-visita',   'La fecha es obligatoria.'],
+      ['hora-visita',    'La hora es obligatoria.'],
+    ].forEach(function(par) {
       var el   = document.getElementById(par[0]);
-      var wrap = el.closest ? el.closest('.field') : el.parentNode;
+      var wrap = el.parentNode;
       if (!el.value.trim()) {
         wrap.classList.add('has-error');
         var err = wrap.querySelector('.field-error');
@@ -574,14 +571,13 @@
       document.getElementById('err-actividades').style.display = 'block';
       ok = false;
     }
-
     return ok;
   }
 
   function mostrarEstado(estado) {
-    document.getElementById('vista-form').style.display = (estado === 'form')    ? '' : 'none';
-    document.getElementById('loading').style.display    = (estado === 'loading') ? '' : 'none';
-    document.getElementById('exito').style.display      = (estado === 'exito')   ? '' : 'none';
+    document.getElementById('vista-form').style.display = estado === 'form'    ? '' : 'none';
+    document.getElementById('loading').style.display    = estado === 'loading' ? '' : 'none';
+    document.getElementById('exito').style.display      = estado === 'exito'   ? '' : 'none';
   }
 
   function mostrarError(msg) {
@@ -594,8 +590,6 @@
   function limpiarFormulario() {
     document.querySelectorAll('#vista-form input[type=text], #vista-form input[type=date], #vista-form input[type=time], #vista-form textarea')
       .forEach(function(el){ el.value = ''; });
-    document.querySelectorAll('[name=actividades]').forEach(function(r){ r.checked = false; });
-    document.querySelectorAll('[name=desvios]').forEach(function(cb){ cb.checked = false; });
     document.querySelectorAll('.act-card').forEach(function(c){ c.classList.remove('selected'); });
     document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('selected'); });
     document.getElementById('act-otros-wrap').classList.remove('visible');
