@@ -7,342 +7,318 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --teal:      #00ACC1;
-    --teal-dark: #007C91;
-    --navy:      #1a237e;
-    --text:      #212121;
-    --muted:     #757575;
-    --border:    #E0E0E0;
-    --bg:        #F5F7FA;
-    --white:     #ffffff;
-    --error:     #E53935;
-    --success:   #43A047;
-    --chip-on:   #E0F7FA;
-    --act-on:    #E8EAF6;
-  }
-
   body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
+    background: #F0F4F8;
+    color: #212121;
     min-height: 100vh;
-    padding: 0 0 60px;
+    padding-bottom: 60px;
   }
 
-  /* ── Header ─────────────────────────────────── */
+  /* ── Header ── */
   .hero {
-    background: linear-gradient(135deg, var(--navy) 0%, #283593 60%, #1565C0 100%);
+    background: #1a237e;
+    background: linear-gradient(135deg, #1a237e 0%, #283593 60%, #1565C0 100%);
     color: white;
-    padding: 32px 24px 48px;
+    padding: 28px 24px 40px;
     text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::after {
-    content: '';
-    position: absolute;
-    bottom: -1px; left: 0; right: 0;
-    height: 32px;
-    background: var(--bg);
-    border-radius: 32px 32px 0 0;
   }
   .hero-logo {
-    font-size: 13px;
+    font-size: 11px;
     letter-spacing: 3px;
     text-transform: uppercase;
-    color: var(--teal);
-    font-weight: 600;
+    color: #4DD0E1;
+    font-weight: 700;
     margin-bottom: 8px;
   }
-  .hero h1 {
-    font-size: 26px;
+  .hero h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+  .hero p  { font-size: 13px; color: rgba(255,255,255,.75); }
+
+  /* ── Constancia de Visita badge ── */
+  .badge {
+    display: inline-block;
+    background: #00ACC1;
+    color: white;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 1px;
-    margin-bottom: 6px;
-  }
-  .hero p {
-    font-size: 13px;
-    opacity: .7;
-    letter-spacing: .5px;
+    text-transform: uppercase;
+    padding: 6px 20px;
+    border-radius: 0 0 16px 16px;
+    margin-top: 0;
   }
 
-  /* ── Contenedor ─────────────────────────────── */
-  .container { max-width: 660px; margin: 0 auto; padding: 0 16px; }
+  /* ── Contenedor ── */
+  .container { max-width: 660px; margin: 0 auto; padding: 20px 16px 0; }
 
-  /* ── Sección ─────────────────────────────────── */
+  /* ── Sección ── */
   .section {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 22px 20px;
+    margin-bottom: 14px;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 2px 6px rgba(0,0,0,.07);
   }
+
   .section-label {
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--teal);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
+    color: #00838F;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #E0F7FA;
   }
 
-  /* ── Campos de texto ─────────────────────────── */
-  .field { margin-bottom: 20px; }
+  /* ── Campos ── */
+  .field { margin-bottom: 16px; }
   .field:last-child { margin-bottom: 0; }
-  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .field-three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
 
   .field label {
     display: block;
     font-size: 12px;
     font-weight: 600;
-    color: var(--muted);
+    color: #616161;
     text-transform: uppercase;
     letter-spacing: .5px;
-    margin-bottom: 8px;
+    margin-bottom: 7px;
   }
-  .field label .req { color: var(--error); margin-left: 2px; }
+  .req { color: #E53935; margin-left: 2px; }
 
   .field input[type=text],
   .field input[type=date],
   .field input[type=time],
   .field textarea {
     width: 100%;
-    padding: 12px 16px;
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    font-size: 15px;
-    color: var(--text);
+    padding: 11px 14px;
+    border: 2px solid #E0E0E0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #212121;
     font-family: inherit;
     background: #FAFAFA;
     outline: none;
-    transition: border-color .2s, background .2s, box-shadow .2s;
+    transition: border-color .2s, box-shadow .2s;
   }
-  .field input:focus,
-  .field textarea:focus {
-    border-color: var(--teal);
-    background: white;
-    box-shadow: 0 0 0 4px rgba(0,172,193,.1);
+  .field input:focus, .field textarea:focus {
+    border-color: #00ACC1;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0,172,193,.15);
   }
   .field textarea { resize: vertical; min-height: 90px; }
+
   .field-error {
-    font-size: 12px;
-    color: var(--error);
-    margin-top: 5px;
     display: none;
+    font-size: 12px;
+    color: #E53935;
+    margin-top: 5px;
   }
   .field.has-error input,
-  .field.has-error textarea {
-    border-color: var(--error);
-  }
+  .field.has-error textarea { border-color: #E53935; }
   .field.has-error .field-error { display: block; }
 
-  /* ── Actividades — tarjetas ──────────────────── */
+  /* ── Actividades ── */
   .act-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     gap: 10px;
   }
   .act-card {
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    padding: 14px 12px;
+    border: 2px solid #E0E0E0;
+    border-radius: 10px;
+    padding: 14px 10px;
     text-align: center;
     cursor: pointer;
-    transition: all .18s;
     background: #FAFAFA;
+    transition: border-color .15s, background .15s, box-shadow .15s;
     user-select: none;
+    display: block;
   }
-  .act-card:hover { border-color: var(--teal); background: #E0F7FA44; }
+  .act-card:hover { border-color: #00ACC1; background: #E0F7FA; }
   .act-card.selected {
-    border-color: var(--navy);
-    background: var(--act-on);
-    box-shadow: 0 2px 8px rgba(26,35,126,.12);
+    border-color: #1a237e;
+    background: #E8EAF6;
+    box-shadow: 0 2px 8px rgba(26,35,126,.15);
   }
-  .act-card .icon { font-size: 24px; margin-bottom: 6px; }
-  .act-card .label { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.3; }
+  .act-card .icon { font-size: 26px; margin-bottom: 6px; display: block; }
+  .act-card .lbl  { font-size: 12px; font-weight: 600; color: #424242; line-height: 1.3; }
   .act-card input { display: none; }
-  .act-otros { margin-top: 12px; display: none; }
+
+  .act-otros { display: none; margin-top: 12px; }
   .act-otros.visible { display: block; }
 
-  /* ── Desvíos — chips ─────────────────────────── */
+  .err-msg {
+    display: none;
+    font-size: 12px;
+    color: #E53935;
+    margin-top: 8px;
+  }
+
+  /* ── Chips desvíos ── */
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+
   .chip {
-    display: flex; align-items: center; gap: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     padding: 8px 14px;
-    border: 2px solid var(--border);
+    border: 2px solid #E0E0E0;
     border-radius: 100px;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    transition: all .18s;
     background: #FAFAFA;
+    color: #424242;
+    transition: all .15s;
     user-select: none;
-    color: var(--text);
   }
-  .chip:hover { border-color: var(--teal); background: #E0F7FA44; }
-  .chip.selected {
-    border-color: var(--teal);
-    background: var(--chip-on);
-    color: var(--teal-dark);
-  }
-  .chip .check { font-size: 14px; opacity: 0; transition: opacity .15s; }
-  .chip.selected .check { opacity: 1; }
+  .chip:hover { border-color: #00ACC1; background: #E0F7FA; }
+  .chip.selected { border-color: #00ACC1; background: #E0F7FA; color: #006064; }
+  .chip .chk { font-size: 13px; opacity: 0; transition: opacity .15s; }
+  .chip.selected .chk { opacity: 1; }
   .chip input { display: none; }
 
-  .desvios-libre label { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 8px; display: block; }
-  .desvios-libre input {
-    width: 100%;
-    padding: 10px 16px;
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    font-size: 14px;
-    font-family: inherit;
-    outline: none;
-    background: #FAFAFA;
+  .desvios-extra label {
+    font-size: 12px; font-weight: 600; color: #616161;
+    text-transform: uppercase; letter-spacing: .5px;
+    margin-bottom: 7px; display: block;
+  }
+  .desvios-extra input {
+    width: 100%; padding: 11px 14px;
+    border: 2px solid #E0E0E0; border-radius: 8px;
+    font-size: 14px; font-family: inherit;
+    background: #FAFAFA; outline: none;
     transition: border-color .2s, box-shadow .2s;
   }
-  .desvios-libre input:focus {
-    border-color: var(--teal);
-    background: white;
-    box-shadow: 0 0 0 4px rgba(0,172,193,.1);
+  .desvios-extra input:focus {
+    border-color: #00ACC1; background: #fff;
+    box-shadow: 0 0 0 3px rgba(0,172,193,.15);
   }
 
-  /* ── Auditor + fecha + hora ──────────────────── */
-  .field-three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-  @media (max-width: 520px) { .field-three { grid-template-columns: 1fr; } }
-
-  /* ── Botón enviar ────────────────────────────── */
+  /* ── Botones ── */
   .submit-wrap {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 0;
+    display: flex; justify-content: space-between; align-items: center;
   }
   .btn-limpiar {
-    background: none; border: none;
-    font-size: 13px; color: var(--muted);
-    cursor: pointer; font-family: inherit;
-    padding: 10px 0;
-    transition: color .15s;
+    background: none; border: none; font-size: 13px;
+    color: #9E9E9E; cursor: pointer; font-family: inherit;
+    padding: 8px 0; transition: color .15s;
   }
-  .btn-limpiar:hover { color: var(--text); }
+  .btn-limpiar:hover { color: #424242; }
 
   .btn-submit {
-    display: flex; align-items: center; gap: 10px;
-    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
-    color: white; border: none; border-radius: 12px;
-    padding: 14px 32px; font-size: 15px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #00ACC1;
+    background: linear-gradient(135deg, #00ACC1 0%, #00838F 100%);
+    color: white; border: none; border-radius: 10px;
+    padding: 13px 28px; font-size: 15px; font-weight: 700;
     cursor: pointer; font-family: inherit;
-    box-shadow: 0 4px 14px rgba(0,172,193,.35);
+    box-shadow: 0 4px 12px rgba(0,172,193,.4);
     transition: all .2s;
   }
   .btn-submit:hover:not(:disabled) {
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(0,172,193,.45);
+    box-shadow: 0 6px 18px rgba(0,172,193,.5);
   }
   .btn-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
-  /* ── Error banner ────────────────────────────── */
+  /* ── Error banner ── */
   #error-banner {
     display: none;
     background: #FFEBEE;
-    color: var(--error);
+    color: #C62828;
     padding: 12px 16px;
-    border-radius: 10px;
+    border-radius: 8px;
     font-size: 13px;
-    margin-bottom: 16px;
-    border-left: 4px solid var(--error);
+    margin-bottom: 14px;
+    border-left: 4px solid #E53935;
   }
 
-  /* ── Loading ─────────────────────────────────── */
-  #loading {
-    display: none;
-    text-align: center;
-    padding: 60px 24px;
-  }
-  .spinner-wrap { margin-bottom: 20px; }
+  /* ── Loading ── */
+  #loading { display: none; }
   .spinner-big {
     width: 48px; height: 48px;
     border: 4px solid #E0F7FA;
-    border-top-color: var(--teal);
+    border-top-color: #00ACC1;
     border-radius: 50%;
     animation: spin .8s linear infinite;
-    margin: 0 auto;
+    margin: 0 auto 18px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  #loading p { color: var(--muted); font-size: 15px; }
 
-  /* ── Éxito ───────────────────────────────────── */
-  #exito {
-    display: none;
-    text-align: center;
-    padding: 60px 24px;
-  }
+  /* ── Éxito ── */
+  #exito { display: none; }
   .exito-icon {
-    width: 72px; height: 72px;
-    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+    width: 68px; height: 68px;
+    background: linear-gradient(135deg, #00ACC1, #00838F);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 24px;
-    font-size: 32px;
-    box-shadow: 0 8px 24px rgba(0,172,193,.3);
+    margin: 0 auto 20px;
+    font-size: 30px;
+    box-shadow: 0 8px 20px rgba(0,172,193,.35);
     animation: popIn .4s cubic-bezier(.175,.885,.32,1.275);
   }
-  @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  #exito h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
-  #exito p  { font-size: 14px; color: var(--muted); margin-bottom: 32px; }
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .exito-box { text-align: center; padding: 20px 0; }
+  .exito-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .exito-box p  { font-size: 14px; color: #757575; margin-bottom: 28px; }
   .exito-botones {
     display: flex; gap: 12px; justify-content: center;
-    flex-wrap: wrap; margin-bottom: 16px;
-  }
-  .btn-doc, .btn-carpeta {
-    display: inline-flex; align-items: center; gap: 8px;
-    border-radius: 12px; padding: 14px 24px;
-    font-size: 15px; font-weight: 600; text-decoration: none;
-    transition: all .2s;
+    flex-wrap: wrap; margin-bottom: 20px;
   }
   .btn-doc {
-    background: var(--navy); color: white;
-    box-shadow: 0 4px 14px rgba(26,35,126,.25);
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #1a237e; color: white; text-decoration: none;
+    border-radius: 10px; padding: 13px 22px;
+    font-size: 14px; font-weight: 700;
+    box-shadow: 0 4px 12px rgba(26,35,126,.3);
+    transition: all .2s;
   }
-  .btn-doc:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,35,126,.35); }
+  .btn-doc:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(26,35,126,.4); }
   .btn-carpeta {
-    background: white; color: var(--teal-dark);
-    border: 2px solid var(--teal);
-    box-shadow: 0 4px 14px rgba(0,172,193,.15);
+    display: inline-flex; align-items: center; gap: 8px;
+    background: white; color: #00838F; text-decoration: none;
+    border: 2px solid #00ACC1; border-radius: 10px;
+    padding: 11px 22px; font-size: 14px; font-weight: 700;
+    transition: all .2s;
   }
-  .btn-carpeta:hover { transform: translateY(-1px); background: var(--chip-on); box-shadow: 0 6px 20px rgba(0,172,193,.25); }
+  .btn-carpeta:hover { background: #E0F7FA; transform: translateY(-1px); }
   .btn-nuevo {
-    display: block; background: none; border: none;
-    font-size: 14px; color: var(--teal); cursor: pointer;
-    font-family: inherit; margin-top: 4px;
-    font-weight: 600;
+    background: none; border: none; font-size: 14px;
+    color: #00ACC1; cursor: pointer; font-family: inherit;
+    font-weight: 600; text-decoration: underline;
   }
-  .btn-nuevo:hover { text-decoration: underline; }
+
+  @media (max-width: 500px) {
+    .field-row, .field-three { grid-template-columns: 1fr; }
+    .act-grid { grid-template-columns: repeat(2, 1fr); }
+  }
 </style>
 </head>
 <body>
 
+<!-- Header -->
 <div class="hero">
   <div class="hero-logo">Servicio de Higiene y Seguridad</div>
   <h1>Félix Raúl Vidal</h1>
   <p>Ingeniero Químico &nbsp;·&nbsp; Mat. CPIT 1461 / CPIQ 2848</p>
 </div>
+<div style="text-align:center; background:#1a237e;">
+  <span class="badge">Constancia de Visita</span>
+</div>
 
 <div class="container">
 
+  <!-- Vista formulario -->
   <div id="vista-form">
+
     <div id="error-banner"></div>
 
     <!-- Identificación -->
@@ -368,77 +344,70 @@
 
     <!-- Actividades -->
     <div class="section">
-      <div class="section-label">Actividades desarrolladas <span style="color:var(--error);font-size:13px;text-transform:none;letter-spacing:0;margin-left:2px">*</span></div>
-      <div class="act-grid" id="act-grid">
-        <label class="act-card" onclick="selAct(this)">
+      <div class="section-label">Actividades desarrolladas <span class="req">*</span></div>
+      <div class="act-grid">
+        <label class="act-card" onclick="selAct(this,'auditoria')">
           <input type="radio" name="actividades" value="auditoria">
-          <div class="icon">🔍</div>
-          <div class="label">Auditoría</div>
+          <span class="icon">🔍</span><span class="lbl">Auditoría</span>
         </label>
-        <label class="act-card" onclick="selAct(this)">
+        <label class="act-card" onclick="selAct(this,'capacitacion')">
           <input type="radio" name="actividades" value="capacitacion">
-          <div class="icon">📚</div>
-          <div class="label">Capacitación</div>
+          <span class="icon">📚</span><span class="lbl">Capacitación</span>
         </label>
-        <label class="act-card" onclick="selAct(this)">
+        <label class="act-card" onclick="selAct(this,'reunión')">
           <input type="radio" name="actividades" value="reunión">
-          <div class="icon">🤝</div>
-          <div class="label">Reunión</div>
+          <span class="icon">🤝</span><span class="lbl">Reunión</span>
         </label>
-        <label class="act-card" onclick="selAct(this)">
+        <label class="act-card" onclick="selAct(this,'mediciones ambientales')">
           <input type="radio" name="actividades" value="mediciones ambientales">
-          <div class="icon">🌡️</div>
-          <div class="label">Mediciones ambientales</div>
+          <span class="icon">🌡️</span><span class="lbl">Mediciones ambientales</span>
         </label>
-        <label class="act-card" onclick="selAct(this)">
+        <label class="act-card" onclick="selAct(this,'preparacion de informes')">
           <input type="radio" name="actividades" value="preparacion de informes">
-          <div class="icon">📋</div>
-          <div class="label">Preparación de informes</div>
+          <span class="icon">📋</span><span class="lbl">Preparación de informes</span>
         </label>
-        <label class="act-card" onclick="selAct(this)">
+        <label class="act-card" onclick="selAct(this,'acompañamiento ART SRT')">
           <input type="radio" name="actividades" value="acompañamiento ART SRT">
-          <div class="icon">🏛️</div>
-          <div class="label">Acompañamiento ART / SRT</div>
+          <span class="icon">🏛️</span><span class="lbl">Acompañamiento ART/SRT</span>
         </label>
-        <label class="act-card" id="act-otros-card" onclick="selAct(this)">
+        <label class="act-card" id="card-otros" onclick="selAct(this,'otros')">
           <input type="radio" name="actividades" value="otros">
-          <div class="icon">✏️</div>
-          <div class="label">Otros</div>
+          <span class="icon">✏️</span><span class="lbl">Otros</span>
         </label>
       </div>
-      <div class="act-otros field" id="act-otros-input">
+      <div class="act-otros field" id="act-otros-wrap">
         <label>Especificar actividad</label>
         <input type="text" id="actividades-otros" placeholder="Describí la actividad">
       </div>
-      <div class="field-error" id="err-actividades" style="margin-top:10px">Seleccioná una actividad.</div>
+      <div class="err-msg" id="err-actividades">Seleccioná una actividad.</div>
     </div>
 
     <!-- Desvíos -->
     <div class="section">
       <div class="section-label">Desvíos observados</div>
-      <div class="chips" id="chips-desvios">
+      <div class="chips">
         <label class="chip" onclick="toggleChip(this)">
           <input type="checkbox" name="desvios" value="actos inseguros">
-          <span class="check">✓</span> Actos inseguros
+          <span class="chk">✓</span> Actos inseguros
         </label>
         <label class="chip" onclick="toggleChip(this)">
           <input type="checkbox" name="desvios" value="condiciones inseguras">
-          <span class="check">✓</span> Condiciones inseguras
+          <span class="chk">✓</span> Condiciones inseguras
         </label>
         <label class="chip" onclick="toggleChip(this)">
           <input type="checkbox" name="desvios" value="falta o mal uso de EPP">
-          <span class="check">✓</span> Falta / mal uso de EPP
+          <span class="chk">✓</span> Falta / mal uso de EPP
         </label>
         <label class="chip" onclick="toggleChip(this)">
           <input type="checkbox" name="desvios" value="falta de orden y limpieza">
-          <span class="check">✓</span> Orden y limpieza
+          <span class="chk">✓</span> Orden y limpieza
         </label>
         <label class="chip" onclick="toggleChip(this)">
           <input type="checkbox" name="desvios" value="mal uso de maquinas y herramientas">
-          <span class="check">✓</span> Mal uso de máquinas
+          <span class="chk">✓</span> Mal uso de máquinas
         </label>
       </div>
-      <div class="desvios-libre">
+      <div class="desvios-extra">
         <label>Otros desvíos (opcional)</label>
         <input type="text" id="desvios-libre" placeholder="Ej: falta de señalización, sin botiquín…">
       </div>
@@ -446,7 +415,7 @@
 
     <!-- Comentarios -->
     <div class="section">
-      <div class="section-label">Comentarios</div>
+      <div class="section-label">Comentarios y observaciones</div>
       <div class="field">
         <label>Observaciones <span class="req">*</span></label>
         <textarea id="comentarios" placeholder="Describí las observaciones de la visita…"></textarea>
@@ -454,7 +423,7 @@
       </div>
     </div>
 
-    <!-- Auditor + fecha + hora -->
+    <!-- Datos de visita -->
     <div class="section">
       <div class="section-label">Datos de la visita</div>
       <div class="field-three">
@@ -477,75 +446,83 @@
     </div>
 
     <!-- Enviar -->
-    <div class="section" style="padding:16px 24px">
+    <div class="section">
       <div class="submit-wrap">
-        <button type="button" class="btn-limpiar" onclick="limpiarFormulario()">Limpiar formulario</button>
+        <button type="button" class="btn-limpiar" onclick="limpiarFormulario()">Limpiar</button>
         <button class="btn-submit" id="btn-enviar" onclick="enviar()">
-          <span>Generar constancia</span>
-          <span>→</span>
+          Generar constancia &rarr;
         </button>
       </div>
     </div>
 
   </div><!-- /vista-form -->
 
-  <!-- Cargando -->
+  <!-- Loading -->
   <div id="loading">
-    <div class="section" style="padding:60px 24px">
-      <div class="spinner-wrap"><div class="spinner-big"></div></div>
-      <p>Generando el documento…</p>
+    <div class="section" style="text-align:center; padding:50px 24px;">
+      <div class="spinner-big"></div>
+      <p style="color:#757575; font-size:15px;">Generando el documento…</p>
     </div>
   </div>
 
   <!-- Éxito -->
   <div id="exito">
-    <div class="section" style="padding:60px 24px">
-      <div class="exito-icon">✓</div>
-      <h2>¡Constancia generada!</h2>
-      <p>El registro fue guardado y el documento está listo para imprimir.</p>
-      <div class="exito-botones">
-        <a id="link-doc" class="btn-doc" href="#" target="_blank">📄 Abrir documento</a>
-        <a id="link-carpeta" class="btn-carpeta" href="#" target="_blank">🗂 Ver carpeta</a>
+    <div class="section">
+      <div class="exito-box">
+        <div class="exito-icon">✓</div>
+        <h2>¡Constancia generada!</h2>
+        <p>El registro fue guardado y el documento está listo para imprimir.</p>
+        <div class="exito-botones">
+          <a id="link-doc"     class="btn-doc"     href="#" target="_blank">📄 Abrir documento</a>
+          <a id="link-carpeta" class="btn-carpeta"  href="#" target="_blank">🗂 Ver carpeta</a>
+        </div>
+        <button class="btn-nuevo" onclick="nuevaConstancia()">+ Cargar otra constancia</button>
       </div>
-      <button class="btn-nuevo" onclick="nuevaConstancia()">+ Cargar otra constancia</button>
     </div>
   </div>
 
 </div><!-- /container -->
 
 <script>
-  function selAct(card) {
-    document.querySelectorAll('.act-card').forEach(c => c.classList.remove('selected'));
+  var actSeleccionada = '';
+
+  function selAct(card, valor) {
+    document.querySelectorAll('.act-card').forEach(function(c){ c.classList.remove('selected'); });
     card.classList.add('selected');
-    const esOtros = card.querySelector('input').value === 'otros';
-    document.getElementById('act-otros-input').classList.toggle('visible', esOtros);
+    card.querySelector('input').checked = true;
+    actSeleccionada = valor;
+    var wrap = document.getElementById('act-otros-wrap');
+    if (valor === 'otros') { wrap.classList.add('visible'); }
+    else { wrap.classList.remove('visible'); }
+    document.getElementById('err-actividades').style.display = 'none';
   }
 
   function toggleChip(chip) {
     chip.classList.toggle('selected');
+    chip.querySelector('input').checked = chip.classList.contains('selected');
   }
 
   function enviar() {
     if (!validar()) return;
 
-    const radioAct = document.querySelector('[name=actividades]:checked');
-    let actividades = radioAct ? radioAct.value : '';
+    var actividades = actSeleccionada;
     if (actividades === 'otros') {
       actividades = document.getElementById('actividades-otros').value.trim() || 'Otros';
     }
 
-    const desviosChips = Array.from(document.querySelectorAll('[name=desvios]:checked'))
-                              .map(cb => cb.value);
-    const desviosLibre = document.getElementById('desvios-libre').value.trim();
-    if (desviosLibre) desviosChips.push(desviosLibre);
-    const desvios = desviosChips.join(', ');
+    var desviosArr = [];
+    document.querySelectorAll('[name=desvios]:checked').forEach(function(cb){
+      desviosArr.push(cb.value);
+    });
+    var libre = document.getElementById('desvios-libre').value.trim();
+    if (libre) desviosArr.push(libre);
 
-    const datos = {
+    var datos = {
       empresa:         document.getElementById('empresa').value.trim(),
       establecimiento: document.getElementById('establecimiento').value.trim(),
       sector:          document.getElementById('sector').value.trim(),
       actividades:     actividades,
-      desvios:         desvios,
+      desvios:         desviosArr.join(', '),
       comentarios:     document.getElementById('comentarios').value.trim(),
       auditor:         document.getElementById('auditor').value.trim(),
       fechaVisita:     document.getElementById('fecha-visita').value,
@@ -555,12 +532,12 @@
     mostrarEstado('loading');
 
     google.script.run
-      .withSuccessHandler(res => {
+      .withSuccessHandler(function(res) {
         document.getElementById('link-doc').href     = res.urlDoc;
         document.getElementById('link-carpeta').href = res.urlCarpeta;
         mostrarEstado('exito');
       })
-      .withFailureHandler(err => {
+      .withFailureHandler(function(err) {
         mostrarEstado('form');
         mostrarError(err.message || 'Ocurrió un error. Intentá de nuevo.');
       })
@@ -568,66 +545,70 @@
   }
 
   function validar() {
-    let ok = true;
+    var ok = true;
     document.getElementById('error-banner').style.display = 'none';
 
-    [
-      ['empresa', 'Empresa es obligatorio.'],
-      ['establecimiento', 'Establecimiento es obligatorio.'],
-      ['comentarios', 'Los comentarios son obligatorios.'],
-      ['auditor', 'El nombre del auditor es obligatorio.'],
-      ['fecha-visita', 'La fecha es obligatoria.'],
-      ['hora-visita', 'La hora es obligatoria.'],
-    ].forEach(([id, msg]) => {
-      const campo = document.getElementById(id);
-      const wrap  = campo.closest('.field');
-      if (!campo.value.trim()) {
+    var campos = [
+      ['empresa',       'Empresa es obligatoria.'],
+      ['establecimiento','Establecimiento es obligatorio.'],
+      ['comentarios',   'Los comentarios son obligatorios.'],
+      ['auditor',       'El nombre del auditor es obligatorio.'],
+      ['fecha-visita',  'La fecha es obligatoria.'],
+      ['hora-visita',   'La hora es obligatoria.'],
+    ];
+
+    campos.forEach(function(par) {
+      var el   = document.getElementById(par[0]);
+      var wrap = el.closest ? el.closest('.field') : el.parentNode;
+      if (!el.value.trim()) {
         wrap.classList.add('has-error');
-        wrap.querySelector('.field-error').textContent = msg;
+        var err = wrap.querySelector('.field-error');
+        if (err) err.textContent = par[1];
         ok = false;
       } else {
         wrap.classList.remove('has-error');
       }
     });
 
-    const radioAct = document.querySelector('[name=actividades]:checked');
-    const errAct = document.getElementById('err-actividades');
-    if (!radioAct) { errAct.style.display = 'block'; ok = false; }
-    else            { errAct.style.display = 'none'; }
+    if (!actSeleccionada) {
+      document.getElementById('err-actividades').style.display = 'block';
+      ok = false;
+    }
 
     return ok;
   }
 
   function mostrarEstado(estado) {
-    document.getElementById('vista-form').style.display = estado === 'form'    ? '' : 'none';
-    document.getElementById('loading').style.display    = estado === 'loading' ? '' : 'none';
-    document.getElementById('exito').style.display      = estado === 'exito'   ? '' : 'none';
+    document.getElementById('vista-form').style.display = (estado === 'form')    ? '' : 'none';
+    document.getElementById('loading').style.display    = (estado === 'loading') ? '' : 'none';
+    document.getElementById('exito').style.display      = (estado === 'exito')   ? '' : 'none';
   }
 
   function mostrarError(msg) {
-    const el = document.getElementById('error-banner');
+    var el = document.getElementById('error-banner');
     el.textContent = '⚠ ' + msg;
     el.style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   }
 
   function limpiarFormulario() {
-    document.querySelectorAll('input[type=text], input[type=date], input[type=time], textarea')
-            .forEach(el => el.value = '');
-    document.querySelectorAll('[name=actividades]').forEach(r => r.checked = false);
-    document.querySelectorAll('[name=desvios]').forEach(cb => cb.checked = false);
-    document.querySelectorAll('.act-card').forEach(c => c.classList.remove('selected'));
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-    document.getElementById('act-otros-input').classList.remove('visible');
-    document.querySelectorAll('.field').forEach(f => f.classList.remove('has-error'));
+    document.querySelectorAll('#vista-form input[type=text], #vista-form input[type=date], #vista-form input[type=time], #vista-form textarea')
+      .forEach(function(el){ el.value = ''; });
+    document.querySelectorAll('[name=actividades]').forEach(function(r){ r.checked = false; });
+    document.querySelectorAll('[name=desvios]').forEach(function(cb){ cb.checked = false; });
+    document.querySelectorAll('.act-card').forEach(function(c){ c.classList.remove('selected'); });
+    document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('selected'); });
+    document.getElementById('act-otros-wrap').classList.remove('visible');
+    document.querySelectorAll('.field').forEach(function(f){ f.classList.remove('has-error'); });
     document.getElementById('err-actividades').style.display = 'none';
     document.getElementById('error-banner').style.display = 'none';
+    actSeleccionada = '';
   }
 
   function nuevaConstancia() {
     limpiarFormulario();
     mostrarEstado('form');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   }
 </script>
 </body>
