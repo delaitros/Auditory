@@ -144,6 +144,7 @@ function procesarAudi(datos) {
   const cfg = getConfig();
   const ss  = SpreadsheetApp.openById(cfg.SPREADSHEET_ID);
 
+  // 1. Guardar en Sheet
   let sheetName = datos.formNombre.replace(/[\/\\?*\[\]:]/g, '-');
   if (sheetName.length > 100) sheetName = sheetName.substring(0, 100);
 
@@ -154,7 +155,7 @@ function procesarAudi(datos) {
   const baseHeaders = ['Marca temporal', 'Empresa', 'Establecimiento', 'Sector', 'Auditor', 'Fecha'];
   const extraHeaders = datos.extras.map(function(e) { return e.label; });
   const pregHeaders  = datos.respuestas.map(function(r) { return r.pregunta; });
-  const allHeaders   = baseHeaders.concat(extraHeaders).concat(pregHeaders).concat(['Observaciones']);
+  const allHeaders   = baseHeaders.concat(extraHeaders).concat(pregHeaders).concat(['Observaciones', 'Documento']);
 
   if (isNew) {
     sheet.appendRow(allHeaders);
@@ -162,13 +163,133 @@ function procesarAudi(datos) {
       .setBackground('#4a148c').setFontColor('#ffffff').setFontWeight('bold');
   }
 
+  // 2. Generar documento
+  const urlDoc = generarDocumentoAudi(datos, cfg);
+
   const baseRow  = [new Date(), datos.empresa, datos.establecimiento, datos.sector, datos.auditor, datos.fecha];
   const extraRow = datos.extras.map(function(e) { return e.valor; });
   const respRow  = datos.respuestas.map(function(r) { return r.valor; });
-  sheet.appendRow(baseRow.concat(extraRow).concat(respRow).concat([datos.observaciones]));
+  sheet.appendRow(baseRow.concat(extraRow).concat(respRow).concat([datos.observaciones, urlDoc]));
 
+  // Registrar en maestro
   registrarEnMaestro(datos.empresa, datos.formId, datos.formNombre, datos.auditor);
-  return { ok: true };
+
+  return { ok: true, urlDoc: urlDoc, urlCarpeta: 'https://drive.google.com/drive/folders/' + cfg.OUTPUT_FOLDER_ID };
+}
+
+function generarDocumentoAudi(datos, cfg) {
+  const fecha     = datos.fecha || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  const fechaStr  = fecha.replace(/-/g, '');
+  const nombreBase = datos.formNombre + ' — ' + datos.empresa + ' — ' + fechaStr;
+
+  const carpeta = DriveApp.getFolderById(cfg.OUTPUT_FOLDER_ID);
+  const doc     = DocumentApp.create(nombreBase);
+  const body    = doc.getBody();
+
+  // ── Estilos base ──
+  body.setMarginTop(40).setMarginBottom(40).setMarginLeft(50).setMarginRight(50);
+
+  // ── Encabezado del documento ──
+  const tituloP = body.appendParagraph('Félix Raúl Vidal — Ing. Químico');
+  tituloP.setHeading(DocumentApp.ParagraphHeading.HEADING2);
+  tituloP.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  tituloP.editAsText().setForegroundColor('#0f3460');
+
+  const subtituloP = body.appendParagraph('Mat. CPIT 1461 / CPIQ 2848 — Servicio de Higiene y Seguridad');
+  subtituloP.setHeading(DocumentApp.ParagraphHeading.HEADING3);
+  subtituloP.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  subtituloP.editAsText().setForegroundColor('#5f6368');
+
+  body.appendParagraph('');
+
+  // ── Título del formulario ──
+  const formTituloP = body.appendParagraph(datos.formNombre.toUpperCase());
+  formTituloP.setHeading(DocumentApp.ParagraphHeading.HEADING1);
+  formTituloP.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  formTituloP.editAsText().setForegroundColor('#1a1a2e');
+
+  body.appendParagraph('');
+
+  // ── Datos generales ──
+  function campoInfo(label, valor) {
+    const p = body.appendParagraph('');
+    const t = p.editAsText();
+    t.insertText(0, label + ':  ' + (valor || '—'));
+    t.setBold(0, label.length, true);
+    p.setSpacingAfter(4);
+  }
+
+  campoInfo('Empresa',          datos.empresa);
+  campoInfo('Establecimiento',  datos.establecimiento);
+  campoInfo('Sector',           datos.sector);
+  datos.extras.forEach(function(e) { campoInfo(e.label, e.valor); });
+  campoInfo('Auditor',          datos.auditor);
+  campoInfo('Fecha',            fecha.split('-').reverse().join('/'));
+  campoInfo('Generado',         Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm'));
+
+  body.appendParagraph('');
+
+  // ── Sección cumplimiento ──
+  const cumplimientoTitulo = body.appendParagraph('CUMPLIMIENTO');
+  cumplimientoTitulo.setHeading(DocumentApp.ParagraphHeading.HEADING2);
+  cumplimientoTitulo.editAsText().setForegroundColor('#0f3460');
+  body.appendParagraph('');
+
+  // Colores por respuesta
+  const COLORES = { 'cumple': '#137333', 'no cumple': '#c5221f', 'no aplica': '#3949ab' };
+  const ETIQUETAS = { 'cumple': 'CUMPLE', 'no cumple': 'NO CUMPLE', 'no aplica': 'NO APLICA' };
+
+  datos.respuestas.forEach(function(r, i) {
+    const p   = body.appendParagraph('');
+    const t   = p.editAsText();
+    const num = (i + 1) + '.  ';
+    const etq = '  [' + (ETIQUETAS[r.valor] || r.valor.toUpperCase()) + ']';
+    const txt = num + r.pregunta + etq;
+    t.insertText(0, txt);
+
+    // Número en negrita
+    t.setBold(0, num.length - 1, true);
+    // Etiqueta coloreada
+    const startEtq = num.length + r.pregunta.length;
+    t.setForegroundColor(startEtq, txt.length - 1, COLORES[r.valor] || '#000000');
+    t.setBold(startEtq, txt.length - 1, true);
+    p.setSpacingAfter(6);
+  });
+
+  body.appendParagraph('');
+
+  // ── Observaciones ──
+  if (datos.observaciones && datos.observaciones.trim()) {
+    const obsTitulo = body.appendParagraph('OBSERVACIONES');
+    obsTitulo.setHeading(DocumentApp.ParagraphHeading.HEADING2);
+    obsTitulo.editAsText().setForegroundColor('#0f3460');
+    body.appendParagraph('');
+    const obsP = body.appendParagraph(datos.observaciones);
+    obsP.setSpacingAfter(10);
+    body.appendParagraph('');
+  }
+
+  // ── Firma ──
+  body.appendParagraph('');
+  const firmaLinea = body.appendParagraph('_________________________________');
+  firmaLinea.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  const firmaP = body.appendParagraph(datos.auditor);
+  firmaP.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  firmaP.editAsText().setBold(true);
+
+  doc.saveAndClose();
+
+  // Mover a la carpeta de destino
+  const archivo = DriveApp.getFileById(doc.getId());
+  carpeta.addFile(archivo);
+  DriveApp.getRootFolder().removeFile(archivo);
+
+  // Generar PDF si está configurado
+  if (cfg.GENERAR_PDF) {
+    carpeta.createFile(archivo.getAs('application/pdf')).setName(nombreBase + '.pdf');
+  }
+
+  return archivo.getUrl();
 }
 
 // -----------------------------------------------------------
