@@ -178,118 +178,126 @@ function procesarAudi(datos) {
 }
 
 function generarDocumentoAudi(datos, cfg) {
-  const fecha     = datos.fecha || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
-  const fechaStr  = fecha.replace(/-/g, '');
+  const fecha      = datos.fecha || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  const fechaStr   = fecha.replace(/-/g, '');
+  const fechaLeg   = fecha.split('-').reverse().join('/');
+  const carpeta    = DriveApp.getFolderById(cfg.OUTPUT_FOLDER_ID);
   const nombreBase = datos.formNombre + ' — ' + datos.empresa + ' — ' + fechaStr;
 
-  const carpeta = DriveApp.getFolderById(cfg.OUTPUT_FOLDER_ID);
-  const doc     = DocumentApp.create(nombreBase);
-  const body    = doc.getBody();
+  // Número de registro: contar filas existentes en la pestaña del formulario
+  const ss = SpreadsheetApp.openById(cfg.SPREADSHEET_ID);
+  let sheetName = datos.formNombre.replace(/[\/\\?*\[\]:]/g, '-');
+  if (sheetName.length > 100) sheetName = sheetName.substring(0, 100);
+  const sheet = ss.getSheetByName(sheetName);
+  const numRegistro = sheet ? String(Math.max(sheet.getLastRow() - 1, 1)) : '1';
 
-  // ── Estilos base ──
-  body.setMarginTop(40).setMarginBottom(40).setMarginLeft(50).setMarginRight(50);
-
-  // ── Encabezado del documento ──
-  const tituloP = body.appendParagraph('Félix Raúl Vidal — Ing. Químico');
-  tituloP.setHeading(DocumentApp.ParagraphHeading.HEADING2);
-  tituloP.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  tituloP.editAsText().setForegroundColor('#0f3460');
-
-  const subtituloP = body.appendParagraph('Mat. CPIT 1461 / CPIQ 2848 — Servicio de Higiene y Seguridad');
-  subtituloP.setHeading(DocumentApp.ParagraphHeading.HEADING3);
-  subtituloP.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  subtituloP.editAsText().setForegroundColor('#5f6368');
-
-  body.appendParagraph('');
-
-  // ── Título del formulario ──
-  const formTituloP = body.appendParagraph(datos.formNombre.toUpperCase());
-  formTituloP.setHeading(DocumentApp.ParagraphHeading.HEADING1);
-  formTituloP.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  formTituloP.editAsText().setForegroundColor('#1a1a2e');
-
-  body.appendParagraph('');
-
-  // ── Datos generales ──
-  function campoInfo(label, valor) {
-    const p = body.appendParagraph('');
-    const t = p.editAsText();
-    t.insertText(0, label + ':  ' + (valor || '—'));
-    t.setBold(0, label.length, true);
-    p.setSpacingAfter(4);
-  }
-
-  campoInfo('Empresa',          datos.empresa);
-  campoInfo('Establecimiento',  datos.establecimiento);
-  campoInfo('Sector',           datos.sector);
-  datos.extras.forEach(function(e) { campoInfo(e.label, e.valor); });
-  campoInfo('Auditor',          datos.auditor);
-  campoInfo('Fecha',            fecha.split('-').reverse().join('/'));
-  campoInfo('Generado',         Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm'));
-
-  body.appendParagraph('');
-
-  // ── Sección cumplimiento ──
-  const cumplimientoTitulo = body.appendParagraph('CUMPLIMIENTO');
-  cumplimientoTitulo.setHeading(DocumentApp.ParagraphHeading.HEADING2);
-  cumplimientoTitulo.editAsText().setForegroundColor('#0f3460');
-  body.appendParagraph('');
-
-  // Colores por respuesta
-  const COLORES = { 'cumple': '#137333', 'no cumple': '#c5221f', 'no aplica': '#3949ab' };
+  // Armar bloque de respuestas como texto plano
   const ETIQUETAS = { 'cumple': 'CUMPLE', 'no cumple': 'NO CUMPLE', 'no aplica': 'NO APLICA' };
+  const respuestasTexto = datos.respuestas.map(function(r, i) {
+    return (i + 1) + '. ' + r.pregunta + ' → ' + (ETIQUETAS[r.valor] || r.valor.toUpperCase());
+  }).join('\n');
 
-  datos.respuestas.forEach(function(r, i) {
-    const p   = body.appendParagraph('');
-    const t   = p.editAsText();
-    const num = (i + 1) + '.  ';
-    const etq = '  [' + (ETIQUETAS[r.valor] || r.valor.toUpperCase()) + ']';
-    const txt = num + r.pregunta + etq;
-    t.insertText(0, txt);
+  // Campo extra (Herramienta, Máquina, etc.) como texto
+  const campoExtra = datos.extras.map(function(e) { return e.label + ': ' + e.valor; }).join(' | ') || '';
 
-    // Número en negrita
-    t.setBold(0, num.length - 1, true);
-    // Etiqueta coloreada
-    const startEtq = num.length + r.pregunta.length;
-    t.setForegroundColor(startEtq, txt.length - 1, COLORES[r.valor] || '#000000');
-    t.setBold(startEtq, txt.length - 1, true);
-    p.setSpacingAfter(6);
-  });
+  // Usar plantilla AUDI si está configurada, si no, generar por código
+  const templateId = cfg.AUDI_TEMPLATE_DOC_ID;
+  if (templateId) {
+    // ── Modo plantilla: copiar y reemplazar marcadores ──
+    const copia = DriveApp.getFileById(templateId).makeCopy(nombreBase, carpeta);
+    const doc   = DocumentApp.openById(copia.getId());
+    const partes = [doc.getBody(), doc.getHeader(), doc.getFooter()];
 
-  body.appendParagraph('');
+    const marcadores = {
+      'formulario':          datos.formNombre,
+      'empresa':             datos.empresa,
+      'establecimiento':     datos.establecimiento,
+      'sector':              datos.sector,
+      'campo_extra':         campoExtra,
+      'auditor':             datos.auditor,
+      'fecha_de_la_visita':  fechaLeg,
+      'respuestas':          respuestasTexto,
+      'observaciones':       datos.observaciones || '',
+      '__fila__':            numRegistro,
+      '__fecha_generacion__': Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm'),
+    };
 
-  // ── Observaciones ──
-  if (datos.observaciones && datos.observaciones.trim()) {
-    const obsTitulo = body.appendParagraph('OBSERVACIONES');
-    obsTitulo.setHeading(DocumentApp.ParagraphHeading.HEADING2);
-    obsTitulo.editAsText().setForegroundColor('#0f3460');
+    Object.entries(marcadores).forEach(function([k, v]) {
+      partes.forEach(function(p) { if (p) p.replaceText('{{' + k + '}}', v); });
+    });
+    // Limpiar marcadores sin reemplazar
+    doc.getBody().replaceText('\\{\\{[^}]+\\}\\}', '');
+    doc.saveAndClose();
+
+    if (cfg.GENERAR_PDF) {
+      carpeta.createFile(copia.getAs('application/pdf')).setName(nombreBase + '.pdf');
+    }
+    return copia.getUrl();
+
+  } else {
+    // ── Modo sin plantilla: generar doc por código ──
+    const doc  = DocumentApp.create(nombreBase);
+    const body = doc.getBody();
+    body.setMarginTop(40).setMarginBottom(40).setMarginLeft(50).setMarginRight(50);
+
+    body.appendParagraph('Félix Raúl Vidal — Ing. Químico')
+      .setHeading(DocumentApp.ParagraphHeading.HEADING2)
+      .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    body.appendParagraph('Mat. CPIT 1461 / CPIQ 2848 — Servicio de Higiene y Seguridad')
+      .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
     body.appendParagraph('');
-    const obsP = body.appendParagraph(datos.observaciones);
-    obsP.setSpacingAfter(10);
+    body.appendParagraph(datos.formNombre.toUpperCase())
+      .setHeading(DocumentApp.ParagraphHeading.HEADING1)
+      .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
     body.appendParagraph('');
+
+    [['Empresa', datos.empresa], ['Establecimiento', datos.establecimiento],
+     ['Sector', datos.sector], ['Auditor', datos.auditor], ['Fecha', fechaLeg],
+     ['Nro. de registro', numRegistro]
+    ].concat(datos.extras.map(function(e) { return [e.label, e.valor]; }))
+     .forEach(function(par) {
+       const p = body.appendParagraph('');
+       p.editAsText().insertText(0, par[0] + ': ' + (par[1] || '—'));
+       p.editAsText().setBold(0, par[0].length, true);
+       p.setSpacingAfter(4);
+     });
+
+    body.appendParagraph('');
+    body.appendParagraph('CUMPLIMIENTO').setHeading(DocumentApp.ParagraphHeading.HEADING2);
+    body.appendParagraph('');
+
+    const COLORES = { 'cumple': '#137333', 'no cumple': '#c5221f', 'no aplica': '#3949ab' };
+    datos.respuestas.forEach(function(r, i) {
+      const etq = ' [' + (ETIQUETAS[r.valor] || r.valor.toUpperCase()) + ']';
+      const txt = (i + 1) + '. ' + r.pregunta + etq;
+      const p   = body.appendParagraph('');
+      const t   = p.editAsText().insertText(0, txt);
+      const startEtq = txt.length - etq.length;
+      p.editAsText().setForegroundColor(startEtq, txt.length - 1, COLORES[r.valor] || '#000000');
+      p.editAsText().setBold(startEtq, txt.length - 1, true);
+      p.setSpacingAfter(5);
+    });
+
+    if (datos.observaciones && datos.observaciones.trim()) {
+      body.appendParagraph('');
+      body.appendParagraph('OBSERVACIONES').setHeading(DocumentApp.ParagraphHeading.HEADING2);
+      body.appendParagraph('');
+      body.appendParagraph(datos.observaciones);
+    }
+
+    body.appendParagraph('');
+    body.appendParagraph('_________________________________').setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    body.appendParagraph(datos.auditor).setAlignment(DocumentApp.HorizontalAlignment.CENTER).editAsText().setBold(true);
+
+    doc.saveAndClose();
+    const archivo = DriveApp.getFileById(doc.getId());
+    carpeta.addFile(archivo);
+    DriveApp.getRootFolder().removeFile(archivo);
+    if (cfg.GENERAR_PDF) {
+      carpeta.createFile(archivo.getAs('application/pdf')).setName(nombreBase + '.pdf');
+    }
+    return archivo.getUrl();
   }
-
-  // ── Firma ──
-  body.appendParagraph('');
-  const firmaLinea = body.appendParagraph('_________________________________');
-  firmaLinea.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  const firmaP = body.appendParagraph(datos.auditor);
-  firmaP.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  firmaP.editAsText().setBold(true);
-
-  doc.saveAndClose();
-
-  // Mover a la carpeta de destino
-  const archivo = DriveApp.getFileById(doc.getId());
-  carpeta.addFile(archivo);
-  DriveApp.getRootFolder().removeFile(archivo);
-
-  // Generar PDF si está configurado
-  if (cfg.GENERAR_PDF) {
-    carpeta.createFile(archivo.getAs('application/pdf')).setName(nombreBase + '.pdf');
-  }
-
-  return archivo.getUrl();
 }
 
 // -----------------------------------------------------------
@@ -298,7 +306,8 @@ function generarDocumentoAudi(datos, cfg) {
 function getConfig() {
   const props = PropertiesService.getScriptProperties().getProperties();
   return {
-    TEMPLATE_DOC_ID:   props.TEMPLATE_DOC_ID  || '1BhVRm-XSz8a3koPOA9QnQLAL2E2cqATIvqXnwShA3yU',
+    TEMPLATE_DOC_ID:      props.TEMPLATE_DOC_ID      || '1BhVRm-XSz8a3koPOA9QnQLAL2E2cqATIvqXnwShA3yU',
+    AUDI_TEMPLATE_DOC_ID: props.AUDI_TEMPLATE_DOC_ID || '',
     OUTPUT_FOLDER_ID:  props.OUTPUT_FOLDER_ID  || '1_r1u39-DyCuqg3fhYGARKISQ0hsiaAC4',
     SPREADSHEET_ID:    props.SPREADSHEET_ID    || '1xHVDVMcgaSD8h56poDS01KXopMy6Fq9IehOYJRCICXs',
     SHEET_NAME:        props.SHEET_NAME        || 'Constancias',

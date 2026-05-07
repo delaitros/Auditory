@@ -894,7 +894,7 @@ function enviarAudi() {
   document.getElementById('loading-text').textContent = 'Guardando auditoría…';
 
   google.script.run
-    .withSuccessHandler(function() {
+    .withSuccessHandler(function(res) {
       mostrarExito(formSel.nombre, res && res.urlDoc ? res.urlDoc : null);
     })
     .withFailureHandler(function(e) {
