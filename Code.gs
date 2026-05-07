@@ -1,21 +1,180 @@
 // ============================================================
-//  AUDITORIAS — Web App + Generador de Documentos  v4.0
+//  AUDITORIAS — Portal + Web App + Generador de Documentos  v5.0
 //  Script standalone: no requiere hoja de cálculo previa.
 //  La primera vez crea el Sheet automáticamente en la carpeta.
 // ============================================================
 
 // -----------------------------------------------------------
+//  DATOS DEL PORTAL
+// -----------------------------------------------------------
+const EMPRESAS = [
+  'ABC Industrial',
+  'Abelardo de la Vega',
+  'AJ Tendlarz',
+  'Alianza Sotavento',
+  'Astillero al Sur',
+  'Biofoods Argentina',
+  'Ce.Me.Es',
+  'Cerámica Etchehon',
+  'Clínica Veterinaria Integral',
+  'CyESAS',
+  'Cymseg',
+  'Daniel Fanti',
+  'Denis Musielack',
+  'Dibac',
+  'Dislac SRL',
+  'EDASA',
+  'Emprendimiento Rio Chubut',
+  'Fapre',
+  'Fuhrmann SA',
+  'Gas Trelew',
+  'Gimap',
+  'Jorge Lino',
+  'Jorge Martinez',
+  'La Casa del Pan',
+  'La Ermita',
+  'MIDA',
+  'Mistura',
+  'Mundo Madera',
+  'Puerto Rawson Patagonia',
+  'Pyg Servicios Generales',
+  'Rubén Centeno',
+  'Servimar',
+  'Sofimed',
+  'Soltex',
+  'Tacme SRL',
+  'Transporte MZ',
+  'Unilan Trelew SA',
+  'Zanotti S.A',
+];
+
+const AUDITORES = ['Félix Raúl Vidal', 'Valeria'];
+
+const FORMULARIOS = [
+  { id: 'constancia', nombre: 'Constancia de Visita', url: null },
+  { id: 'audi1',  nombre: 'AUDI 1 — Higiene y Seguridad en el Trabajo',     url: 'https://docs.google.com/forms/d/e/1FAIpQLSeN-z--FjiMAy4gaL9bNES9C-Kw_sRa8s3__l7WtXGUCHLmcg/viewform' },
+  { id: 'audi2',  nombre: 'AUDI 2 — Medicina del Trabajo',                  url: 'https://docs.google.com/forms/d/e/1FAIpQLSczdTzm6shCLEJ9cznvlPYU9hhnWQcXLWPx0Cbsq8ilVIGwKw/viewform' },
+  { id: 'audi3',  nombre: 'AUDI 3 — Herramientas',                          url: 'https://docs.google.com/forms/d/e/1FAIpQLScxC-brTDdeGr7cUX6fmTN0PmwhknhMRXotdrIMyOfctkJWog/viewform' },
+  { id: 'audi4',  nombre: 'AUDI 4 — Máquinas',                              url: 'https://docs.google.com/forms/d/e/1FAIpQLScGC_jZNskAAg73uKszbq2QpYCVzgODSsf67FdgtoKS4q8MqQ/viewform' },
+  { id: 'audi5',  nombre: 'AUDI 5 — Espacios de Trabajo',                   url: 'https://docs.google.com/forms/d/e/1FAIpQLSccPjL6BSxwRiFVglz45yzokM4Y16g5hinadiZ0np0feqRtsA/viewform' },
+  { id: 'audi6',  nombre: 'AUDI 6 — Ergonomía',                             url: 'https://docs.google.com/forms/d/e/1FAIpQLScVf7ozawyWElgOyRB18zeYrVS230vFUb92m1jJK1DDouJgOQ/viewform' },
+  { id: 'audi7',  nombre: 'AUDI 7 — Protección contra Incendios',           url: 'https://docs.google.com/forms/d/e/1FAIpQLScTw9hLiGGJK6EHMvuII8TItJi5-klEFhsmWcdxVvZxnpq2Nw/viewform' },
+  { id: 'audi8',  nombre: 'AUDI 8 — Almacenaje',                            url: 'https://docs.google.com/forms/d/e/1FAIpQLSfiWeDnB0bUXWr--cMAKIAn6qMrPa2pLgb5nIaGKCp8_hF7Rw/viewform' },
+  { id: 'audi9',  nombre: 'AUDI 9 — Almacenaje de Sustancias Peligrosas',   url: 'https://docs.google.com/forms/d/e/1FAIpQLSfXrmflJioGuvuEV401WZBZ4ceNSZG6jpTBcyiAyuqtypfSow/viewform' },
+  { id: 'audi10', nombre: 'AUDI 10 — Sustancias Peligrosas',                url: 'https://docs.google.com/forms/d/e/1FAIpQLSdzgUIQdE-Hi2DY8UIbSbTXQLJWdCEZqHPbz6tbgEWF1pgyVA/viewform' },
+  { id: 'audi11', nombre: 'AUDI 11 — Riesgo Eléctrico',                     url: 'https://docs.google.com/forms/d/e/1FAIpQLSeUf-cheGF3T4t5MtN01wmUWYUgkWsCzbP6cGumOAVcgDKrwg/viewform' },
+  { id: 'audi12', nombre: 'AUDI 12 — Aparatos Sometidos a Presión',         url: 'https://docs.google.com/forms/d/e/1FAIpQLSfKL05WaarWEKlUvDc7x7lDN8DMdD0GXnIKMY4n-XRRgr14oA/viewform' },
+  { id: 'audi13', nombre: 'AUDI 13 — EPP',                                  url: 'https://docs.google.com/forms/d/e/1FAIpQLSfjq2ZKDq5_-8OZdO1Bs60iA9aQUffUfnTuiC8JppNqFEdCTw/viewform' },
+  { id: 'audi14', nombre: 'AUDI 14 — Iluminación y Color',                  url: 'https://docs.google.com/forms/d/e/1FAIpQLScJbRD_eMa883zhf4ukjKT66fWYI7xku6-toAOL7vBKXnDDTA/viewform' },
+  { id: 'audi15', nombre: 'AUDI 15 — Condiciones Higrotérmicas',            url: 'https://docs.google.com/forms/d/e/1FAIpQLSeopIr5vD4pxa3MojfvdrwpkIKPytleeXOJ8JDDldwhHC1Y4w/viewform' },
+  { id: 'audi16', nombre: 'AUDI 16 — Radiaciones Ionizantes',               url: 'https://docs.google.com/forms/d/e/1FAIpQLSe5H8FlXzHZypMutHOsWQpjzwdqdMRkyaCIS35M4SDbYn-VLQ/viewform' },
+  { id: 'audi17', nombre: 'AUDI 17 — Láseres',                              url: 'https://docs.google.com/forms/d/e/1FAIpQLSfVYz6HAjG6Brp8copckAG61TPiZ-FUlyu15iVnUxK19xITrQ/viewform' },
+  { id: 'audi18', nombre: 'AUDI 18 — Radiaciones No Ionizantes',            url: 'https://docs.google.com/forms/d/e/1FAIpQLScR0MmHsvSOWp-VV5f3SaIvSZMZYvCSdrASzT3CldasUr2vnQ/viewform' },
+  { id: 'audi19', nombre: 'AUDI 19 — Provisión de Agua',                    url: 'https://docs.google.com/forms/d/e/1FAIpQLSfHy3zmZLx8cJXlNGEyZlC9m8sWLW-dWKbxsWtvX5kn2ZRgtA/viewform' },
+  { id: 'audi20', nombre: 'AUDI 20 — Desagües Industriales',                url: 'https://docs.google.com/forms/d/e/1FAIpQLSfOMkKM76vWemvJda8k9nZAi_0wrL0TCCXNJwDLGUMwiDIvqg/viewform' },
+  { id: 'audi21', nombre: 'AUDI 21 — Baños, Vestuarios y Comedor',          url: 'https://docs.google.com/forms/d/e/1FAIpQLSeOvJtzyD6xRM7DYFnIIpEnCxpGfAgVmUEpXjDaFBQFU1SmYA/viewform' },
+  { id: 'audi22', nombre: 'AUDI 22 — Aparatos para Izar, Montacargas y Ascensores', url: 'https://docs.google.com/forms/d/e/1FAIpQLSfSrXWtDWBhlkBl9uKfd7zH1P086YvoIP71rGBrwSeL1bbZpw/viewform' },
+  { id: 'audi23', nombre: 'AUDI 23 — Capacitación',                         url: 'https://docs.google.com/forms/d/e/1FAIpQLSfcrE3llDN9OQ1R-xhFE_WZJ9SfBXqgL8oHTA2gjVj1xYXWWg/viewform' },
+  { id: 'audi24', nombre: 'AUDI 24 — Primeros Auxilios',                    url: 'https://docs.google.com/forms/d/e/1FAIpQLSckTdzcHVl9ds5jK56lvzGxW_iuLEK_snrWdvgiuJ0OOhOBSA/viewform' },
+  { id: 'audi25', nombre: 'AUDI 25 — Vehículos',                            url: 'https://docs.google.com/forms/d/e/1FAIpQLSfnbfy4B7pRIN98bTpuiVgxqAA1ZG6g9gax_crGIv2px_f97A/viewform' },
+  { id: 'audi26', nombre: 'AUDI 26 — Contaminación Ambiental',              url: 'https://docs.google.com/forms/d/e/1FAIpQLSf2t850UmIBTwjuKEHk0Bzn5D_9k0_FOEBLWWlRWZMTdrVmpg/viewform' },
+  { id: 'audi27', nombre: 'AUDI 27 — Ruidos',                               url: 'https://docs.google.com/forms/d/e/1FAIpQLSdUvnMSme8xhWfLHiO5-TBpcrZEsqxgBE8Lz-j1XKToAiX2lQ/viewform' },
+  { id: 'audi28', nombre: 'AUDI 28 — Ultrasonido e Infrasonido',            url: 'https://docs.google.com/forms/d/e/1FAIpQLSfmoLfB4fM_A9fnDbHcHHKAX-iNfjhFD1nBuIwEbkeMpwLp8w/viewform' },
+  { id: 'audi29', nombre: 'AUDI 29 — Vibraciones',                          url: 'https://docs.google.com/forms/d/e/1FAIpQLSdxH3hfNcy5mBufmspcntkqWzr6POG3VSUFOTDBQR3eIvxBBg/viewform' },
+  { id: 'audi30', nombre: 'AUDI 30 — Utilización de Gases',                 url: 'https://docs.google.com/forms/d/e/1FAIpQLSfseAfiMxAsTfvZ5jpZz5l1kBVkPkD0rd2vQPzVhSsrc2rRgg/viewform' },
+  { id: 'audi31', nombre: 'AUDI 31 — Soldadura',                            url: 'https://docs.google.com/forms/d/e/1FAIpQLSdDp1VsItur8KmgzxbWgKdK_VFzMVLBBMxhHcjVTB48cBkXCA/viewform' },
+  { id: 'audi32', nombre: 'AUDI 32 — Escaleras',                            url: 'https://docs.google.com/forms/d/e/1FAIpQLSfMzzuSlNBahLfDGU2pR65y3WXktfVwgXe2vaKu_-9iyzqVjQ/viewform' },
+  { id: 'audi33', nombre: 'AUDI 33 — Mantenimiento Preventivo',             url: 'https://docs.google.com/forms/d/e/1FAIpQLScuTzHCULRUuYOlk4UYdfMoe2VyoXpDcl1mZMSquUFzGLesWw/viewform' },
+  { id: 'audi34', nombre: 'AUDI 34 — Otras Resoluciones Legales',           url: 'https://docs.google.com/forms/d/e/1FAIpQLSfRvUBP-NgGSxCC_xt8bXaSNBQ1HE9U7gV4zfkklXrumnioew/viewform' },
+];
+
+// -----------------------------------------------------------
 //  WEB APP
 // -----------------------------------------------------------
 function doGet() {
-  return HtmlService.createHtmlOutputFromFile('Formulario')
-    .setTitle('Constancia de Visita — Higiene y Seguridad')
+  return HtmlService.createHtmlOutputFromFile('Portal')
+    .setTitle('Portal de Auditorías — Higiene y Seguridad')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
+// -----------------------------------------------------------
+//  PORTAL — funciones del servidor
+// -----------------------------------------------------------
+function obtenerDatosPortal() {
+  return {
+    empresas:    EMPRESAS,
+    auditores:   AUDITORES,
+    formularios: FORMULARIOS,
+  };
+}
+
 /**
- * Recibe los datos del formulario web, guarda en el Sheet
- * y genera el documento. Devuelve la URL del doc generado.
+ * Verifica si ya se realizó el mismo formulario para la misma empresa
+ * en los últimos 6 meses.
+ */
+function verificar6Meses(empresa, idFormulario) {
+  const cfg = getConfig();
+  if (!cfg.SPREADSHEET_ID) return { encontrado: false };
+
+  const ss    = SpreadsheetApp.openById(cfg.SPREADSHEET_ID);
+  const sheet = ss.getSheetByName('Registro');
+  if (!sheet || sheet.getLastRow() <= 1) return { encontrado: false };
+
+  const datos = sheet.getRange(2, 1, sheet.getLastRow() - 1, 4).getValues();
+  const hace6Meses = new Date();
+  hace6Meses.setMonth(hace6Meses.getMonth() - 6);
+
+  const empresaNorm = empresa.toString().toLowerCase().trim();
+
+  for (const fila of datos) {
+    const [fechaVal, empresaReg, formularioReg, auditorReg] = fila;
+    if (!fechaVal) continue;
+    const fecha = new Date(fechaVal);
+    if (
+      fecha >= hace6Meses &&
+      empresaReg.toString().toLowerCase().trim() === empresaNorm &&
+      formularioReg.toString() === idFormulario
+    ) {
+      return {
+        encontrado: true,
+        fecha:   Utilities.formatDate(fecha, Session.getScriptTimeZone(), 'dd/MM/yyyy'),
+        auditor: auditorReg.toString(),
+      };
+    }
+  }
+  return { encontrado: false };
+}
+
+/**
+ * Registra una visita/auditoría en la hoja "Registro" (crea la hoja si no existe).
+ */
+function registrarEnMaestro(empresa, idFormulario, nombreFormulario, auditor) {
+  const cfg = getConfig();
+  const ss  = SpreadsheetApp.openById(cfg.SPREADSHEET_ID);
+
+  let sheet = ss.getSheetByName('Registro');
+  if (!sheet) {
+    sheet = ss.insertSheet('Registro');
+    sheet.appendRow(['Fecha', 'Empresa', 'ID Formulario', 'Nombre Formulario', 'Auditor']);
+    sheet.getRange(1, 1, 1, 5)
+      .setBackground('#4a148c').setFontColor('#ffffff').setFontWeight('bold');
+  } else if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['Fecha', 'Empresa', 'ID Formulario', 'Nombre Formulario', 'Auditor']);
+    sheet.getRange(1, 1, 1, 5)
+      .setBackground('#4a148c').setFontColor('#ffffff').setFontWeight('bold');
+  }
+
+  sheet.appendRow([new Date(), empresa, idFormulario, nombreFormulario, auditor]);
+  return { ok: true };
+}
+
+// -----------------------------------------------------------
+//  CONSTANCIA DE VISITA — procesar formulario completo
+// -----------------------------------------------------------
+/**
+ * Recibe los datos del formulario web, guarda en el Sheet,
+ * registra en el maestro y genera el documento.
+ * Devuelve la URL del doc generado.
  */
 function procesarFormulario(datos) {
   const cfg   = getConfig();
@@ -26,17 +185,19 @@ function procesarFormulario(datos) {
   const numFila = sheet.getLastRow();
 
   const urlDoc = generarDocumento(numFila, cfg, sheet);
+
+  // Registrar en el maestro de visitas
+  registrarEnMaestro(datos.empresa, 'constancia', 'Constancia de Visita', datos.auditor);
+
   return {
     ok: true,
-    urlDoc:    urlDoc,
+    urlDoc:     urlDoc,
     urlCarpeta: 'https://drive.google.com/drive/folders/' + cfg.OUTPUT_FOLDER_ID,
   };
 }
 
 // -----------------------------------------------------------
-//  CONFIGURACIÓN — IDs pre-cargados, ajustables desde el
-//  panel de Configuración o desde Archivo → Propiedades del
-//  proyecto en Apps Script.
+//  CONFIGURACIÓN
 // -----------------------------------------------------------
 function getConfig() {
   const props = PropertiesService.getScriptProperties().getProperties();
@@ -71,7 +232,7 @@ function guardarConfiguracion(datos) {
 function obtenerConfiguracionActual() {
   const cfg = getConfig();
   const ss  = cfg.SPREADSHEET_ID ? SpreadsheetApp.openById(cfg.SPREADSHEET_ID) : null;
-  const hojas   = ss ? ss.getSheets().map(s => s.getName()) : [cfg.SHEET_NAME];
+  const hojas    = ss ? ss.getSheets().map(s => s.getName()) : [cfg.SHEET_NAME];
   const columnas = ss ? listarColumnas(ss, cfg.SHEET_NAME) : [];
   return {
     templateUrl:      `https://docs.google.com/document/d/${cfg.TEMPLATE_DOC_ID}/edit`,
@@ -94,16 +255,14 @@ function listarColumnas(ss, sheetName) {
   return sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].filter(v => v !== '');
 }
 
-// Abre el panel de configuración (ejecutar manualmente desde el editor).
 function abrirConfiguracion() {
   const html = HtmlService.createHtmlOutputFromFile('Configuracion')
     .setWidth(520).setHeight(580);
-  // En un script standalone se muestra via UI del editor
   SpreadsheetApp.getUi().showModalDialog(html, 'Configuración — Auditorias');
 }
 
 // -----------------------------------------------------------
-//  HOJA DE CÁLCULO — se crea sola la primera vez
+//  HOJA DE CÁLCULO
 // -----------------------------------------------------------
 function obtenerHoja(cfg) {
   let ss;
@@ -111,7 +270,6 @@ function obtenerHoja(cfg) {
   if (cfg.SPREADSHEET_ID) {
     ss = SpreadsheetApp.openById(cfg.SPREADSHEET_ID);
   } else {
-    // Primera ejecución: crear el Sheet en la carpeta de destino
     ss = SpreadsheetApp.create('Auditorias — Constancias de Visita');
     const archivo = DriveApp.getFileById(ss.getId());
     DriveApp.getFolderById(cfg.OUTPUT_FOLDER_ID).addFile(archivo);
@@ -231,7 +389,6 @@ function normalizarClave(texto) {
 
 function formatearValor(valor) {
   if (valor instanceof Date) {
-    // Google Sheets almacena valores de solo hora como 30/12/1899 + fracción del día
     if (valor.getFullYear() <= 1899) {
       return Utilities.formatDate(valor, Session.getScriptTimeZone(), 'HH:mm');
     }

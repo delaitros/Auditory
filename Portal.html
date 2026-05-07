@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal de Auditorías</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Google Sans', 'Segoe UI', Arial, sans-serif;
+  background: #F0F4F8;
+  min-height: 100vh;
+  color: #1a1a2e;
+}
+
+/* ── Header ── */
+.header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+  padding: 24px 20px 20px;
+  text-align: center;
+  color: white;
+}
+.header-logo {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #90caf9;
+  margin-bottom: 6px;
+}
+.header-name {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.header-title {
+  font-size: 13px;
+  color: #b0bec5;
+  font-weight: 400;
+}
+.badge {
+  display: inline-block;
+  background: #00897b;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-top: 14px;
+}
+
+/* ── Container ── */
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+/* ── Card ── */
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #0f3460;
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e8f4fd;
+}
+
+/* ── Form fields ── */
+.field { margin-bottom: 16px; }
+.field:last-child { margin-bottom: 0; }
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5f6368;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+input[type="text"],
+select,
+input[type="date"],
+input[type="time"],
+textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #dde3ea;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1a1a2e;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: white;
+  font-family: inherit;
+}
+input[type="text"]:focus,
+select:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+textarea:focus {
+  border-color: #0f3460;
+  box-shadow: 0 0 0 3px rgba(15,52,96,0.08);
+}
+
+/* ── Form search ── */
+.form-search-wrapper { position: relative; }
+.form-search-wrapper input {
+  padding-right: 36px;
+}
+.form-search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9aa5b4;
+  font-size: 16px;
+  pointer-events: none;
+}
+.form-list {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1.5px solid #dde3ea;
+  border-radius: 8px;
+  margin-top: 6px;
+  background: white;
+  display: none;
+}
+.form-list.open { display: block; }
+.form-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #1a1a2e;
+  border-bottom: 1px solid #f4f6f8;
+  transition: background 0.15s;
+}
+.form-item:last-child { border-bottom: none; }
+.form-item:hover { background: #f0f4f8; }
+.form-item.selected { background: #e8f4fd; color: #0f3460; font-weight: 600; }
+.form-item.hidden { display: none; }
+
+.hint {
+  font-size: 11px;
+  color: #9aa5b4;
+  margin-top: 4px;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.btn-primary {
+  background: #0f3460;
+  color: white;
+  width: 100%;
+}
+.btn-primary:hover { background: #1a4a80; }
+.btn-primary:disabled { background: #9aa5b4; cursor: not-allowed; }
+
+.btn-outline {
+  background: transparent;
+  color: #0f3460;
+  border: 2px solid #0f3460;
+  width: 100%;
+}
+.btn-outline:hover { background: #f0f4f8; }
+
+.btn-teal {
+  background: #00897b;
+  color: white;
+  width: 100%;
+}
+.btn-teal:hover { background: #00695c; }
+
+.btn-danger {
+  background: #e53935;
+  color: white;
+}
+.btn-danger:hover { background: #c62828; }
+
+.btn-sm {
+  padding: 8px 18px;
+  font-size: 13px;
+  width: auto;
+}
+
+/* ── Warning ── */
+.warning-box {
+  background: #fff8e1;
+  border: 2px solid #ffb300;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+.warning-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #e65100;
+  margin-bottom: 8px;
+}
+.warning-text {
+  font-size: 13px;
+  color: #5d4037;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.warning-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* ── Chips ── */
+.chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.chip {
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  border: 1.5px solid #dde3ea;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: #5f6368;
+  background: white;
+  user-select: none;
+}
+.chip:hover { border-color: #0f3460; color: #0f3460; background: #f0f4f8; }
+.chip.selected { background: #0f3460; color: white; border-color: #0f3460; }
+
+/* ── Activity cards ── */
+.act-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-top: 6px;
+}
+.act-card {
+  border: 1.5px solid #dde3ea;
+  border-radius: 10px;
+  padding: 14px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: white;
+  user-select: none;
+}
+.act-card:hover { border-color: #0f3460; background: #f0f4f8; }
+.act-card.selected { border-color: #0f3460; background: #e8f4fd; }
+.act-card .act-icon { font-size: 24px; margin-bottom: 6px; }
+.act-card .act-label { font-size: 12px; color: #5f6368; font-weight: 500; line-height: 1.3; }
+.act-card.selected .act-label { color: #0f3460; font-weight: 600; }
+
+/* ── Grid 2-col ── */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 480px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+
+/* ── Loading ── */
+.loading-wrap {
+  text-align: center;
+  padding: 60px 20px;
+}
+.spinner {
+  width: 48px; height: 48px;
+  border: 4px solid #e8f4fd;
+  border-top-color: #0f3460;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 15px; color: #5f6368; }
+
+/* ── Success ── */
+.success-wrap {
+  text-align: center;
+  padding: 40px 20px;
+}
+.success-icon { font-size: 56px; margin-bottom: 16px; }
+.success-title { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+.success-sub { font-size: 14px; color: #5f6368; margin-bottom: 28px; }
+.success-actions { display: flex; flex-direction: column; gap: 10px; }
+
+/* ── Error ── */
+.error-box {
+  background: #fce8e6;
+  border: 1.5px solid #f28b82;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #c5221f;
+  margin-bottom: 14px;
+  display: none;
+}
+.error-box.visible { display: block; }
+
+/* ── Divider ── */
+.section-sep {
+  height: 1px;
+  background: #e8edf2;
+  margin: 20px 0;
+}
+
+/* ── Footer ── */
+.footer-link {
+  text-align: center;
+  margin-top: 24px;
+}
+.footer-link a {
+  font-size: 12px;
+  color: #00897b;
+  text-decoration: none;
+  font-weight: 500;
+}
+.footer-link a:hover { text-decoration: underline; }
+
+/* ── AUDI info box ── */
+.audi-info {
+  background: #e8f4fd;
+  border: 1.5px solid #90caf9;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #0d47a1;
+  line-height: 1.5;
+}
+.audi-info strong { display: block; font-size: 14px; margin-bottom: 6px; }
+
+/* ── Textarea ── */
+textarea { resize: vertical; min-height: 80px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">Servicio de Higiene y Seguridad</div>
+  <div class="header-name">Félix Raúl Vidal</div>
+  <div class="header-title">Ingeniero Químico &middot; Mat. CPIT 1461 / CPIQ 2848</div>
+  <div class="badge">Portal de Auditorías</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     VISTA 1: SELECCIÓN DE FORMULARIO
+═══════════════════════════════════════════════════════ -->
+<div id="vista-portal">
+  <div class="container">
+
+    <div id="error-portal" class="error-box"></div>
+
+    <div class="card">
+      <div class="card-title">Selección de Empresa y Auditor</div>
+
+      <div class="field">
+        <label for="empresa">Empresa</label>
+        <input type="text" id="empresa" list="empresas-list" placeholder="Escribí o elegí una empresa…" autocomplete="off">
+        <datalist id="empresas-list"></datalist>
+      </div>
+
+      <div class="field">
+        <label for="auditor">Auditor</label>
+        <select id="auditor">
+          <option value="">— Seleccioná un auditor —</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tipo de Formulario</div>
+
+      <div class="field">
+        <label for="form-search">Buscar formulario</label>
+        <div class="form-search-wrapper">
+          <input type="text" id="form-search" placeholder="Escribí para filtrar…" autocomplete="off">
+          <span class="form-search-icon">&#128269;</span>
+        </div>
+        <div class="form-list" id="form-list"></div>
+        <input type="hidden" id="form-id">
+        <input type="hidden" id="form-url">
+        <div id="form-selected-label" class="hint" style="margin-top:8px;color:#0f3460;font-weight:600;display:none;"></div>
+      </div>
+    </div>
+
+    <div id="advertencia-box" class="warning-box" style="display:none;">
+      <div class="warning-title">&#9888; Visita reciente detectada</div>
+      <div class="warning-text" id="advertencia-texto"></div>
+      <div class="warning-actions">
+        <button class="btn btn-outline btn-sm" onclick="cancelarSeleccion()">Cancelar</button>
+        <button class="btn btn-danger btn-sm" onclick="proceder()">Proceder igualmente</button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="btn-verificar" onclick="verificar()">
+      Verificar y continuar
+    </button>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     VISTA 2: CONSTANCIA DE VISITA (inline form)
+═══════════════════════════════════════════════════════ -->
+<div id="vista-constancia" style="display:none;">
+  <div class="container">
+
+    <div id="error-constancia" class="error-box"></div>
+
+    <!-- Empresa + Establecimiento + Sector -->
+    <div class="card">
+      <div class="card-title">Datos de la Visita</div>
+
+      <div class="field">
+        <label>Empresa</label>
+        <input type="text" id="c-empresa" readonly style="background:#f8f9fa;">
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="c-establecimiento">Establecimiento</label>
+          <input type="text" id="c-establecimiento" placeholder="Nombre o número">
+        </div>
+        <div class="field">
+          <label for="c-sector">Sector</label>
+          <input type="text" id="c-sector" placeholder="Área o sector">
+        </div>
+      </div>
+    </div>
+
+    <!-- Actividades -->
+    <div class="card">
+      <div class="card-title">Actividades Desarrolladas</div>
+      <div class="act-grid">
+        <div class="act-card" onclick="selAct(this,'Recorrida general')">
+          <div class="act-icon">&#128694;</div>
+          <div class="act-label">Recorrida general</div>
+        </div>
+        <div class="act-card" onclick="selAct(this,'Relevamiento de riesgos')">
+          <div class="act-icon">&#128269;</div>
+          <div class="act-label">Relevamiento de riesgos</div>
+        </div>
+        <div class="act-card" onclick="selAct(this,'Capacitación')">
+          <div class="act-icon">&#128218;</div>
+          <div class="act-label">Capacitación</div>
+        </div>
+        <div class="act-card" onclick="selAct(this,'Auditoría de cumplimiento')">
+          <div class="act-icon">&#9989;</div>
+          <div class="act-label">Auditoría de cumplimiento</div>
+        </div>
+        <div class="act-card" onclick="selAct(this,'Medición ambiental')">
+          <div class="act-icon">&#127754;</div>
+          <div class="act-label">Medición ambiental</div>
+        </div>
+        <div class="act-card" onclick="selAct(this,'Asesoramiento')">
+          <div class="act-icon">&#128172;</div>
+          <div class="act-label">Asesoramiento</div>
+        </div>
+        <div class="act-card" onclick="selAct(this,'Otra actividad')">
+          <div class="act-icon">&#128221;</div>
+          <div class="act-label">Otra actividad</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desvíos -->
+    <div class="card">
+      <div class="card-title">Desvíos Observados</div>
+      <div class="chips-grid" id="chips-desvios">
+        <div class="chip" onclick="toggleChip(this)" data-value="Sin desvíos observados">Sin desvíos</div>
+        <div class="chip" onclick="toggleChip(this)" data-value="EPP incompleto o inadecuado">EPP incompleto</div>
+        <div class="chip" onclick="toggleChip(this)" data-value="Orden y limpieza deficiente">Orden y limpieza</div>
+        <div class="chip" onclick="toggleChip(this)" data-value="Riesgo eléctrico">Riesgo eléctrico</div>
+        <div class="chip" onclick="toggleChip(this)" data-value="Señalización insuficiente">Señalización</div>
+      </div>
+      <div class="field" style="margin-top:12px;">
+        <label for="c-desvios-texto">Detalle adicional (opcional)</label>
+        <textarea id="c-desvios-texto" placeholder="Describí otros desvíos observados…" rows="3"></textarea>
+      </div>
+    </div>
+
+    <!-- Comentarios -->
+    <div class="card">
+      <div class="card-title">Comentarios Generales</div>
+      <div class="field">
+        <textarea id="c-comentarios" placeholder="Observaciones adicionales, recomendaciones, compromisos asumidos…" rows="4"></textarea>
+      </div>
+    </div>
+
+    <!-- Auditor + Fecha + Hora -->
+    <div class="card">
+      <div class="card-title">Auditor y Fecha</div>
+      <div class="grid-3">
+        <div class="field">
+          <label>Auditor</label>
+          <input type="text" id="c-auditor" readonly style="background:#f8f9fa;">
+        </div>
+        <div class="field">
+          <label for="c-fecha">Fecha de la visita</label>
+          <input type="date" id="c-fecha">
+        </div>
+        <div class="field">
+          <label for="c-hora">Hora de la visita</label>
+          <input type="time" id="c-hora">
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="btn-enviar" onclick="enviarConstancia()">
+      Generar constancia
+    </button>
+
+    <div style="margin-top:12px;">
+      <button class="btn btn-outline" onclick="volverPortal()">
+        &#8592; Volver al portal
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     VISTA 3: FORMULARIO AUDI (info + redirect)
+═══════════════════════════════════════════════════════ -->
+<div id="vista-audi" style="display:none;">
+  <div class="container">
+    <div class="audi-info">
+      <strong id="audi-nombre"></strong>
+      El formulario externo fue registrado y se abrió en una nueva pestaña.<br>
+      Completalo allí y volvé acá cuando termines.
+    </div>
+    <a id="audi-link" href="#" target="_blank" class="btn btn-teal" style="display:inline-flex;margin-bottom:12px;">
+      Abrir formulario nuevamente
+    </a>
+    <div>
+      <button class="btn btn-outline" onclick="volverPortal()">
+        &#8592; Volver al portal
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     LOADING
+═══════════════════════════════════════════════════════ -->
+<div id="loading" style="display:none;">
+  <div class="container">
+    <div class="card loading-wrap">
+      <div class="spinner"></div>
+      <div class="loading-text" id="loading-text">Procesando…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ÉXITO (constancia)
+═══════════════════════════════════════════════════════ -->
+<div id="exito" style="display:none;">
+  <div class="container">
+    <div class="card">
+      <div class="success-wrap">
+        <div class="success-icon">&#9989;</div>
+        <div class="success-title">Constancia generada</div>
+        <div class="success-sub">El documento fue creado y guardado en Drive.</div>
+        <div class="success-actions">
+          <a id="link-doc" href="#" target="_blank" class="btn btn-primary">
+            Abrir documento
+          </a>
+          <a href="https://drive.google.com/drive/folders/1_r1u39-DyCuqg3fhYGARKISQ0hsiaAC4" target="_blank" class="btn btn-outline">
+            Ver carpeta de Drive
+          </a>
+          <button class="btn btn-teal" onclick="nuevaConstancia()">
+            Nueva auditoría
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer permanente ── -->
+<div class="footer-link">
+  <a href="https://drive.google.com/drive/folders/1_r1u39-DyCuqg3fhYGARKISQ0hsiaAC4" target="_blank">
+    &#128194; Ver carpeta de constancias en Drive
+  </a>
+</div>
+
+<script>
+// ── Estado global ──
+var datosPortal = null;
+var actSeleccionada = '';
+var formSeleccionado = null;  // { id, nombre, url }
+var verificacionOk = false;
+
+// ── Arranque ──
+setLoading(true, 'Cargando portal…');
+google.script.run
+  .withSuccessHandler(function(datos) {
+    datosPortal = datos;
+    inicializarPortal(datos);
+    setLoading(false);
+  })
+  .withFailureHandler(function(err) {
+    setLoading(false);
+    mostrarError('error-portal', 'Error al cargar el portal: ' + (err.message || err));
+    mostrarVista('vista-portal');
+  })
+  .obtenerDatosPortal();
+
+// ── Inicializar portal ──
+function inicializarPortal(datos) {
+  // Datalist empresas
+  var dl = document.getElementById('empresas-list');
+  datos.empresas.forEach(function(e) {
+    var opt = document.createElement('option');
+    opt.value = e;
+    dl.appendChild(opt);
+  });
+
+  // Select auditores
+  var selAud = document.getElementById('auditor');
+  datos.auditores.forEach(function(a) {
+    var opt = document.createElement('option');
+    opt.value = a;
+    opt.textContent = a;
+    selAud.appendChild(opt);
+  });
+
+  // Lista de formularios
+  var list = document.getElementById('form-list');
+  datos.formularios.forEach(function(f) {
+    var item = document.createElement('div');
+    item.className = 'form-item';
+    item.textContent = f.nombre;
+    item.setAttribute('data-id', f.id);
+    item.setAttribute('data-url', f.url || '');
+    item.setAttribute('data-nombre', f.nombre);
+    item.onclick = function() { seleccionarFormulario(this); };
+    list.appendChild(item);
+  });
+
+  // Search filter
+  document.getElementById('form-search').addEventListener('input', filtrarFormularios);
+  document.getElementById('form-search').addEventListener('focus', function() {
+    document.getElementById('form-list').classList.add('open');
+  });
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#form-list') && e.target.id !== 'form-search') {
+      document.getElementById('form-list').classList.remove('open');
+    }
+  });
+
+  // Fecha y hora por defecto
+  var hoy = new Date();
+  document.getElementById('c-fecha').value = hoy.toISOString().split('T')[0];
+  document.getElementById('c-hora').value  = hoy.toTimeString().slice(0,5);
+
+  mostrarVista('vista-portal');
+}
+
+function filtrarFormularios() {
+  var q = this.value.toLowerCase().trim();
+  var items = document.querySelectorAll('#form-list .form-item');
+  items.forEach(function(item) {
+    var match = item.textContent.toLowerCase().includes(q);
+    item.classList.toggle('hidden', !match);
+  });
+  document.getElementById('form-list').classList.add('open');
+}
+
+function seleccionarFormulario(item) {
+  document.querySelectorAll('#form-list .form-item').forEach(function(i) {
+    i.classList.remove('selected');
+  });
+  item.classList.add('selected');
+  document.getElementById('form-list').classList.remove('open');
+
+  formSeleccionado = {
+    id:     item.getAttribute('data-id'),
+    nombre: item.getAttribute('data-nombre'),
+    url:    item.getAttribute('data-url') || null,
+  };
+
+  document.getElementById('form-id').value  = formSeleccionado.id;
+  document.getElementById('form-url').value = formSeleccionado.url || '';
+  document.getElementById('form-search').value = formSeleccionado.nombre;
+
+  var lbl = document.getElementById('form-selected-label');
+  lbl.textContent = 'Seleccionado: ' + formSeleccionado.nombre;
+  lbl.style.display = 'block';
+
+  // Reset verificación si cambian
+  ocultarAdvertencia();
+  verificacionOk = false;
+}
+
+// ── Verificar 6 meses ──
+function verificar() {
+  var empresa  = document.getElementById('empresa').value.trim();
+  var auditor  = document.getElementById('auditor').value;
+  var formId   = document.getElementById('form-id').value;
+
+  ocultarError('error-portal');
+
+  if (!empresa)  { mostrarError('error-portal', 'Seleccioná o escribí el nombre de la empresa.'); return; }
+  if (!auditor)  { mostrarError('error-portal', 'Seleccioná un auditor.'); return; }
+  if (!formId)   { mostrarError('error-portal', 'Seleccioná el tipo de formulario.'); return; }
+
+  document.getElementById('btn-verificar').disabled = true;
+  document.getElementById('btn-verificar').textContent = 'Verificando…';
+
+  google.script.run
+    .withSuccessHandler(function(resultado) {
+      document.getElementById('btn-verificar').disabled = false;
+      document.getElementById('btn-verificar').textContent = 'Verificar y continuar';
+
+      if (resultado.encontrado) {
+        mostrarAdvertencia(empresa, formSeleccionado.nombre, resultado.fecha, resultado.auditor);
+      } else {
+        verificacionOk = true;
+        proceder();
+      }
+    })
+    .withFailureHandler(function(err) {
+      document.getElementById('btn-verificar').disabled = false;
+      document.getElementById('btn-verificar').textContent = 'Verificar y continuar';
+      mostrarError('error-portal', 'Error al verificar: ' + (err.message || err));
+    })
+    .verificar6Meses(empresa, formId);
+}
+
+function mostrarAdvertencia(empresa, formulario, fecha, auditor) {
+  var box = document.getElementById('advertencia-box');
+  document.getElementById('advertencia-texto').innerHTML =
+    'Se encontró una visita reciente a <strong>' + empresa + '</strong><br>' +
+    'Formulario: <strong>' + formulario + '</strong><br>' +
+    'Última fecha: <strong>' + fecha + '</strong> — Auditor: <strong>' + auditor + '</strong>';
+  box.style.display = 'block';
+}
+
+function ocultarAdvertencia() {
+  document.getElementById('advertencia-box').style.display = 'none';
+}
+
+function cancelarSeleccion() {
+  ocultarAdvertencia();
+  verificacionOk = false;
+}
+
+// ── Proceder ──
+function proceder() {
+  ocultarAdvertencia();
+  var empresa  = document.getElementById('empresa').value.trim();
+  var auditor  = document.getElementById('auditor').value;
+
+  if (formSeleccionado.id === 'constancia') {
+    // Constancia de visita → formulario inline
+    document.getElementById('c-empresa').value = empresa;
+    document.getElementById('c-auditor').value = auditor;
+    mostrarVista('vista-constancia');
+    window.scrollTo(0, 0);
+  } else {
+    // AUDI → registrar en maestro y abrir Google Form
+    setLoading(true, 'Registrando en el sistema…');
+    google.script.run
+      .withSuccessHandler(function() {
+        setLoading(false);
+        // Abrir el formulario en nueva pestaña
+        window.open(formSeleccionado.url, '_blank');
+        // Mostrar vista AUDI
+        document.getElementById('audi-nombre').textContent = formSeleccionado.nombre;
+        document.getElementById('audi-link').href = formSeleccionado.url;
+        mostrarVista('vista-audi');
+        window.scrollTo(0, 0);
+      })
+      .withFailureHandler(function(err) {
+        setLoading(false);
+        // Aunque falle el registro, abrimos el formulario igual
+        window.open(formSeleccionado.url, '_blank');
+        document.getElementById('audi-nombre').textContent = formSeleccionado.nombre;
+        document.getElementById('audi-link').href = formSeleccionado.url;
+        mostrarVista('vista-audi');
+      })
+      .registrarEnMaestro(empresa, formSeleccionado.id, formSeleccionado.nombre, auditor);
+  }
+}
+
+// ── Constancia: chips y actividades ──
+function selAct(card, valor) {
+  document.querySelectorAll('.act-card').forEach(function(c) { c.classList.remove('selected'); });
+  card.classList.add('selected');
+  actSeleccionada = valor;
+}
+
+function toggleChip(chip) {
+  chip.classList.toggle('selected');
+}
+
+// ── Enviar constancia ──
+function enviarConstancia() {
+  var empresa         = document.getElementById('c-empresa').value.trim();
+  var establecimiento = document.getElementById('c-establecimiento').value.trim();
+  var sector          = document.getElementById('c-sector').value.trim();
+  var auditor         = document.getElementById('c-auditor').value.trim();
+  var fecha           = document.getElementById('c-fecha').value;
+  var hora            = document.getElementById('c-hora').value;
+
+  ocultarError('error-constancia');
+
+  if (!establecimiento) { mostrarError('error-constancia', 'Ingresá el nombre del establecimiento.'); return; }
+  if (!actSeleccionada)  { mostrarError('error-constancia', 'Seleccioná la actividad desarrollada.'); return; }
+  if (!fecha)            { mostrarError('error-constancia', 'Ingresá la fecha de la visita.'); return; }
+  if (!hora)             { mostrarError('error-constancia', 'Ingresá la hora de la visita.'); return; }
+
+  // Recopilar desvíos
+  var chips = document.querySelectorAll('#chips-desvios .chip.selected');
+  var desviosArr = Array.from(chips).map(function(c) { return c.getAttribute('data-value'); });
+  var desviosTexto = document.getElementById('c-desvios-texto').value.trim();
+  if (desviosTexto) desviosArr.push(desviosTexto);
+  var desvios = desviosArr.join('; ') || 'Sin desvíos registrados';
+
+  var datos = {
+    empresa:        empresa,
+    establecimiento: establecimiento,
+    sector:         sector,
+    actividades:    actSeleccionada,
+    desvios:        desvios,
+    comentarios:    document.getElementById('c-comentarios').value.trim(),
+    auditor:        auditor,
+    fechaVisita:    fecha,
+    horaVisita:     hora,
+  };
+
+  document.getElementById('btn-enviar').disabled = true;
+  document.getElementById('btn-enviar').textContent = 'Generando…';
+  setLoading(true, 'Generando la constancia…');
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      setLoading(false);
+      if (res && res.ok) {
+        document.getElementById('link-doc').href = res.urlDoc || '#';
+        mostrarVista('exito');
+        window.scrollTo(0, 0);
+      } else {
+        document.getElementById('btn-enviar').disabled = false;
+        document.getElementById('btn-enviar').textContent = 'Generar constancia';
+        mostrarError('error-constancia', 'Hubo un error al generar la constancia. Intenta nuevamente.');
+      }
+    })
+    .withFailureHandler(function(err) {
+      setLoading(false);
+      document.getElementById('btn-enviar').disabled = false;
+      document.getElementById('btn-enviar').textContent = 'Generar constancia';
+      mostrarError('error-constancia', 'Error: ' + (err.message || err));
+    })
+    .procesarFormulario(datos);
+}
+
+// ── Navegación ──
+function mostrarVista(id) {
+  ['vista-portal','vista-constancia','vista-audi','loading','exito'].forEach(function(v) {
+    document.getElementById(v).style.display = (v === id) ? '' : 'none';
+  });
+}
+
+function setLoading(on, texto) {
+  if (on) {
+    document.getElementById('loading-text').textContent = texto || 'Procesando…';
+    mostrarVista('loading');
+  }
+  // No oculta solo — se llama mostrarVista() explícitamente
+}
+
+function volverPortal() {
+  // Resetear advertencia y selección
+  ocultarAdvertencia();
+  verificacionOk = false;
+  mostrarVista('vista-portal');
+  window.scrollTo(0, 0);
+}
+
+function nuevaConstancia() {
+  // Resetear formulario constancia
+  actSeleccionada = '';
+  document.querySelectorAll('.act-card').forEach(function(c) { c.classList.remove('selected'); });
+  document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('selected'); });
+  document.getElementById('c-establecimiento').value = '';
+  document.getElementById('c-sector').value = '';
+  document.getElementById('c-desvios-texto').value = '';
+  document.getElementById('c-comentarios').value = '';
+  document.getElementById('btn-enviar').disabled = false;
+  document.getElementById('btn-enviar').textContent = 'Generar constancia';
+
+  // Resetear portal
+  formSeleccionado = null;
+  document.getElementById('form-id').value = '';
+  document.getElementById('form-url').value = '';
+  document.getElementById('form-search').value = '';
+  document.getElementById('form-selected-label').style.display = 'none';
+  document.querySelectorAll('#form-list .form-item').forEach(function(i) {
+    i.classList.remove('selected');
+  });
+
+  volverPortal();
+}
+
+// ── Errores ──
+function mostrarError(idBox, msg) {
+  var el = document.getElementById(idBox);
+  el.textContent = msg;
+  el.classList.add('visible');
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function ocultarError(idBox) {
+  var el = document.getElementById(idBox);
+  el.textContent = '';
+  el.classList.remove('visible');
+}
+</script>
+</body>
+</html>
