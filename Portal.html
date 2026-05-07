@@ -895,7 +895,7 @@ function enviarAudi() {
 
   google.script.run
     .withSuccessHandler(function() {
-      mostrarExito(formSel.nombre, null);
+      mostrarExito(formSel.nombre, res && res.urlDoc ? res.urlDoc : null);
     })
     .withFailureHandler(function(e) {
       btn.disabled = false; btn.textContent = 'Guardar auditoría';
