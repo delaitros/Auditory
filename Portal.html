@@ -6,370 +6,121 @@
 <title>Portal de Auditorías</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Google Sans', 'Segoe UI', Arial, sans-serif; background: #F0F4F8; min-height: 100vh; color: #1a1a2e; }
 
-body {
-  font-family: 'Google Sans', 'Segoe UI', Arial, sans-serif;
-  background: #F0F4F8;
-  min-height: 100vh;
-  color: #1a1a2e;
-}
+.header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%); padding: 24px 20px 20px; text-align: center; color: white; }
+.header-logo { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #90caf9; margin-bottom: 6px; }
+.header-name { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 4px; }
+.header-title { font-size: 13px; color: #b0bec5; }
+.badge { display: inline-block; background: #00897b; color: white; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-top: 14px; }
 
-/* ── Header ── */
-.header {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
-  padding: 24px 20px 20px;
-  text-align: center;
-  color: white;
-}
-.header-logo {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #90caf9;
-  margin-bottom: 6px;
-}
-.header-name {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
-}
-.header-title {
-  font-size: 13px;
-  color: #b0bec5;
-  font-weight: 400;
-}
-.badge {
-  display: inline-block;
-  background: #00897b;
-  color: white;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 5px 14px;
-  border-radius: 20px;
-  margin-top: 14px;
-}
+.container { max-width: 700px; margin: 0 auto; padding: 24px 16px 60px; }
 
-/* ── Container ── */
-.container {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 24px 16px 40px;
-}
+.card { background: white; border-radius: 12px; padding: 22px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); margin-bottom: 14px; }
+.card-title { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #0f3460; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #e8f4fd; }
 
-/* ── Card ── */
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  margin-bottom: 16px;
-}
-
-.card-title {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: #0f3460;
-  margin-bottom: 18px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #e8f4fd;
-}
-
-/* ── Form fields ── */
-.field { margin-bottom: 16px; }
+.field { margin-bottom: 14px; }
 .field:last-child { margin-bottom: 0; }
+label { display: block; font-size: 11px; font-weight: 700; color: #5f6368; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-label {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  color: #5f6368;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+input[type="text"], select, input[type="date"], input[type="time"], textarea {
+  width: 100%; padding: 10px 13px; border: 1.5px solid #dde3ea; border-radius: 8px;
+  font-size: 14px; color: #1a1a2e; outline: none; transition: border-color .2s, box-shadow .2s;
+  background: white; font-family: inherit;
 }
+input[type="text"]:focus, select:focus, input[type="date"]:focus, input[type="time"]:focus, textarea:focus {
+  border-color: #0f3460; box-shadow: 0 0 0 3px rgba(15,52,96,0.07);
+}
+input[readonly] { background: #f8f9fa; color: #5f6368; }
+textarea { resize: vertical; min-height: 80px; }
 
-input[type="text"],
-select,
-input[type="date"],
-input[type="time"],
-textarea {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid #dde3ea;
-  border-radius: 8px;
-  font-size: 14px;
-  color: #1a1a2e;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  background: white;
-  font-family: inherit;
-}
-input[type="text"]:focus,
-select:focus,
-input[type="date"]:focus,
-input[type="time"]:focus,
-textarea:focus {
-  border-color: #0f3460;
-  box-shadow: 0 0 0 3px rgba(15,52,96,0.08);
-}
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+@media(max-width:500px) { .grid-2,.grid-3 { grid-template-columns:1fr; } }
 
-/* ── Form search ── */
-.form-search-wrapper { position: relative; }
-.form-search-wrapper input {
-  padding-right: 36px;
-}
-.form-search-icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #9aa5b4;
-  font-size: 16px;
-  pointer-events: none;
-}
-.form-list {
-  max-height: 220px;
-  overflow-y: auto;
-  border: 1.5px solid #dde3ea;
-  border-radius: 8px;
-  margin-top: 6px;
-  background: white;
-  display: none;
-}
+/* Form search */
+.form-search-wrap { position: relative; }
+.form-list { border: 1.5px solid #dde3ea; border-radius: 8px; margin-top: 6px; background: white; display: none; max-height: 240px; overflow-y: auto; }
 .form-list.open { display: block; }
-.form-item {
-  padding: 10px 14px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #1a1a2e;
-  border-bottom: 1px solid #f4f6f8;
-  transition: background 0.15s;
-}
-.form-item:last-child { border-bottom: none; }
+.form-item { padding: 9px 13px; cursor: pointer; font-size: 13px; border-bottom: 1px solid #f4f6f8; transition: background .1s; }
 .form-item:hover { background: #f0f4f8; }
 .form-item.selected { background: #e8f4fd; color: #0f3460; font-weight: 600; }
 .form-item.hidden { display: none; }
+.selected-label { font-size: 12px; color: #0f3460; font-weight: 600; margin-top: 7px; display: none; }
 
-.hint {
-  font-size: 11px;
-  color: #9aa5b4;
-  margin-top: 4px;
-}
-
-/* ── Buttons ── */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 28px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s;
-  text-decoration: none;
-}
-.btn-primary {
-  background: #0f3460;
-  color: white;
-  width: 100%;
-}
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; text-decoration: none; font-family: inherit; }
+.btn-primary { background: #0f3460; color: white; width: 100%; }
 .btn-primary:hover { background: #1a4a80; }
 .btn-primary:disabled { background: #9aa5b4; cursor: not-allowed; }
-
-.btn-outline {
-  background: transparent;
-  color: #0f3460;
-  border: 2px solid #0f3460;
-  width: 100%;
-}
+.btn-outline { background: transparent; color: #0f3460; border: 2px solid #0f3460; width: 100%; }
 .btn-outline:hover { background: #f0f4f8; }
-
-.btn-teal {
-  background: #00897b;
-  color: white;
-  width: 100%;
-}
+.btn-teal { background: #00897b; color: white; width: 100%; }
 .btn-teal:hover { background: #00695c; }
-
-.btn-danger {
-  background: #e53935;
-  color: white;
-}
+.btn-danger { background: #e53935; color: white; }
 .btn-danger:hover { background: #c62828; }
+.btn-sm { padding: 8px 16px; font-size: 13px; width: auto; }
 
-.btn-sm {
-  padding: 8px 18px;
-  font-size: 13px;
-  width: auto;
-}
+/* Warning */
+.warning-box { background: #fff8e1; border: 2px solid #ffb300; border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; display: none; }
+.warning-title { font-size: 14px; font-weight: 700; color: #e65100; margin-bottom: 7px; }
+.warning-text { font-size: 13px; color: #5d4037; line-height: 1.5; margin-bottom: 12px; }
+.warning-actions { display: flex; gap: 10px; }
 
-/* ── Warning ── */
-.warning-box {
-  background: #fff8e1;
-  border: 2px solid #ffb300;
-  border-radius: 10px;
-  padding: 18px 20px;
-  margin-bottom: 16px;
-}
-.warning-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: #e65100;
-  margin-bottom: 8px;
-}
-.warning-text {
-  font-size: 13px;
-  color: #5d4037;
-  line-height: 1.5;
-  margin-bottom: 14px;
-}
-.warning-actions {
-  display: flex;
-  gap: 10px;
-}
+/* Error */
+.err-box { background: #fce8e6; border: 1.5px solid #f28b82; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #c5221f; margin-bottom: 12px; display: none; }
+.err-box.show { display: block; }
 
-/* ── Chips ── */
-.chips-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 6px;
-}
-.chip {
-  padding: 7px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  border: 1.5px solid #dde3ea;
-  cursor: pointer;
-  transition: all 0.15s;
-  color: #5f6368;
-  background: white;
-  user-select: none;
-}
-.chip:hover { border-color: #0f3460; color: #0f3460; background: #f0f4f8; }
-.chip.selected { background: #0f3460; color: white; border-color: #0f3460; }
-
-/* ── Activity cards ── */
-.act-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
-  margin-top: 6px;
-}
-.act-card {
-  border: 1.5px solid #dde3ea;
-  border-radius: 10px;
-  padding: 14px 10px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.15s;
-  background: white;
-  user-select: none;
-}
-.act-card:hover { border-color: #0f3460; background: #f0f4f8; }
-.act-card.selected { border-color: #0f3460; background: #e8f4fd; }
-.act-card .act-icon { font-size: 24px; margin-bottom: 6px; }
-.act-card .act-label { font-size: 12px; color: #5f6368; font-weight: 500; line-height: 1.3; }
-.act-card.selected .act-label { color: #0f3460; font-weight: 600; }
-
-/* ── Grid 2-col ── */
-.grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-.grid-3 {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 14px;
-}
-@media (max-width: 480px) {
-  .grid-2, .grid-3 { grid-template-columns: 1fr; }
-}
-
-/* ── Loading ── */
-.loading-wrap {
-  text-align: center;
-  padding: 60px 20px;
-}
-.spinner {
-  width: 48px; height: 48px;
-  border: 4px solid #e8f4fd;
-  border-top-color: #0f3460;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 20px;
-}
+/* Loading */
+.loading-wrap { text-align: center; padding: 60px 20px; }
+.spinner { width: 44px; height: 44px; border: 4px solid #e8f4fd; border-top-color: #0f3460; border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 18px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-text { font-size: 15px; color: #5f6368; }
 
-/* ── Success ── */
-.success-wrap {
-  text-align: center;
-  padding: 40px 20px;
-}
-.success-icon { font-size: 56px; margin-bottom: 16px; }
-.success-title { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
-.success-sub { font-size: 14px; color: #5f6368; margin-bottom: 28px; }
+/* Success */
+.success-wrap { text-align: center; padding: 36px 16px; }
+.success-icon { font-size: 52px; margin-bottom: 14px; }
+.success-title { font-size: 21px; font-weight: 700; margin-bottom: 7px; }
+.success-sub { font-size: 14px; color: #5f6368; margin-bottom: 24px; }
 .success-actions { display: flex; flex-direction: column; gap: 10px; }
 
-/* ── Error ── */
-.error-box {
-  background: #fce8e6;
-  border: 1.5px solid #f28b82;
-  border-radius: 8px;
-  padding: 12px 16px;
-  font-size: 13px;
-  color: #c5221f;
-  margin-bottom: 14px;
-  display: none;
-}
-.error-box.visible { display: block; }
+/* Chips (constancia desvíos) */
+.chips-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.chip { padding: 7px 13px; border-radius: 20px; font-size: 13px; border: 1.5px solid #dde3ea; cursor: pointer; transition: all .15s; color: #5f6368; background: white; user-select: none; }
+.chip:hover { border-color: #0f3460; color: #0f3460; }
+.chip.selected { background: #0f3460; color: white; border-color: #0f3460; }
 
-/* ── Divider ── */
-.section-sep {
-  height: 1px;
-  background: #e8edf2;
-  margin: 20px 0;
+/* Activity cards (constancia) */
+.act-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 9px; margin-top: 6px; }
+.act-card { border: 1.5px solid #dde3ea; border-radius: 10px; padding: 13px 9px; text-align: center; cursor: pointer; transition: all .15s; background: white; user-select: none; }
+.act-card:hover { border-color: #0f3460; background: #f0f4f8; }
+.act-card.selected { border-color: #0f3460; background: #e8f4fd; }
+.act-card .ai { font-size: 22px; margin-bottom: 5px; }
+.act-card .al { font-size: 12px; color: #5f6368; font-weight: 500; line-height: 1.3; }
+.act-card.selected .al { color: #0f3460; font-weight: 600; }
+
+/* AUDI question rows */
+.audi-q { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f4f8; }
+.audi-q:last-child { border-bottom: none; }
+.audi-q-text { flex: 1; font-size: 13px; color: #2d3748; line-height: 1.45; padding-top: 4px; }
+.audi-opts { display: flex; gap: 5px; flex-shrink: 0; }
+.audi-opt { padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid #dde3ea; color: #5f6368; background: white; transition: all .15s; user-select: none; white-space: nowrap; }
+.audi-opt:hover { border-color: #9aa5b4; }
+.audi-opt.ok  { background: #e6f4ea; color: #137333; border-color: #137333; }
+.audi-opt.mal { background: #fce8e6; color: #c5221f; border-color: #c5221f; }
+.audi-opt.na  { background: #e8eaf6; color: #3949ab; border-color: #3949ab; }
+
+@media(max-width:500px) {
+  .audi-q { flex-direction: column; gap: 7px; }
+  .audi-opts { flex-direction: row; }
 }
 
-/* ── Footer ── */
-.footer-link {
-  text-align: center;
-  margin-top: 24px;
-}
-.footer-link a {
-  font-size: 12px;
-  color: #00897b;
-  text-decoration: none;
-  font-weight: 500;
-}
+/* Footer */
+.footer-link { text-align: center; margin-top: 20px; padding-bottom: 30px; }
+.footer-link a { font-size: 12px; color: #00897b; text-decoration: none; font-weight: 500; }
 .footer-link a:hover { text-decoration: underline; }
 
-/* ── AUDI info box ── */
-.audi-info {
-  background: #e8f4fd;
-  border: 1.5px solid #90caf9;
-  border-radius: 10px;
-  padding: 16px 18px;
-  margin-bottom: 16px;
-  font-size: 13px;
-  color: #0d47a1;
-  line-height: 1.5;
-}
-.audi-info strong { display: block; font-size: 14px; margin-bottom: 6px; }
-
-/* ── Textarea ── */
-textarea { resize: vertical; min-height: 80px; }
+.hint { font-size: 11px; color: #9aa5b4; margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -381,581 +132,894 @@ textarea { resize: vertical; min-height: 80px; }
   <div class="badge">Portal de Auditorías</div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     VISTA 1: SELECCIÓN DE FORMULARIO
-═══════════════════════════════════════════════════════ -->
+<!-- ══════════════════════ PORTAL (selector) ══════════════════════ -->
 <div id="vista-portal">
-  <div class="container">
+<div class="container">
+  <div id="err-portal" class="err-box"></div>
 
-    <div id="error-portal" class="error-box"></div>
-
-    <div class="card">
-      <div class="card-title">Selección de Empresa y Auditor</div>
-
-      <div class="field">
-        <label for="empresa">Empresa</label>
-        <input type="text" id="empresa" list="empresas-list" placeholder="Escribí o elegí una empresa…" autocomplete="off">
-        <datalist id="empresas-list"></datalist>
-      </div>
-
-      <div class="field">
-        <label for="auditor">Auditor</label>
-        <select id="auditor">
-          <option value="">— Seleccioná un auditor —</option>
-        </select>
-      </div>
+  <div class="card">
+    <div class="card-title">Empresa y Auditor</div>
+    <div class="field">
+      <label for="p-empresa">Empresa</label>
+      <input type="text" id="p-empresa" list="dl-empresas" placeholder="Escribí o seleccioná una empresa…" autocomplete="off">
+      <datalist id="dl-empresas"></datalist>
     </div>
-
-    <div class="card">
-      <div class="card-title">Tipo de Formulario</div>
-
-      <div class="field">
-        <label for="form-search">Buscar formulario</label>
-        <div class="form-search-wrapper">
-          <input type="text" id="form-search" placeholder="Escribí para filtrar…" autocomplete="off">
-          <span class="form-search-icon">&#128269;</span>
-        </div>
-        <div class="form-list" id="form-list"></div>
-        <input type="hidden" id="form-id">
-        <input type="hidden" id="form-url">
-        <div id="form-selected-label" class="hint" style="margin-top:8px;color:#0f3460;font-weight:600;display:none;"></div>
-      </div>
-    </div>
-
-    <div id="advertencia-box" class="warning-box" style="display:none;">
-      <div class="warning-title">&#9888; Visita reciente detectada</div>
-      <div class="warning-text" id="advertencia-texto"></div>
-      <div class="warning-actions">
-        <button class="btn btn-outline btn-sm" onclick="cancelarSeleccion()">Cancelar</button>
-        <button class="btn btn-danger btn-sm" onclick="proceder()">Proceder igualmente</button>
-      </div>
-    </div>
-
-    <button class="btn btn-primary" id="btn-verificar" onclick="verificar()">
-      Verificar y continuar
-    </button>
-
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════
-     VISTA 2: CONSTANCIA DE VISITA (inline form)
-═══════════════════════════════════════════════════════ -->
-<div id="vista-constancia" style="display:none;">
-  <div class="container">
-
-    <div id="error-constancia" class="error-box"></div>
-
-    <!-- Empresa + Establecimiento + Sector -->
-    <div class="card">
-      <div class="card-title">Datos de la Visita</div>
-
-      <div class="field">
-        <label>Empresa</label>
-        <input type="text" id="c-empresa" readonly style="background:#f8f9fa;">
-      </div>
-
-      <div class="grid-2">
-        <div class="field">
-          <label for="c-establecimiento">Establecimiento</label>
-          <input type="text" id="c-establecimiento" placeholder="Nombre o número">
-        </div>
-        <div class="field">
-          <label for="c-sector">Sector</label>
-          <input type="text" id="c-sector" placeholder="Área o sector">
-        </div>
-      </div>
-    </div>
-
-    <!-- Actividades -->
-    <div class="card">
-      <div class="card-title">Actividades Desarrolladas</div>
-      <div class="act-grid">
-        <div class="act-card" onclick="selAct(this,'Recorrida general')">
-          <div class="act-icon">&#128694;</div>
-          <div class="act-label">Recorrida general</div>
-        </div>
-        <div class="act-card" onclick="selAct(this,'Relevamiento de riesgos')">
-          <div class="act-icon">&#128269;</div>
-          <div class="act-label">Relevamiento de riesgos</div>
-        </div>
-        <div class="act-card" onclick="selAct(this,'Capacitación')">
-          <div class="act-icon">&#128218;</div>
-          <div class="act-label">Capacitación</div>
-        </div>
-        <div class="act-card" onclick="selAct(this,'Auditoría de cumplimiento')">
-          <div class="act-icon">&#9989;</div>
-          <div class="act-label">Auditoría de cumplimiento</div>
-        </div>
-        <div class="act-card" onclick="selAct(this,'Medición ambiental')">
-          <div class="act-icon">&#127754;</div>
-          <div class="act-label">Medición ambiental</div>
-        </div>
-        <div class="act-card" onclick="selAct(this,'Asesoramiento')">
-          <div class="act-icon">&#128172;</div>
-          <div class="act-label">Asesoramiento</div>
-        </div>
-        <div class="act-card" onclick="selAct(this,'Otra actividad')">
-          <div class="act-icon">&#128221;</div>
-          <div class="act-label">Otra actividad</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Desvíos -->
-    <div class="card">
-      <div class="card-title">Desvíos Observados</div>
-      <div class="chips-grid" id="chips-desvios">
-        <div class="chip" onclick="toggleChip(this)" data-value="Sin desvíos observados">Sin desvíos</div>
-        <div class="chip" onclick="toggleChip(this)" data-value="EPP incompleto o inadecuado">EPP incompleto</div>
-        <div class="chip" onclick="toggleChip(this)" data-value="Orden y limpieza deficiente">Orden y limpieza</div>
-        <div class="chip" onclick="toggleChip(this)" data-value="Riesgo eléctrico">Riesgo eléctrico</div>
-        <div class="chip" onclick="toggleChip(this)" data-value="Señalización insuficiente">Señalización</div>
-      </div>
-      <div class="field" style="margin-top:12px;">
-        <label for="c-desvios-texto">Detalle adicional (opcional)</label>
-        <textarea id="c-desvios-texto" placeholder="Describí otros desvíos observados…" rows="3"></textarea>
-      </div>
-    </div>
-
-    <!-- Comentarios -->
-    <div class="card">
-      <div class="card-title">Comentarios Generales</div>
-      <div class="field">
-        <textarea id="c-comentarios" placeholder="Observaciones adicionales, recomendaciones, compromisos asumidos…" rows="4"></textarea>
-      </div>
-    </div>
-
-    <!-- Auditor + Fecha + Hora -->
-    <div class="card">
-      <div class="card-title">Auditor y Fecha</div>
-      <div class="grid-3">
-        <div class="field">
-          <label>Auditor</label>
-          <input type="text" id="c-auditor" readonly style="background:#f8f9fa;">
-        </div>
-        <div class="field">
-          <label for="c-fecha">Fecha de la visita</label>
-          <input type="date" id="c-fecha">
-        </div>
-        <div class="field">
-          <label for="c-hora">Hora de la visita</label>
-          <input type="time" id="c-hora">
-        </div>
-      </div>
-    </div>
-
-    <button class="btn btn-primary" id="btn-enviar" onclick="enviarConstancia()">
-      Generar constancia
-    </button>
-
-    <div style="margin-top:12px;">
-      <button class="btn btn-outline" onclick="volverPortal()">
-        &#8592; Volver al portal
-      </button>
-    </div>
-
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════
-     VISTA 3: FORMULARIO AUDI (info + redirect)
-═══════════════════════════════════════════════════════ -->
-<div id="vista-audi" style="display:none;">
-  <div class="container">
-    <div class="audi-info">
-      <strong id="audi-nombre"></strong>
-      El formulario externo fue registrado y se abrió en una nueva pestaña.<br>
-      Completalo allí y volvé acá cuando termines.
-    </div>
-    <a id="audi-link" href="#" target="_blank" class="btn btn-teal" style="display:inline-flex;margin-bottom:12px;">
-      Abrir formulario nuevamente
-    </a>
-    <div>
-      <button class="btn btn-outline" onclick="volverPortal()">
-        &#8592; Volver al portal
-      </button>
+    <div class="field">
+      <label for="p-auditor">Auditor</label>
+      <select id="p-auditor">
+        <option value="">— Seleccioná —</option>
+      </select>
     </div>
   </div>
-</div>
 
-<!-- ═══════════════════════════════════════════════════════
-     LOADING
-═══════════════════════════════════════════════════════ -->
-<div id="loading" style="display:none;">
-  <div class="container">
-    <div class="card loading-wrap">
-      <div class="spinner"></div>
-      <div class="loading-text" id="loading-text">Procesando…</div>
+  <div class="card">
+    <div class="card-title">Tipo de Formulario</div>
+    <div class="field">
+      <label for="p-form-search">Buscar formulario</label>
+      <div class="form-search-wrap">
+        <input type="text" id="p-form-search" placeholder="Escribí para filtrar…" autocomplete="off">
+      </div>
+      <div class="form-list" id="p-form-list"></div>
+      <div class="selected-label" id="p-form-label"></div>
+      <input type="hidden" id="p-form-id">
     </div>
   </div>
+
+  <div class="warning-box" id="adv-box">
+    <div class="warning-title">&#9888;&#65039; Visita reciente detectada</div>
+    <div class="warning-text" id="adv-texto"></div>
+    <div class="warning-actions">
+      <button class="btn btn-outline btn-sm" onclick="cancelarAdv()">Cancelar</button>
+      <button class="btn btn-danger btn-sm" onclick="proceder()">Proceder igualmente</button>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" id="btn-verificar" onclick="verificar()">Verificar y continuar</button>
+</div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     ÉXITO (constancia)
-═══════════════════════════════════════════════════════ -->
-<div id="exito" style="display:none;">
-  <div class="container">
-    <div class="card">
-      <div class="success-wrap">
-        <div class="success-icon">&#9989;</div>
-        <div class="success-title">Constancia generada</div>
-        <div class="success-sub">El documento fue creado y guardado en Drive.</div>
-        <div class="success-actions">
-          <a id="link-doc" href="#" target="_blank" class="btn btn-primary">
-            Abrir documento
-          </a>
-          <a href="https://drive.google.com/drive/folders/1_r1u39-DyCuqg3fhYGARKISQ0hsiaAC4" target="_blank" class="btn btn-outline">
-            Ver carpeta de Drive
-          </a>
-          <button class="btn btn-teal" onclick="nuevaConstancia()">
-            Nueva auditoría
-          </button>
-        </div>
+<!-- ══════════════════════ CONSTANCIA ══════════════════════ -->
+<div id="vista-constancia" style="display:none">
+<div class="container">
+  <div id="err-constancia" class="err-box"></div>
+
+  <div class="card">
+    <div class="card-title">Datos de la Visita</div>
+    <div class="field">
+      <label>Empresa</label>
+      <input type="text" id="c-empresa" readonly>
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label for="c-estab">Establecimiento</label>
+        <input type="text" id="c-estab" placeholder="Nombre o número">
+      </div>
+      <div class="field">
+        <label for="c-sector">Sector</label>
+        <input type="text" id="c-sector" placeholder="Área o sector">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Actividad Desarrollada</div>
+    <div class="act-grid">
+      <div class="act-card" onclick="selAct(this,'Recorrida general')"><div class="ai">&#128694;</div><div class="al">Recorrida general</div></div>
+      <div class="act-card" onclick="selAct(this,'Relevamiento de riesgos')"><div class="ai">&#128269;</div><div class="al">Relevamiento de riesgos</div></div>
+      <div class="act-card" onclick="selAct(this,'Capacitación')"><div class="ai">&#128218;</div><div class="al">Capacitación</div></div>
+      <div class="act-card" onclick="selAct(this,'Auditoría de cumplimiento')"><div class="ai">&#9989;</div><div class="al">Auditoría de cumplimiento</div></div>
+      <div class="act-card" onclick="selAct(this,'Medición ambiental')"><div class="ai">&#127754;</div><div class="al">Medición ambiental</div></div>
+      <div class="act-card" onclick="selAct(this,'Asesoramiento')"><div class="ai">&#128172;</div><div class="al">Asesoramiento</div></div>
+      <div class="act-card" onclick="selAct(this,'Otra actividad')"><div class="ai">&#128221;</div><div class="al">Otra actividad</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Desvíos Observados</div>
+    <div class="chips-grid">
+      <div class="chip" onclick="toggleChip(this)" data-value="Sin desvíos observados">Sin desvíos</div>
+      <div class="chip" onclick="toggleChip(this)" data-value="EPP incompleto o inadecuado">EPP incompleto</div>
+      <div class="chip" onclick="toggleChip(this)" data-value="Orden y limpieza deficiente">Orden y limpieza</div>
+      <div class="chip" onclick="toggleChip(this)" data-value="Riesgo eléctrico">Riesgo eléctrico</div>
+      <div class="chip" onclick="toggleChip(this)" data-value="Señalización insuficiente">Señalización</div>
+    </div>
+    <div class="field" style="margin-top:10px">
+      <label for="c-desvios-txt">Detalle adicional</label>
+      <textarea id="c-desvios-txt" placeholder="Otros desvíos…" rows="3"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Comentarios Generales</div>
+    <textarea id="c-comentarios" placeholder="Observaciones, recomendaciones, compromisos…" rows="4"></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Auditor y Fecha</div>
+    <div class="grid-3">
+      <div class="field"><label>Auditor</label><input type="text" id="c-auditor" readonly></div>
+      <div class="field"><label for="c-fecha">Fecha</label><input type="date" id="c-fecha"></div>
+      <div class="field"><label for="c-hora">Hora</label><input type="time" id="c-hora"></div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" id="btn-enviar-c" onclick="enviarConstancia()">Generar constancia</button>
+  <div style="margin-top:10px"><button class="btn btn-outline" onclick="volver()">&#8592; Volver</button></div>
+</div>
+</div>
+
+<!-- ══════════════════════ AUDI (dinámico) ══════════════════════ -->
+<div id="vista-audi" style="display:none">
+<div class="container">
+  <div id="err-audi" class="err-box"></div>
+  <div id="audi-content"></div>
+  <button class="btn btn-primary" id="btn-enviar-a" onclick="enviarAudi()">Guardar auditoría</button>
+  <div style="margin-top:10px"><button class="btn btn-outline" onclick="volver()">&#8592; Volver</button></div>
+</div>
+</div>
+
+<!-- ══════════════════════ LOADING ══════════════════════ -->
+<div id="loading" style="display:none">
+<div class="container">
+  <div class="card loading-wrap">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loading-text">Procesando…</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ ÉXITO ══════════════════════ -->
+<div id="exito" style="display:none">
+<div class="container">
+  <div class="card">
+    <div class="success-wrap">
+      <div class="success-icon">&#9989;</div>
+      <div class="success-title" id="exito-titulo">¡Listo!</div>
+      <div class="success-sub" id="exito-sub">El registro fue guardado correctamente.</div>
+      <div class="success-actions">
+        <a id="link-doc" href="#" target="_blank" class="btn btn-primary" style="display:none">Abrir documento</a>
+        <a href="https://drive.google.com/drive/folders/1_r1u39-DyCuqg3fhYGARKISQ0hsiaAC4" target="_blank" class="btn btn-outline">Ver carpeta de Drive</a>
+        <button class="btn btn-teal" onclick="nueva()">Nueva auditoría</button>
       </div>
     </div>
   </div>
 </div>
+</div>
 
-<!-- ── Footer permanente ── -->
 <div class="footer-link">
-  <a href="https://drive.google.com/drive/folders/1_r1u39-DyCuqg3fhYGARKISQ0hsiaAC4" target="_blank">
-    &#128194; Ver carpeta de constancias en Drive
-  </a>
+  <a href="https://drive.google.com/drive/folders/1_r1u39-DyCuqg3fhYGARKISQ0hsiaAC4" target="_blank">&#128194; Ver carpeta de constancias en Drive</a>
 </div>
 
 <script>
-// ── Estado global ──
-var datosPortal = null;
-var actSeleccionada = '';
-var formSeleccionado = null;  // { id, nombre, url }
-var verificacionOk = false;
+// ══════════════════════════════════════════════════════════════
+//  DEFINICIÓN DE FORMULARIOS AUDI
+// ══════════════════════════════════════════════════════════════
+var AUDI = {
+  audi1: {
+    extras: [],
+    preguntas: [
+      '¿Dispone del Servicio de Higiene y Seguridad?',
+      'Contrato actualizado',
+      'Cálculo de horas profesionales (CHP)',
+      '¿Cumple con las horas profesionales según Decreto 1338/96?',
+      '¿Posee documentación actualizada sobre análisis de riesgos y medidas preventivas en los puestos de trabajo? (IPER)',
+      'Relevamiento General de Riesgos (RGRL)',
+      'Relevamiento de Agentes de Riesgo (RAR)',
+      'Sistema de Vigilancia y Control de Sustancias Cancerígenas (SVCC)',
+    ]
+  },
+  audi2: {
+    extras: [],
+    preguntas: [
+      '¿Dispone del Servicio de Medicina del Trabajo?',
+      'Contrato actualizado',
+      'Cálculo de horas profesionales (CHP)',
+      '¿Cumple con las horas profesionales según Decreto 1338/96?',
+      '¿Posee documentación actualizada sobre educación sanitaria, socorro, vacunación y estudios de ausentismo por morbilidad?',
+      '¿Se realizan los exámenes periódicos?',
+    ]
+  },
+  audi3: {
+    extras: ['Herramienta'],
+    preguntas: [
+      '¿Las herramientas están en estado de conservación adecuado?',
+      '¿La empresa provee herramientas aptas y seguras?',
+      '¿Las herramientas corto-punzantes poseen fundas o vainas?',
+      '¿Existe un lugar destinado para la ubicación ordenada de las herramientas?',
+      '¿Las portátiles eléctricas poseen protecciones para evitar riesgos?',
+      '¿Las neumáticas e hidráulicas poseen válvulas de cierre automático al dejar de accionarlas?',
+    ]
+  },
+  audi4: {
+    extras: ['Máquina'],
+    preguntas: [
+      '¿Tienen todas las máquinas y herramientas protecciones para evitar riesgos al trabajador?',
+      '¿Existen dispositivos de parada de emergencia?',
+      '¿Se han previsto sistemas de bloqueo de la máquina para operaciones de mantenimiento?',
+      '¿Tienen las máquinas eléctricas sistema de puesta a tierra?',
+      '¿Están identificadas conforme a normas IRAM todas las partes de máquinas y equipos que en accionamiento puedan causar daño a los trabajadores?',
+    ]
+  },
+  audi5: {
+    extras: [],
+    preguntas: [
+      '¿Existe orden y limpieza?',
+      '¿Existen depósitos de residuos?',
+      '¿Tienen las salientes y partes móviles de máquinas y/o instalaciones señalización y protección?',
+    ]
+  },
+  audi6: {
+    extras: ['Puesto de trabajo'],
+    preguntas: [
+      '¿Se realiza manejo manual de cargas?',
+      '¿Se desarrolla un programa de ergonomía integrada para el puesto de trabajo?',
+      '¿Se realizan controles de ingeniería en el puesto de trabajo?',
+      '¿Se realizan controles administrativos y seguimiento a los puestos de trabajo?',
+    ]
+  },
+  audi7: {
+    extras: ['Puesto de trabajo'],
+    preguntas: [
+      '¿Existen medios o vías de escape adecuadas en caso de incendio?',
+      '¿Cuenta con estudio de carga de fuego?',
+      '¿La cantidad de matafuegos es acorde a la carga de fuego?',
+      '¿Se registra el control de recargas y reparación?',
+      '¿Se registra el control de prueba hidráulica de carros y matafuegos?',
+      '¿Existen sistemas de detección de incendios?',
+      '¿Cuentan con habilitación los carros, matafuegos y demás instalaciones para extinción?',
+      '¿El depósito de combustibles cumple con la legislación vigente?',
+      '¿Se acredita la realización periódica de simulacros de evacuación?',
+      '¿Se dispone de estanterías de material no combustible o metálico?',
+      '¿Se separan los materiales combustibles de los no combustibles y los que puedan reaccionar entre sí?',
+    ]
+  },
+  audi8: {
+    extras: ['Materiales almacenados'],
+    preguntas: [
+      '¿Se almacenan los productos respetando la distancia mínima de 1 m entre la parte superior de las estibas y el techo?',
+      '¿Los sistemas de almacenaje permiten una adecuada circulación y son seguros?',
+      '¿En los almacenajes a granel, las estibas cuentan con elementos de contención?',
+      '¿En atmósferas inflamables la instalación eléctrica es antiexplosiva?',
+    ]
+  },
+  audi9: {
+    extras: ['Materiales almacenados'],
+    preguntas: [
+      '¿Se encuentran separados los productos incompatibles?',
+      '¿Se identifican los productos riesgosos almacenados?',
+      '¿Se proveen elementos de protección adecuados al personal?',
+      '¿Existen duchas de emergencia y/o lava ojos en los sectores con productos peligrosos?',
+      '¿En atmósferas inflamables la instalación eléctrica es antiexplosiva?',
+      '¿Existe un sistema para control de derrames de productos peligrosos?',
+    ]
+  },
+  audi10: {
+    extras: ['Sustancias peligrosas'],
+    preguntas: [
+      '¿Su fabricación y/o manipuleo cumplimenta la legislación vigente?',
+      '¿Todas las sustancias que se utilizan poseen sus respectivas hojas de seguridad?',
+      '¿Las instalaciones y equipos se encuentran protegidos contra el efecto corrosivo de las sustancias empleadas?',
+      '¿Se fabrican, depositan o manipulan sustancias explosivas conforme a lo reglamentado por Fabricaciones Militares?',
+      '¿Existen dispositivos de alarma acústicos y visuales donde se manipulen sustancias infectantes y/o contaminantes?',
+      '¿Se ha señalizado y resguardado la zona ante casos de derrame de sustancias corrosivas?',
+      '¿Se ha evitado la acumulación de desechos orgánicos en estado de putrefacción e implementado la desinfección correspondiente?',
+      '¿Se confeccionó un plan de seguridad para casos de emergencia en lugar visible?',
+    ]
+  },
+  audi11: {
+    extras: [],
+    preguntas: [
+      '¿Están todos los cableados eléctricos adecuadamente contenidos?',
+      '¿Los conectores eléctricos se encuentran en buen estado?',
+      '¿Las instalaciones y equipos eléctricos cumplen con la legislación?',
+      '¿Las tareas de mantenimiento son efectuadas por personal capacitado y autorizado por la empresa?',
+      '¿Se efectúa y registra el mantenimiento de las instalaciones en base a normas de seguridad?',
+      '¿Los proyectos de instalaciones de más de 1000 V cumplen con la legislación y están aprobados por el responsable de H&S?',
+      '¿Se adoptan medidas de seguridad en locales con sustancias corrosivas, inflamables, explosivas o de alto riesgo y en locales húmedos?',
+      '¿Se han adoptado medidas para la protección contra contactos directos e indirectos?',
+      '¿Se han adoptado medidas para eliminar la electricidad estática en operaciones que pueda producirse?',
+      '¿Posee instalación para prevenir sobretensiones por descargas atmosféricas (pararrayos)?',
+      '¿Poseen las instalaciones tomas a tierra independientes de las instaladas para descargas atmosféricas?',
+      '¿Las puestas a tierra se verifican periódicamente mediante mediciones? (Prot Res 900/15)',
+    ]
+  },
+  audi12: {
+    extras: ['Equipo', 'Fluido'],
+    preguntas: [
+      '¿Se realizan los controles e inspecciones periódicas establecidos en calderas y aparatos sometidos a presión?',
+      '¿Se han fijado instrucciones detalladas con esquemas de la instalación y procedimientos operativos?',
+      '¿Se protegen los hornos, calderas, etc., para evitar la acción del calor?',
+      '¿Están los cilindros que contengan gases sometidos a presión adecuadamente almacenados?',
+      '¿Los restantes aparatos sometidos a presión cuentan con dispositivos de protección y seguridad?',
+      '¿Cuenta el operador con la capacitación y/o habilitación pertinente?',
+      '¿Están aislados y ventilados los aparatos capaces de producir frío con posibilidad de desprendimiento de contaminantes?',
+    ]
+  },
+  audi13: {
+    extras: [],
+    preguntas: [
+      '¿Se provee a todos los trabajadores de los EPP adecuados, acorde a los riesgos a los que se hallan expuestos?',
+      '¿Existen señalizaciones visibles sobre la obligatoriedad del uso de los EPP?',
+      '¿Se verifica la existencia de registros de entrega de los EPP? (Form Res 299)',
+      '¿Se realizó un estudio por puesto de trabajo o sector donde se detallen los EPP necesarios?',
+      '¿Cuenta el operador con la capacitación y/o habilitación pertinente?',
+    ]
+  },
+  audi14: {
+    extras: [],
+    preguntas: [
+      '¿Se cumplen los requisitos de iluminación establecidos en la legislación vigente?',
+      '¿Se ha instalado un sistema de iluminación de emergencia acorde a los requerimientos legales?',
+      '¿Se registran las mediciones en los puestos y/o lugares de trabajo? (Res SRT 84/12)',
+      '¿Los niveles existentes cumplen con la legislación vigente?',
+      '¿Existe marcación visible de pasillos, circulaciones y lugares de cruce con cargas suspendidas?',
+      '¿Se encuentran señalizados los caminos de evacuación y salidas normales y de emergencia?',
+      '¿Se encuentran identificadas las cañerías?',
+    ]
+  },
+  audi15: {
+    extras: [],
+    preguntas: [
+      '¿Se registran las mediciones en los puestos y/o lugares de trabajo?',
+      '¿El personal sometido a estrés por frío está protegido adecuadamente?',
+      '¿Se adoptaron las correcciones en los puestos del personal sometido a estrés por frío?',
+      '¿El personal sometido a estrés térmico y tensión térmica está protegido adecuadamente?',
+      '¿Se adoptaron las correcciones en los puestos del personal sometido a estrés térmico?',
+    ]
+  },
+  audi16: {
+    extras: [],
+    preguntas: [
+      '¿En caso de existir fuentes de radiaciones ionizantes (Ej. Rayos X), los trabajadores y fuentes cuentan con autorización del organismo competente?',
+      '¿Se encuentran habilitados los operadores y equipos generadores de radiaciones ionizantes ante el organismo competente?',
+      '¿Se lleva el control y registro de las dosis individuales?',
+      '¿Los valores hallados se encuentran dentro de lo establecido en la normativa vigente?',
+    ]
+  },
+  audi17: {
+    extras: [],
+    preguntas: [
+      '¿Se han aplicado las medidas de control a la clase de riesgo?',
+      '¿Las medidas aplicadas cumplen con lo establecido en la normativa vigente?',
+    ]
+  },
+  audi18: {
+    extras: [],
+    preguntas: [
+      '¿En caso de existir fuentes de radiaciones no ionizantes (Ej. Soldadura), los trabajadores están protegidos?',
+      '¿Se cumple con la normativa vigente para campos magnéticos estáticos?',
+      '¿Se registran las mediciones de radiofrecuencia y/o microondas en los lugares de trabajo?',
+      '¿Los valores de radiofrecuencia/microondas están dentro de lo establecido en la normativa?',
+      '¿En caso de existir radiación infrarroja, se registran las mediciones?',
+      '¿Los valores de radiación infrarroja están dentro de lo establecido en la normativa?',
+      '¿En caso de existir radiación ultravioleta, se registran las mediciones?',
+      '¿Los valores de radiación ultravioleta están dentro de lo establecido en la normativa?',
+    ]
+  },
+  audi19: {
+    extras: [],
+    preguntas: [
+      '¿Existe provisión de agua potable para el consumo e higiene de los trabajadores?',
+      '¿Se registran los análisis bacteriológico y físico-químico del agua de consumo con la frecuencia requerida?',
+      '¿Se ha evitado el consumo humano del agua para uso industrial?',
+    ]
+  },
+  audi20: {
+    extras: [],
+    preguntas: [
+      '¿Se recogen y canalizan los desagües por conductos, impidiendo su libre escurrimiento?',
+      '¿Se ha evitado el contacto de líquidos que puedan reaccionar originando gases tóxicos o contaminantes?',
+      '¿Son evacuados los efluentes a plantas de tratamiento?',
+      '¿Se limpia periódicamente la planta de tratamiento con las precauciones necesarias?',
+    ]
+  },
+  audi21: {
+    extras: [],
+    preguntas: [
+      '¿Existen baños aptos higiénicamente?',
+      '¿Existen vestuarios aptos higiénicamente y poseen armarios adecuados e individuales?',
+      '¿Existen comedores aptos higiénicamente?',
+      '¿La cocina reúne los requisitos establecidos?',
+      '¿Los establecimientos temporarios cumplen con las exigencias de la legislación vigente?',
+    ]
+  },
+  audi22: {
+    extras: [],
+    preguntas: [
+      '¿Se encuentra identificada la carga máxima en los equipos?',
+      '¿Poseen parada de máximo nivel de sobrecarga en el sistema de fuerza motriz?',
+      '¿Se halla la alimentación eléctrica del equipo en buenas condiciones?',
+      '¿Tienen los ganchos de izar traba de seguridad?',
+      '¿Los elementos auxiliares de elevación se encuentran en buen estado (cadenas, perchas, eslingas, fajas)?',
+      '¿Se registra el mantenimiento preventivo de estos equipos?',
+      '¿Reciben los operadores instrucción respecto a la operación y uso correcto del equipo de izar?',
+      '¿Los ascensores y montacargas cumplen los requisitos de seguridad en construcción, instalación y mantenimiento?',
+      '¿Los aparatos para izar, aparejos, puentes grúa y transportadores cumplen los requisitos de seguridad?',
+    ]
+  },
+  audi23: {
+    extras: [],
+    preguntas: [
+      '¿Se capacita a los trabajadores acerca de los riesgos específicos de su puesto de trabajo?',
+      '¿Existen programas de capacitación con planificación anual?',
+      '¿Se entrega por escrito al personal las medidas preventivas para evitar enfermedades profesionales y accidentes?',
+    ]
+  },
+  audi24: {
+    extras: [],
+    preguntas: [
+      '¿Existen botiquines de primeros auxilios acorde a los riesgos existentes?',
+    ]
+  },
+  audi25: {
+    extras: [],
+    preguntas: [
+      '¿Cuentan los vehículos con los elementos de seguridad?',
+      '¿Se ha evitado la utilización de vehículos con motor a explosión en lugares con peligro de incendio/explosión sin dispositivos apropiados?',
+      '¿Disponen de asientos que neutralicen las vibraciones, tengan respaldo y apoyapiés?',
+      '¿Son adecuadas las cabinas para proteger del riesgo de vuelco?',
+      '¿Están protegidas para los riesgos de desplazamiento de cargas?',
+      '¿Poseen los operadores capacitación respecto a los riesgos inherentes al vehículo que conducen?',
+      '¿Están los vehículos equipados con luces, frenos, dispositivos acústico-luminosos, espejos, cinturón y matafuegos?',
+      '¿Se cumplen las condiciones que deben reunir los ferrocarriles para el transporte interno?',
+    ]
+  },
+  audi26: {
+    extras: [],
+    preguntas: [
+      '¿Se registran las mediciones en los puestos y/o lugares de trabajo?',
+      '¿Se adoptaron las correcciones en los puestos y/o lugares de trabajo?',
+    ]
+  },
+  audi27: {
+    extras: [],
+    preguntas: [
+      '¿Se registran las mediciones de nivel sonoro continuo equivalente en los puestos de trabajo?',
+      '¿Se adoptaron las correcciones en los puestos y/o lugares de trabajo?',
+    ]
+  },
+  audi28: {
+    extras: [],
+    preguntas: [
+      '¿Se registran las mediciones en los puestos y/o lugares de trabajo?',
+      '¿Se adoptaron las correcciones en los puestos y/o lugares de trabajo?',
+    ]
+  },
+  audi29: {
+    extras: [],
+    preguntas: [
+      '¿Se registran las mediciones en los puestos y/o lugares de trabajo?',
+      '¿Se adoptaron las correcciones en los puestos y/o lugares de trabajo?',
+    ]
+  },
+  audi30: {
+    extras: [],
+    preguntas: [
+      '¿Los recipientes con gases se almacenan adecuadamente?',
+      '¿Los cilindros de gases son transportados en carretillas adecuadas?',
+      '¿Los cilindros almacenados cuentan con el capuchón protector y tienen la válvula cerrada?',
+      '¿Los cilindros de oxígeno y acetileno cuentan con válvulas antirretroceso de llama?',
+    ]
+  },
+  audi31: {
+    extras: [],
+    preguntas: [
+      '¿Existe captación localizada de humos de soldadura?',
+      '¿Se utilizan pantallas para la proyección de partículas y chispas?',
+      '¿Las mangueras, reguladores, manómetros, sopletes y válvulas antirretornos se encuentran en buen estado?',
+    ]
+  },
+  audi32: {
+    extras: [],
+    preguntas: [
+      '¿Todas las escaleras cumplen con las condiciones de seguridad?',
+      '¿Todas las plataformas de trabajo y rampas cumplen con las condiciones de seguridad?',
+    ]
+  },
+  audi33: {
+    extras: [],
+    preguntas: [
+      '¿Posee programa de mantenimiento preventivo para instalaciones eléctricas?',
+      '¿Posee programa de mantenimiento preventivo para aparatos para izar?',
+      '¿Posee programa de mantenimiento preventivo para cables de equipos para izar?',
+      '¿Posee programa de mantenimiento preventivo para ascensores y montacargas?',
+      '¿Posee programa de mantenimiento preventivo para calderas y recipientes a presión?',
+      '¿Cumplimenta dicho programa de mantenimiento preventivo?',
+    ]
+  },
+  audi34: {
+    extras: [],
+    preguntas: [
+      '¿El establecimiento está comprendido en la Resolución 415/02 — Registro de Agentes Cancerígenos?',
+      '¿El establecimiento está comprendido en la Resolución 497/03 — Registro de PCBs?',
+      '¿El establecimiento está comprendido en la Resolución 743/03 — Registro de Accidentes Mayores?',
+    ]
+  },
+};
 
-// ── Arranque ──
-setLoading(true, 'Cargando portal…');
+// ══════════════════════════════════════════════════════════════
+//  ESTADO GLOBAL
+// ══════════════════════════════════════════════════════════════
+var datosPortal    = null;
+var formSel        = null;   // { id, nombre }
+var actSeleccionada = '';
+
+// ══════════════════════════════════════════════════════════════
+//  ARRANQUE
+// ══════════════════════════════════════════════════════════════
+mostrarVista('loading');
+document.getElementById('loading-text').textContent = 'Cargando portal…';
+
 google.script.run
-  .withSuccessHandler(function(datos) {
-    datosPortal = datos;
-    inicializarPortal(datos);
-    setLoading(false);
+  .withSuccessHandler(function(d) {
+    datosPortal = d;
+    inicializarPortal(d);
+    mostrarVista('vista-portal');
   })
-  .withFailureHandler(function(err) {
-    setLoading(false);
-    mostrarError('error-portal', 'Error al cargar el portal: ' + (err.message || err));
+  .withFailureHandler(function(e) {
+    mostrarError('err-portal', 'Error al cargar: ' + (e.message || e));
     mostrarVista('vista-portal');
   })
   .obtenerDatosPortal();
 
-// ── Inicializar portal ──
-function inicializarPortal(datos) {
+// ══════════════════════════════════════════════════════════════
+//  INICIALIZACIÓN
+// ══════════════════════════════════════════════════════════════
+function inicializarPortal(d) {
   // Datalist empresas
-  var dl = document.getElementById('empresas-list');
-  datos.empresas.forEach(function(e) {
-    var opt = document.createElement('option');
-    opt.value = e;
-    dl.appendChild(opt);
+  var dl = document.getElementById('dl-empresas');
+  d.empresas.forEach(function(e) {
+    var o = document.createElement('option'); o.value = e; dl.appendChild(o);
   });
 
-  // Select auditores
-  var selAud = document.getElementById('auditor');
-  datos.auditores.forEach(function(a) {
-    var opt = document.createElement('option');
-    opt.value = a;
-    opt.textContent = a;
-    selAud.appendChild(opt);
+  // Auditores
+  var sel = document.getElementById('p-auditor');
+  d.auditores.forEach(function(a) {
+    var o = document.createElement('option'); o.value = a; o.textContent = a; sel.appendChild(o);
   });
 
   // Lista de formularios
-  var list = document.getElementById('form-list');
-  datos.formularios.forEach(function(f) {
+  var list = document.getElementById('p-form-list');
+  d.formularios.forEach(function(f) {
     var item = document.createElement('div');
     item.className = 'form-item';
     item.textContent = f.nombre;
     item.setAttribute('data-id', f.id);
-    item.setAttribute('data-url', f.url || '');
     item.setAttribute('data-nombre', f.nombre);
-    item.onclick = function() { seleccionarFormulario(this); };
+    item.onclick = function() { selForm(this); };
     list.appendChild(item);
   });
 
-  // Search filter
-  document.getElementById('form-search').addEventListener('input', filtrarFormularios);
-  document.getElementById('form-search').addEventListener('focus', function() {
-    document.getElementById('form-list').classList.add('open');
+  // Búsqueda
+  var inp = document.getElementById('p-form-search');
+  inp.addEventListener('focus', function() { document.getElementById('p-form-list').classList.add('open'); });
+  inp.addEventListener('input', function() {
+    var q = this.value.toLowerCase();
+    document.querySelectorAll('#p-form-list .form-item').forEach(function(it) {
+      it.classList.toggle('hidden', !it.textContent.toLowerCase().includes(q));
+    });
+    document.getElementById('p-form-list').classList.add('open');
   });
   document.addEventListener('click', function(e) {
-    if (!e.target.closest('#form-list') && e.target.id !== 'form-search') {
-      document.getElementById('form-list').classList.remove('open');
+    if (!e.target.closest('#p-form-list') && e.target.id !== 'p-form-search') {
+      document.getElementById('p-form-list').classList.remove('open');
     }
   });
 
-  // Fecha y hora por defecto
+  // Fecha/hora por defecto (constancia)
   var hoy = new Date();
   document.getElementById('c-fecha').value = hoy.toISOString().split('T')[0];
   document.getElementById('c-hora').value  = hoy.toTimeString().slice(0,5);
-
-  mostrarVista('vista-portal');
 }
 
-function filtrarFormularios() {
-  var q = this.value.toLowerCase().trim();
-  var items = document.querySelectorAll('#form-list .form-item');
-  items.forEach(function(item) {
-    var match = item.textContent.toLowerCase().includes(q);
-    item.classList.toggle('hidden', !match);
-  });
-  document.getElementById('form-list').classList.add('open');
-}
-
-function seleccionarFormulario(item) {
-  document.querySelectorAll('#form-list .form-item').forEach(function(i) {
-    i.classList.remove('selected');
-  });
+function selForm(item) {
+  document.querySelectorAll('#p-form-list .form-item').forEach(function(i) { i.classList.remove('selected'); });
   item.classList.add('selected');
-  document.getElementById('form-list').classList.remove('open');
-
-  formSeleccionado = {
-    id:     item.getAttribute('data-id'),
-    nombre: item.getAttribute('data-nombre'),
-    url:    item.getAttribute('data-url') || null,
-  };
-
-  document.getElementById('form-id').value  = formSeleccionado.id;
-  document.getElementById('form-url').value = formSeleccionado.url || '';
-  document.getElementById('form-search').value = formSeleccionado.nombre;
-
-  var lbl = document.getElementById('form-selected-label');
-  lbl.textContent = 'Seleccionado: ' + formSeleccionado.nombre;
+  document.getElementById('p-form-list').classList.remove('open');
+  formSel = { id: item.getAttribute('data-id'), nombre: item.getAttribute('data-nombre') };
+  document.getElementById('p-form-id').value = formSel.id;
+  document.getElementById('p-form-search').value = formSel.nombre;
+  var lbl = document.getElementById('p-form-label');
+  lbl.textContent = 'Seleccionado: ' + formSel.nombre;
   lbl.style.display = 'block';
-
-  // Reset verificación si cambian
-  ocultarAdvertencia();
-  verificacionOk = false;
+  document.getElementById('adv-box').style.display = 'none';
 }
 
-// ── Verificar 6 meses ──
+// ══════════════════════════════════════════════════════════════
+//  VERIFICACIÓN 6 MESES
+// ══════════════════════════════════════════════════════════════
 function verificar() {
-  var empresa  = document.getElementById('empresa').value.trim();
-  var auditor  = document.getElementById('auditor').value;
-  var formId   = document.getElementById('form-id').value;
+  var empresa = document.getElementById('p-empresa').value.trim();
+  var auditor = document.getElementById('p-auditor').value;
+  var formId  = document.getElementById('p-form-id').value;
+  ocultarError('err-portal');
+  if (!empresa) { mostrarError('err-portal', 'Escribí o seleccioná la empresa.'); return; }
+  if (!auditor) { mostrarError('err-portal', 'Seleccioná un auditor.'); return; }
+  if (!formId)  { mostrarError('err-portal', 'Seleccioná el tipo de formulario.'); return; }
 
-  ocultarError('error-portal');
-
-  if (!empresa)  { mostrarError('error-portal', 'Seleccioná o escribí el nombre de la empresa.'); return; }
-  if (!auditor)  { mostrarError('error-portal', 'Seleccioná un auditor.'); return; }
-  if (!formId)   { mostrarError('error-portal', 'Seleccioná el tipo de formulario.'); return; }
-
-  document.getElementById('btn-verificar').disabled = true;
-  document.getElementById('btn-verificar').textContent = 'Verificando…';
+  var btn = document.getElementById('btn-verificar');
+  btn.disabled = true; btn.textContent = 'Verificando…';
 
   google.script.run
-    .withSuccessHandler(function(resultado) {
-      document.getElementById('btn-verificar').disabled = false;
-      document.getElementById('btn-verificar').textContent = 'Verificar y continuar';
-
-      if (resultado.encontrado) {
-        mostrarAdvertencia(empresa, formSeleccionado.nombre, resultado.fecha, resultado.auditor);
+    .withSuccessHandler(function(r) {
+      btn.disabled = false; btn.textContent = 'Verificar y continuar';
+      if (r.encontrado) {
+        var txt = 'Se realizó este formulario para <strong>' + empresa + '</strong> el <strong>' + r.fecha + '</strong> (auditor: <strong>' + r.auditor + '</strong>). ¿Querés realizarlo igualmente?';
+        document.getElementById('adv-texto').innerHTML = txt;
+        document.getElementById('adv-box').style.display = 'block';
       } else {
-        verificacionOk = true;
         proceder();
       }
     })
-    .withFailureHandler(function(err) {
-      document.getElementById('btn-verificar').disabled = false;
-      document.getElementById('btn-verificar').textContent = 'Verificar y continuar';
-      mostrarError('error-portal', 'Error al verificar: ' + (err.message || err));
+    .withFailureHandler(function(e) {
+      btn.disabled = false; btn.textContent = 'Verificar y continuar';
+      // Si falla la verificación, igual dejamos proceder
+      proceder();
     })
     .verificar6Meses(empresa, formId);
 }
 
-function mostrarAdvertencia(empresa, formulario, fecha, auditor) {
-  var box = document.getElementById('advertencia-box');
-  document.getElementById('advertencia-texto').innerHTML =
-    'Se encontró una visita reciente a <strong>' + empresa + '</strong><br>' +
-    'Formulario: <strong>' + formulario + '</strong><br>' +
-    'Última fecha: <strong>' + fecha + '</strong> — Auditor: <strong>' + auditor + '</strong>';
-  box.style.display = 'block';
-}
+function cancelarAdv() { document.getElementById('adv-box').style.display = 'none'; }
 
-function ocultarAdvertencia() {
-  document.getElementById('advertencia-box').style.display = 'none';
-}
-
-function cancelarSeleccion() {
-  ocultarAdvertencia();
-  verificacionOk = false;
-}
-
-// ── Proceder ──
 function proceder() {
-  ocultarAdvertencia();
-  var empresa  = document.getElementById('empresa').value.trim();
-  var auditor  = document.getElementById('auditor').value;
+  document.getElementById('adv-box').style.display = 'none';
+  var empresa = document.getElementById('p-empresa').value.trim();
+  var auditor = document.getElementById('p-auditor').value;
 
-  if (formSeleccionado.id === 'constancia') {
-    // Constancia de visita → formulario inline
+  if (formSel.id === 'constancia') {
     document.getElementById('c-empresa').value = empresa;
     document.getElementById('c-auditor').value = auditor;
     mostrarVista('vista-constancia');
-    window.scrollTo(0, 0);
   } else {
-    // AUDI → registrar en maestro y abrir Google Form
-    setLoading(true, 'Registrando en el sistema…');
-    google.script.run
-      .withSuccessHandler(function() {
-        setLoading(false);
-        // Abrir el formulario en nueva pestaña
-        window.open(formSeleccionado.url, '_blank');
-        // Mostrar vista AUDI
-        document.getElementById('audi-nombre').textContent = formSeleccionado.nombre;
-        document.getElementById('audi-link').href = formSeleccionado.url;
-        mostrarVista('vista-audi');
-        window.scrollTo(0, 0);
-      })
-      .withFailureHandler(function(err) {
-        setLoading(false);
-        // Aunque falle el registro, abrimos el formulario igual
-        window.open(formSeleccionado.url, '_blank');
-        document.getElementById('audi-nombre').textContent = formSeleccionado.nombre;
-        document.getElementById('audi-link').href = formSeleccionado.url;
-        mostrarVista('vista-audi');
-      })
-      .registrarEnMaestro(empresa, formSeleccionado.id, formSeleccionado.nombre, auditor);
+    renderAudiForm(formSel.id, formSel.nombre, empresa, auditor);
+    mostrarVista('vista-audi');
   }
+  window.scrollTo(0, 0);
 }
 
-// ── Constancia: chips y actividades ──
-function selAct(card, valor) {
-  document.querySelectorAll('.act-card').forEach(function(c) { c.classList.remove('selected'); });
-  card.classList.add('selected');
-  actSeleccionada = valor;
+// ══════════════════════════════════════════════════════════════
+//  RENDER FORMULARIO AUDI
+// ══════════════════════════════════════════════════════════════
+function renderAudiForm(id, nombre, empresa, auditor) {
+  var def = AUDI[id];
+  var hoy = new Date();
+  var hoyStr = hoy.toISOString().split('T')[0];
+  var html = '';
+
+  // Cabecera datos visita
+  html += '<div class="card"><div class="card-title">' + nombre + '</div>';
+  html += '<div class="field"><label>Empresa</label><input type="text" id="a-empresa" value="' + esc(empresa) + '" readonly></div>';
+  html += '<div class="grid-2">';
+  html += '<div class="field"><label for="a-estab">Establecimiento</label><input type="text" id="a-estab" placeholder="Nombre o número"></div>';
+  html += '<div class="field"><label for="a-sector">Sector</label><input type="text" id="a-sector" placeholder="Área o sector"></div>';
+  html += '</div>';
+
+  // Extras
+  def.extras.forEach(function(lbl, i) {
+    html += '<div class="field"><label for="a-extra-' + i + '">' + lbl + '</label><input type="text" id="a-extra-' + i + '" placeholder="Especificá ' + lbl.toLowerCase() + '…"></div>';
+  });
+
+  html += '<div class="grid-2">';
+  html += '<div class="field"><label>Auditor</label><input type="text" id="a-auditor" value="' + esc(auditor) + '" readonly></div>';
+  html += '<div class="field"><label for="a-fecha">Fecha</label><input type="date" id="a-fecha" value="' + hoyStr + '"></div>';
+  html += '</div></div>';
+
+  // Preguntas
+  html += '<div class="card"><div class="card-title">Cumplimiento</div>';
+  def.preguntas.forEach(function(q, i) {
+    html += '<div class="audi-q">';
+    html += '<div class="audi-q-text">' + esc(q) + '</div>';
+    html += '<div class="audi-opts">';
+    html += '<div class="audi-opt" onclick="selOpt(this,' + i + ',\'cumple\')" data-qi="' + i + '">Cumple</div>';
+    html += '<div class="audi-opt" onclick="selOpt(this,' + i + ',\'no cumple\')" data-qi="' + i + '">No Cumple</div>';
+    html += '<div class="audi-opt" onclick="selOpt(this,' + i + ',\'no aplica\')" data-qi="' + i + '">No Aplica</div>';
+    html += '</div></div>';
+  });
+  html += '</div>';
+
+  // Observaciones
+  html += '<div class="card"><div class="card-title">Observaciones</div>';
+  html += '<textarea id="a-obs" placeholder="Comentarios generales, desvíos adicionales, recomendaciones…" rows="4"></textarea></div>';
+
+  document.getElementById('audi-content').innerHTML = html;
 }
 
-function toggleChip(chip) {
-  chip.classList.toggle('selected');
+function selOpt(el, qi, valor) {
+  document.querySelectorAll('[data-qi="' + qi + '"]').forEach(function(o) {
+    o.classList.remove('ok', 'mal', 'na');
+  });
+  if (valor === 'cumple')    el.classList.add('ok');
+  if (valor === 'no cumple') el.classList.add('mal');
+  if (valor === 'no aplica') el.classList.add('na');
+  el.setAttribute('data-val', valor);
 }
 
-// ── Enviar constancia ──
-function enviarConstancia() {
-  var empresa         = document.getElementById('c-empresa').value.trim();
-  var establecimiento = document.getElementById('c-establecimiento').value.trim();
-  var sector          = document.getElementById('c-sector').value.trim();
-  var auditor         = document.getElementById('c-auditor').value.trim();
-  var fecha           = document.getElementById('c-fecha').value;
-  var hora            = document.getElementById('c-hora').value;
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
-  ocultarError('error-constancia');
+// ══════════════════════════════════════════════════════════════
+//  ENVIAR AUDI
+// ══════════════════════════════════════════════════════════════
+function enviarAudi() {
+  var def = AUDI[formSel.id];
+  ocultarError('err-audi');
 
-  if (!establecimiento) { mostrarError('error-constancia', 'Ingresá el nombre del establecimiento.'); return; }
-  if (!actSeleccionada)  { mostrarError('error-constancia', 'Seleccioná la actividad desarrollada.'); return; }
-  if (!fecha)            { mostrarError('error-constancia', 'Ingresá la fecha de la visita.'); return; }
-  if (!hora)             { mostrarError('error-constancia', 'Ingresá la hora de la visita.'); return; }
+  var empresa = document.getElementById('a-empresa').value.trim();
+  var estab   = document.getElementById('a-estab').value.trim();
+  var sector  = document.getElementById('a-sector').value.trim();
+  var auditor = document.getElementById('a-auditor').value.trim();
+  var fecha   = document.getElementById('a-fecha').value;
 
-  // Recopilar desvíos
-  var chips = document.querySelectorAll('#chips-desvios .chip.selected');
-  var desviosArr = Array.from(chips).map(function(c) { return c.getAttribute('data-value'); });
-  var desviosTexto = document.getElementById('c-desvios-texto').value.trim();
-  if (desviosTexto) desviosArr.push(desviosTexto);
-  var desvios = desviosArr.join('; ') || 'Sin desvíos registrados';
+  if (!estab) { mostrarError('err-audi', 'Ingresá el establecimiento.'); return; }
+  if (!fecha) { mostrarError('err-audi', 'Seleccioná la fecha.'); return; }
+
+  // Extras
+  var extras = def.extras.map(function(lbl, i) {
+    return { label: lbl, valor: document.getElementById('a-extra-' + i).value.trim() };
+  });
+
+  // Respuestas
+  var respuestas = def.preguntas.map(function(q, i) {
+    var opts = document.querySelectorAll('[data-qi="' + i + '"]');
+    var val = '';
+    opts.forEach(function(o) {
+      if (o.getAttribute('data-val')) val = o.getAttribute('data-val');
+    });
+    return { pregunta: q, valor: val };
+  });
+
+  var sinResponder = respuestas.filter(function(r) { return !r.valor; });
+  if (sinResponder.length > 0) {
+    mostrarError('err-audi', 'Faltan responder ' + sinResponder.length + ' pregunta(s). Completá todas antes de guardar.');
+    return;
+  }
 
   var datos = {
-    empresa:        empresa,
-    establecimiento: establecimiento,
-    sector:         sector,
-    actividades:    actSeleccionada,
-    desvios:        desvios,
-    comentarios:    document.getElementById('c-comentarios').value.trim(),
-    auditor:        auditor,
-    fechaVisita:    fecha,
-    horaVisita:     hora,
+    empresa: empresa,
+    establecimiento: estab,
+    sector: sector,
+    auditor: auditor,
+    fecha: fecha,
+    formId: formSel.id,
+    formNombre: formSel.nombre,
+    extras: extras,
+    respuestas: respuestas,
+    observaciones: document.getElementById('a-obs').value.trim(),
   };
 
-  document.getElementById('btn-enviar').disabled = true;
-  document.getElementById('btn-enviar').textContent = 'Generando…';
-  setLoading(true, 'Generando la constancia…');
+  var btn = document.getElementById('btn-enviar-a');
+  btn.disabled = true; btn.textContent = 'Guardando…';
+  mostrarVista('loading');
+  document.getElementById('loading-text').textContent = 'Guardando auditoría…';
+
+  google.script.run
+    .withSuccessHandler(function() {
+      mostrarExito(formSel.nombre, null);
+    })
+    .withFailureHandler(function(e) {
+      btn.disabled = false; btn.textContent = 'Guardar auditoría';
+      mostrarVista('vista-audi');
+      mostrarError('err-audi', 'Error: ' + (e.message || e));
+    })
+    .procesarAudi(datos);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  CONSTANCIA
+// ══════════════════════════════════════════════════════════════
+function selAct(card, val) {
+  document.querySelectorAll('.act-card').forEach(function(c) { c.classList.remove('selected'); });
+  card.classList.add('selected');
+  actSeleccionada = val;
+}
+
+function toggleChip(chip) { chip.classList.toggle('selected'); }
+
+function enviarConstancia() {
+  var empresa = document.getElementById('c-empresa').value.trim();
+  var estab   = document.getElementById('c-estab').value.trim();
+  var sector  = document.getElementById('c-sector').value.trim();
+  var auditor = document.getElementById('c-auditor').value.trim();
+  var fecha   = document.getElementById('c-fecha').value;
+  var hora    = document.getElementById('c-hora').value;
+  ocultarError('err-constancia');
+
+  if (!estab)          { mostrarError('err-constancia', 'Ingresá el establecimiento.'); return; }
+  if (!actSeleccionada){ mostrarError('err-constancia', 'Seleccioná la actividad desarrollada.'); return; }
+  if (!fecha)          { mostrarError('err-constancia', 'Seleccioná la fecha.'); return; }
+  if (!hora)           { mostrarError('err-constancia', 'Ingresá la hora.'); return; }
+
+  var chips = document.querySelectorAll('#vista-constancia .chip.selected');
+  var desvArr = Array.from(chips).map(function(c) { return c.getAttribute('data-value'); });
+  var desvTxt = document.getElementById('c-desvios-txt').value.trim();
+  if (desvTxt) desvArr.push(desvTxt);
+  var desvios = desvArr.join('; ') || 'Sin desvíos registrados';
+
+  var datos = {
+    empresa: empresa, establecimiento: estab, sector: sector,
+    actividades: actSeleccionada, desvios: desvios,
+    comentarios: document.getElementById('c-comentarios').value.trim(),
+    auditor: auditor, fechaVisita: fecha, horaVisita: hora,
+  };
+
+  var btn = document.getElementById('btn-enviar-c');
+  btn.disabled = true; btn.textContent = 'Generando…';
+  mostrarVista('loading');
+  document.getElementById('loading-text').textContent = 'Generando la constancia…';
 
   google.script.run
     .withSuccessHandler(function(res) {
-      setLoading(false);
-      if (res && res.ok) {
-        document.getElementById('link-doc').href = res.urlDoc || '#';
-        mostrarVista('exito');
-        window.scrollTo(0, 0);
-      } else {
-        document.getElementById('btn-enviar').disabled = false;
-        document.getElementById('btn-enviar').textContent = 'Generar constancia';
-        mostrarError('error-constancia', 'Hubo un error al generar la constancia. Intenta nuevamente.');
-      }
+      mostrarExito('Constancia de Visita', res && res.urlDoc ? res.urlDoc : null);
     })
-    .withFailureHandler(function(err) {
-      setLoading(false);
-      document.getElementById('btn-enviar').disabled = false;
-      document.getElementById('btn-enviar').textContent = 'Generar constancia';
-      mostrarError('error-constancia', 'Error: ' + (err.message || err));
+    .withFailureHandler(function(e) {
+      btn.disabled = false; btn.textContent = 'Generar constancia';
+      mostrarVista('vista-constancia');
+      mostrarError('err-constancia', 'Error: ' + (e.message || e));
     })
     .procesarFormulario(datos);
 }
 
-// ── Navegación ──
+// ══════════════════════════════════════════════════════════════
+//  NAVEGACIÓN
+// ══════════════════════════════════════════════════════════════
 function mostrarVista(id) {
   ['vista-portal','vista-constancia','vista-audi','loading','exito'].forEach(function(v) {
     document.getElementById(v).style.display = (v === id) ? '' : 'none';
   });
 }
 
-function setLoading(on, texto) {
-  if (on) {
-    document.getElementById('loading-text').textContent = texto || 'Procesando…';
-    mostrarVista('loading');
+function mostrarExito(nombre, urlDoc) {
+  document.getElementById('exito-titulo').textContent = '¡' + nombre + ' guardado!';
+  document.getElementById('exito-sub').textContent = 'El registro fue almacenado en Google Sheets correctamente.';
+  var linkDoc = document.getElementById('link-doc');
+  if (urlDoc) {
+    linkDoc.href = urlDoc;
+    linkDoc.style.display = '';
+    document.getElementById('exito-sub').textContent = 'El documento fue generado y guardado en Drive.';
+  } else {
+    linkDoc.style.display = 'none';
   }
-  // No oculta solo — se llama mostrarVista() explícitamente
+  mostrarVista('exito');
+  window.scrollTo(0, 0);
 }
 
-function volverPortal() {
-  // Resetear advertencia y selección
-  ocultarAdvertencia();
-  verificacionOk = false;
+function volver() {
   mostrarVista('vista-portal');
   window.scrollTo(0, 0);
 }
 
-function nuevaConstancia() {
-  // Resetear formulario constancia
+function nueva() {
+  // Reset constancia
   actSeleccionada = '';
   document.querySelectorAll('.act-card').forEach(function(c) { c.classList.remove('selected'); });
   document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('selected'); });
-  document.getElementById('c-establecimiento').value = '';
-  document.getElementById('c-sector').value = '';
-  document.getElementById('c-desvios-texto').value = '';
-  document.getElementById('c-comentarios').value = '';
-  document.getElementById('btn-enviar').disabled = false;
-  document.getElementById('btn-enviar').textContent = 'Generar constancia';
-
-  // Resetear portal
-  formSeleccionado = null;
-  document.getElementById('form-id').value = '';
-  document.getElementById('form-url').value = '';
-  document.getElementById('form-search').value = '';
-  document.getElementById('form-selected-label').style.display = 'none';
-  document.querySelectorAll('#form-list .form-item').forEach(function(i) {
-    i.classList.remove('selected');
+  ['c-estab','c-sector','c-desvios-txt','c-comentarios'].forEach(function(id) {
+    document.getElementById(id).value = '';
   });
-
-  volverPortal();
+  document.getElementById('btn-enviar-c').disabled = false;
+  document.getElementById('btn-enviar-c').textContent = 'Generar constancia';
+  // Reset portal
+  formSel = null;
+  document.getElementById('p-form-id').value = '';
+  document.getElementById('p-form-search').value = '';
+  document.getElementById('p-form-label').style.display = 'none';
+  document.querySelectorAll('#p-form-list .form-item').forEach(function(i) { i.classList.remove('selected'); });
+  document.getElementById('adv-box').style.display = 'none';
+  volver();
 }
 
-// ── Errores ──
-function mostrarError(idBox, msg) {
-  var el = document.getElementById(idBox);
-  el.textContent = msg;
-  el.classList.add('visible');
+// ══════════════════════════════════════════════════════════════
+//  ERRORES
+// ══════════════════════════════════════════════════════════════
+function mostrarError(id, msg) {
+  var el = document.getElementById(id);
+  el.textContent = msg; el.classList.add('show');
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
-
-function ocultarError(idBox) {
-  var el = document.getElementById(idBox);
-  el.textContent = '';
-  el.classList.remove('visible');
+function ocultarError(id) {
+  var el = document.getElementById(id);
+  el.textContent = ''; el.classList.remove('show');
 }
 </script>
 </body>
