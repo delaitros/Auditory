@@ -1,7 +1,9 @@
-# Auditory — Constancia de Visita
+# Auditory — Portal de Auditorías
 
-Web app que reemplaza Google Forms: el auditor llena el formulario en el navegador,
-el sistema guarda el registro en Google Sheets y genera un Google Doc listo para imprimir.
+Portal web que centraliza la Constancia de Visita y 34 formularios de auditoría (AUDI 1–34).
+El auditor elige empresa, auditor y tipo de formulario; el sistema verifica si ya se realizó
+una visita en los últimos 6 meses y alerta si es así. Las constancias se generan como Google Docs;
+los formularios AUDI abren el Google Form correspondiente en una nueva pestaña.
 
 ---
 
@@ -22,7 +24,8 @@ En el editor de Apps Script hay un archivo `Código.gs` por defecto. Reemplazarl
 | Archivo del repo | Qué crear en Apps Script |
 |---|---|
 | `Code.gs` | Reemplazar el contenido de `Código.gs` |
-| `Formulario.html` | **+** Archivo HTML nuevo → nombrar `Formulario` |
+| `Portal.html` | **+** Archivo HTML nuevo → nombrar `Portal` |
+| `Formulario.html` | **+** Archivo HTML nuevo → nombrar `Formulario` (usado internamente) |
 | `Configuracion.html` | **+** Archivo HTML nuevo → nombrar `Configuracion` |
 
 Para agregar un archivo HTML: clic en el **+** junto a "Archivos" → seleccionar **HTML**.
