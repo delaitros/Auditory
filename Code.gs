@@ -307,7 +307,7 @@ function getConfig() {
   const props = PropertiesService.getScriptProperties().getProperties();
   return {
     TEMPLATE_DOC_ID:      props.TEMPLATE_DOC_ID      || '1BhVRm-XSz8a3koPOA9QnQLAL2E2cqATIvqXnwShA3yU',
-    AUDI_TEMPLATE_DOC_ID: props.AUDI_TEMPLATE_DOC_ID || '',
+    AUDI_TEMPLATE_DOC_ID: props.AUDI_TEMPLATE_DOC_ID || '1G4fKnijZafWGN4EMejAVlGAXcR3YJFsNyr93EyP4L58',
     OUTPUT_FOLDER_ID:  props.OUTPUT_FOLDER_ID  || '1_r1u39-DyCuqg3fhYGARKISQ0hsiaAC4',
     SPREADSHEET_ID:    props.SPREADSHEET_ID    || '1xHVDVMcgaSD8h56poDS01KXopMy6Fq9IehOYJRCICXs',
     SHEET_NAME:        props.SHEET_NAME        || 'Constancias',
@@ -321,8 +321,9 @@ function getConfig() {
 
 function guardarConfiguracion(datos) {
   PropertiesService.getScriptProperties().setProperties({
-    TEMPLATE_DOC_ID:   extraerId(datos.templateUrl),
-    OUTPUT_FOLDER_ID:  extraerId(datos.folderUrl),
+    TEMPLATE_DOC_ID:      extraerId(datos.templateUrl),
+    AUDI_TEMPLATE_DOC_ID: extraerId(datos.auditTemplateUrl || ''),
+    OUTPUT_FOLDER_ID:     extraerId(datos.folderUrl),
     SPREADSHEET_ID:    extraerId(datos.spreadsheetUrl),
     SHEET_NAME:        datos.sheetName,
     NOMBRE_COLUMNA:    datos.nombreColumna,
@@ -341,6 +342,7 @@ function obtenerConfiguracionActual() {
   const columnas = ss ? listarColumnas(ss, cfg.SHEET_NAME) : [];
   return {
     templateUrl:      'https://docs.google.com/document/d/' + cfg.TEMPLATE_DOC_ID + '/edit',
+    auditTemplateUrl: cfg.AUDI_TEMPLATE_DOC_ID ? 'https://docs.google.com/document/d/' + cfg.AUDI_TEMPLATE_DOC_ID + '/edit' : '',
     folderUrl:        'https://drive.google.com/drive/folders/' + cfg.OUTPUT_FOLDER_ID,
     spreadsheetUrl:   cfg.SPREADSHEET_ID ? 'https://docs.google.com/spreadsheets/d/' + cfg.SPREADSHEET_ID + '/edit' : '',
     sheetName:        cfg.SHEET_NAME,
