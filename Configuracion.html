@@ -134,9 +134,13 @@
   <div class="section">
     <div class="section-title">Plantilla y destino</div>
 
-    <label for="templateUrl">URL del Google Doc plantilla *</label>
+    <label for="templateUrl">URL de la plantilla — Constancia de Visita *</label>
     <input type="text" id="templateUrl" placeholder="https://docs.google.com/document/d/…/edit">
-    <div class="hint">Pegá la URL completa del documento que usás como plantilla.</div>
+    <div class="hint">Plantilla usada para generar las Constancias de Visita.</div>
+
+    <label for="auditTemplateUrl">URL de la plantilla — Formularios AUDI</label>
+    <input type="text" id="auditTemplateUrl" placeholder="https://docs.google.com/document/d/…/edit">
+    <div class="hint">Plantilla usada para los 34 formularios AUDI. Si está vacía se genera el documento automáticamente.</div>
 
     <label for="folderUrl">URL de la carpeta de destino *</label>
     <input type="text" id="folderUrl" placeholder="https://drive.google.com/drive/folders/…">
@@ -195,8 +199,9 @@
     .obtenerConfiguracionActual();
 
   function precargar(cfg) {
-    document.getElementById('templateUrl').value       = cfg.templateUrl     || '';
-    document.getElementById('folderUrl').value         = cfg.folderUrl       || '';
+    document.getElementById('templateUrl').value       = cfg.templateUrl      || '';
+    document.getElementById('auditTemplateUrl').value  = cfg.auditTemplateUrl || '';
+    document.getElementById('folderUrl').value         = cfg.folderUrl        || '';
     document.getElementById('spreadsheetUrl').value    = cfg.spreadsheetUrl  || '';
     document.getElementById('prefijoArchivo').value    = cfg.prefijoArchivo  || '';
     document.getElementById('generarPdf').checked      = cfg.generarPdf;
@@ -251,6 +256,7 @@
 
     const datos = {
       templateUrl:      templateUrl,
+      auditTemplateUrl: document.getElementById('auditTemplateUrl').value.trim(),
       folderUrl:        folderUrl,
       spreadsheetUrl:   spreadsheetUrl,
       sheetName:        document.getElementById('sheetName').value,
