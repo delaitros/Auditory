@@ -155,7 +155,7 @@ function procesarAudi(datos) {
   const baseHeaders = ['Marca temporal', 'Empresa', 'Establecimiento', 'Sector', 'Auditor', 'Fecha'];
   const extraHeaders = datos.extras.map(function(e) { return e.label; });
   const pregHeaders  = datos.respuestas.map(function(r) { return r.pregunta; });
-  const allHeaders   = baseHeaders.concat(extraHeaders).concat(pregHeaders).concat(['Observaciones', 'Documento']);
+  const allHeaders   = baseHeaders.concat(extraHeaders).concat(pregHeaders).concat(['Comentarios', 'Documento']);
 
   if (isNew) {
     sheet.appendRow(allHeaders);
@@ -168,7 +168,8 @@ function procesarAudi(datos) {
   const baseRow  = [new Date(), datos.empresa, datos.establecimiento, datos.sector, datos.auditor, datos.fecha];
   const extraRow = datos.extras.map(function(e) { return e.valor; });
   const respRow  = datos.respuestas.map(function(r) { return r.valor; });
-  sheet.appendRow(baseRow.concat(extraRow).concat(respRow).concat([datos.observaciones, '']));
+  const comentarios = datos.comentarios || datos.observaciones || '';
+  sheet.appendRow(baseRow.concat(extraRow).concat(respRow).concat([comentarios, '']));
   const filaDoc = sheet.getLastRow();
 
   // 3. Registrar en maestro
@@ -226,7 +227,8 @@ function generarDocumentoAudi(datos, cfg) {
       'auditor':             datos.auditor,
       'fecha_de_la_visita':  fechaLeg,
       'respuestas':          respuestasTexto,
-      'observaciones':       datos.observaciones || '',
+      'observaciones':       datos.comentarios || datos.observaciones || '',
+      'comentarios':         datos.comentarios || datos.observaciones || '',
       '__fila__':            numRegistro,
       '__fecha_generacion__': Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm'),
     };
@@ -287,11 +289,12 @@ function generarDocumentoAudi(datos, cfg) {
       p.setSpacingAfter(5);
     });
 
-    if (datos.observaciones && datos.observaciones.trim()) {
+    const textoComent = datos.comentarios || datos.observaciones || '';
+    if (textoComent.trim()) {
       body.appendParagraph('');
-      body.appendParagraph('OBSERVACIONES').setHeading(DocumentApp.ParagraphHeading.HEADING2);
+      body.appendParagraph('COMENTARIOS').setHeading(DocumentApp.ParagraphHeading.HEADING2);
       body.appendParagraph('');
-      body.appendParagraph(datos.observaciones);
+      body.appendParagraph(textoComent);
     }
 
     body.appendParagraph('');

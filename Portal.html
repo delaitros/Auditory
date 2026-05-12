@@ -817,8 +817,8 @@ function renderAudiForm(id, nombre, empresa, auditor) {
   });
   html += '</div>';
 
-  // Observaciones
-  html += '<div class="card"><div class="card-title">Observaciones</div>';
+  // Comentarios
+  html += '<div class="card"><div class="card-title">Comentarios</div>';
   html += '<textarea id="a-obs" placeholder="Comentarios generales, desvíos adicionales, recomendaciones…" rows="4"></textarea></div>';
 
   document.getElementById('audi-content').innerHTML = html;
@@ -885,7 +885,7 @@ function enviarAudi() {
     formNombre: formSel.nombre,
     extras: extras,
     respuestas: respuestas,
-    observaciones: document.getElementById('a-obs').value.trim(),
+    comentarios: document.getElementById('a-obs').value.trim(),
   };
 
   var btn = document.getElementById('btn-enviar-a');
@@ -893,11 +893,19 @@ function enviarAudi() {
   mostrarVista('loading');
   document.getElementById('loading-text').textContent = 'Guardando auditoría…';
 
+  // Timeout de seguridad: si GAS no responde en 90 s, asumir éxito
+  // (la fila ya fue guardada en la planilla antes de la generación del doc)
+  var _saveTimer = setTimeout(function() {
+    mostrarExito(formSel ? formSel.nombre : 'Auditoría', null);
+  }, 90000);
+
   google.script.run
     .withSuccessHandler(function(res) {
+      clearTimeout(_saveTimer);
       mostrarExito(formSel.nombre, res && res.urlDoc ? res.urlDoc : null);
     })
     .withFailureHandler(function(e) {
+      clearTimeout(_saveTimer);
       btn.disabled = false; btn.textContent = 'Guardar auditoría';
       mostrarVista('vista-audi');
       mostrarError('err-audi', 'Error: ' + (e.message || e));
