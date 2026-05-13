@@ -817,8 +817,8 @@ function renderAudiForm(id, nombre, empresa, auditor) {
   });
   html += '</div>';
 
-  // Observaciones
-  html += '<div class="card"><div class="card-title">Observaciones</div>';
+  // Comentarios
+  html += '<div class="card"><div class="card-title">Comentarios</div>';
   html += '<textarea id="a-obs" placeholder="Comentarios generales, desvíos adicionales, recomendaciones…" rows="4"></textarea></div>';
 
   document.getElementById('audi-content').innerHTML = html;
@@ -885,7 +885,7 @@ function enviarAudi() {
     formNombre: formSel.nombre,
     extras: extras,
     respuestas: respuestas,
-    observaciones: document.getElementById('a-obs').value.trim(),
+    comentarios: document.getElementById('a-obs').value.trim(),
   };
 
   var btn = document.getElementById('btn-enviar-a');
@@ -893,16 +893,30 @@ function enviarAudi() {
   mostrarVista('loading');
   document.getElementById('loading-text').textContent = 'Guardando auditoría…';
 
+  // PASO 1: solo planilla (< 5 s) — al volver, muestra éxito de inmediato
   google.script.run
-    .withSuccessHandler(function(res) {
-      mostrarExito(formSel.nombre, res && res.urlDoc ? res.urlDoc : null);
+    .withSuccessHandler(function(r) {
+      var nombre = formSel ? formSel.nombre : 'Auditoría';
+      mostrarExito(nombre, null);
+
+      // PASO 2: generar doc en background — si llega actualiza el link
+      google.script.run
+        .withSuccessHandler(function(r2) {
+          if (r2 && r2.urlDoc) {
+            document.getElementById('link-doc').href = r2.urlDoc;
+            document.getElementById('link-doc').style.display = '';
+            document.getElementById('exito-sub').textContent = 'El documento fue generado y guardado en Drive.';
+          }
+        })
+        .withFailureHandler(function() {})
+        .generarDocAudi(datos, r.sheetName, r.fila, r.colDoc);
     })
     .withFailureHandler(function(e) {
       btn.disabled = false; btn.textContent = 'Guardar auditoría';
       mostrarVista('vista-audi');
-      mostrarError('err-audi', 'Error: ' + (e.message || e));
+      mostrarError('err-audi', 'Error al guardar: ' + (e.message || e));
     })
-    .procesarAudi(datos);
+    .guardarAudiEnPlanilla(datos);
 }
 
 // ══════════════════════════════════════════════════════════════
