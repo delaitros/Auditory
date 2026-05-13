@@ -140,11 +140,11 @@ function procesarFormulario(datos) {
 // -----------------------------------------------------------
 //  FORMULARIOS AUDI
 // -----------------------------------------------------------
-function procesarAudi(datos) {
+// Paso 1: solo planilla — retorna en < 5 s, siempre dispara withSuccessHandler
+function guardarAudiEnPlanilla(datos) {
   const cfg = getConfig();
   const ss  = SpreadsheetApp.openById(cfg.SPREADSHEET_ID);
 
-  // 1. Guardar en Sheet
   let sheetName = datos.formNombre.replace(/[\/\\?*\[\]:]/g, '-');
   if (sheetName.length > 100) sheetName = sheetName.substring(0, 100);
 
@@ -163,28 +163,38 @@ function procesarAudi(datos) {
       .setBackground('#4a148c').setFontColor('#ffffff').setFontWeight('bold');
   }
 
-  // 2. Guardar fila primero (sin URL) para que la planilla quede registrada
-  //    aunque la generación del documento tarde o falle.
-  const baseRow  = [new Date(), datos.empresa, datos.establecimiento, datos.sector, datos.auditor, datos.fecha];
+  const comentarios = datos.comentarios || datos.observaciones || '';
+  const baseRow = [new Date(), datos.empresa, datos.establecimiento, datos.sector, datos.auditor, datos.fecha];
   const extraRow = datos.extras.map(function(e) { return e.valor; });
   const respRow  = datos.respuestas.map(function(r) { return r.valor; });
-  const comentarios = datos.comentarios || datos.observaciones || '';
   sheet.appendRow(baseRow.concat(extraRow).concat(respRow).concat([comentarios, '']));
-  const filaDoc = sheet.getLastRow();
+  const fila = sheet.getLastRow();
 
-  // 3. Registrar en maestro
   try { registrarEnMaestro(datos.empresa, datos.formId, datos.formNombre, datos.auditor); } catch(e) {}
 
-  // 4. Generar documento (puede ser lento; si falla se retorna éxito igual)
+  return { ok: true, sheetName: sheetName, fila: fila, colDoc: allHeaders.length };
+}
+
+// Paso 2: solo generación del doc — se llama en background, el éxito ya fue mostrado
+function generarDocAudi(datos, sheetName, fila, colDoc) {
+  const cfg = getConfig();
   let urlDoc = null;
   try {
     urlDoc = generarDocumentoAudi(datos, cfg);
-    if (urlDoc) sheet.getRange(filaDoc, allHeaders.length).setValue(urlDoc);
+    if (urlDoc) {
+      const ss = SpreadsheetApp.openById(cfg.SPREADSHEET_ID);
+      ss.getSheetByName(sheetName).getRange(fila, colDoc).setValue(urlDoc);
+    }
   } catch(e) {
-    console.error('procesarAudi: error al generar documento:', e);
+    console.error('generarDocAudi:', e);
   }
+  return { ok: true, urlDoc: urlDoc };
+}
 
-  return { ok: true, urlDoc: urlDoc, urlCarpeta: 'https://drive.google.com/drive/folders/' + cfg.OUTPUT_FOLDER_ID };
+// Mantener para compatibilidad
+function procesarAudi(datos) {
+  const r = guardarAudiEnPlanilla(datos);
+  return generarDocAudi(datos, r.sheetName, r.fila, r.colDoc);
 }
 
 function generarDocumentoAudi(datos, cfg) {

@@ -893,24 +893,30 @@ function enviarAudi() {
   mostrarVista('loading');
   document.getElementById('loading-text').textContent = 'Guardando auditoría…';
 
-  // Timeout de seguridad: si GAS no responde en 90 s, asumir éxito
-  // (la fila ya fue guardada en la planilla antes de la generación del doc)
-  var _saveTimer = setTimeout(function() {
-    mostrarExito(formSel ? formSel.nombre : 'Auditoría', null);
-  }, 90000);
-
+  // PASO 1: solo planilla (< 5 s) — al volver, muestra éxito de inmediato
   google.script.run
-    .withSuccessHandler(function(res) {
-      clearTimeout(_saveTimer);
-      mostrarExito(formSel.nombre, res && res.urlDoc ? res.urlDoc : null);
+    .withSuccessHandler(function(r) {
+      var nombre = formSel ? formSel.nombre : 'Auditoría';
+      mostrarExito(nombre, null);
+
+      // PASO 2: generar doc en background — si llega actualiza el link
+      google.script.run
+        .withSuccessHandler(function(r2) {
+          if (r2 && r2.urlDoc) {
+            document.getElementById('link-doc').href = r2.urlDoc;
+            document.getElementById('link-doc').style.display = '';
+            document.getElementById('exito-sub').textContent = 'El documento fue generado y guardado en Drive.';
+          }
+        })
+        .withFailureHandler(function() {})
+        .generarDocAudi(datos, r.sheetName, r.fila, r.colDoc);
     })
     .withFailureHandler(function(e) {
-      clearTimeout(_saveTimer);
       btn.disabled = false; btn.textContent = 'Guardar auditoría';
       mostrarVista('vista-audi');
-      mostrarError('err-audi', 'Error: ' + (e.message || e));
+      mostrarError('err-audi', 'Error al guardar: ' + (e.message || e));
     })
-    .procesarAudi(datos);
+    .guardarAudiEnPlanilla(datos);
 }
 
 // ══════════════════════════════════════════════════════════════
