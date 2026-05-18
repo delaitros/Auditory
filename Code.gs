@@ -330,8 +330,8 @@ function getConfig() {
   return {
     TEMPLATE_DOC_ID:      props.TEMPLATE_DOC_ID      || '1BhVRm-XSz8a3koPOA9QnQLAL2E2cqATIvqXnwShA3yU',
     AUDI_TEMPLATE_DOC_ID: props.AUDI_TEMPLATE_DOC_ID || '1G4fKnijZafWGN4EMejAVlGAXcR3YJFsNyr93EyP4L58',
-    OUTPUT_FOLDER_ID:  props.OUTPUT_FOLDER_ID  || '1_r1u39-DyCuqg3fhYGARKISQ0hsiaAC4',
-    SPREADSHEET_ID:    props.SPREADSHEET_ID    || '1xHVDVMcgaSD8h56poDS01KXopMy6Fq9IehOYJRCICXs',
+    OUTPUT_FOLDER_ID:  props.OUTPUT_FOLDER_ID  || '1pPxD8Viwpe3VRfXKkUJoaQxQwRsQQQ4D',
+    SPREADSHEET_ID:    props.SPREADSHEET_ID    || '1iLuTS5s5xgQprIA9vwcEAUDvn25FjuKM660nuEf-zXU',
     SHEET_NAME:        props.SHEET_NAME        || 'Constancias',
     NOMBRE_COLUMNA:    props.NOMBRE_COLUMNA    || 'Empresa',
     PREFIJO_ARCHIVO:   props.PREFIJO_ARCHIVO   || 'Constancia de Visita',
