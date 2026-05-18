@@ -908,7 +908,9 @@ function enviarAudi() {
             document.getElementById('exito-sub').textContent = 'El documento fue generado y guardado en Drive.';
           }
         })
-        .withFailureHandler(function() {})
+        .withFailureHandler(function(e) {
+          document.getElementById('exito-sub').textContent = 'Registro guardado. Error al generar documento: ' + (e.message || e);
+        })
         .generarDocAudi(datos, r.sheetName, r.fila, r.colDoc);
     })
     .withFailureHandler(function(e) {

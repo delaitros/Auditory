@@ -178,15 +178,10 @@ function guardarAudiEnPlanilla(datos) {
 // Paso 2: solo generación del doc — se llama en background, el éxito ya fue mostrado
 function generarDocAudi(datos, sheetName, fila, colDoc) {
   const cfg = getConfig();
-  let urlDoc = null;
-  try {
-    urlDoc = generarDocumentoAudi(datos, cfg);
-    if (urlDoc) {
-      const ss = SpreadsheetApp.openById(cfg.SPREADSHEET_ID);
-      ss.getSheetByName(sheetName).getRange(fila, colDoc).setValue(urlDoc);
-    }
-  } catch(e) {
-    console.error('generarDocAudi:', e);
+  const urlDoc = generarDocumentoAudi(datos, cfg);
+  if (urlDoc) {
+    const ss = SpreadsheetApp.openById(cfg.SPREADSHEET_ID);
+    ss.getSheetByName(sheetName).getRange(fila, colDoc).setValue(urlDoc);
   }
   return { ok: true, urlDoc: urlDoc };
 }
