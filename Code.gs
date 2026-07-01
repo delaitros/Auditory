@@ -56,6 +56,7 @@ const FORMULARIOS = [
   { id: 'audi32', nombre: 'AUDI 32 — Escaleras' },
   { id: 'audi33', nombre: 'AUDI 33 — Mantenimiento Preventivo' },
   { id: 'audi34', nombre: 'AUDI 34 — Otras Resoluciones Legales' },
+  { id: 'audi_obra', nombre: 'CONSTANCIA VISITA A OBRA' },
 ];
 
 // -----------------------------------------------------------
@@ -178,15 +179,10 @@ function guardarAudiEnPlanilla(datos) {
 // Paso 2: solo generación del doc — se llama en background, el éxito ya fue mostrado
 function generarDocAudi(datos, sheetName, fila, colDoc) {
   const cfg = getConfig();
-  let urlDoc = null;
-  try {
-    urlDoc = generarDocumentoAudi(datos, cfg);
-    if (urlDoc) {
-      const ss = SpreadsheetApp.openById(cfg.SPREADSHEET_ID);
-      ss.getSheetByName(sheetName).getRange(fila, colDoc).setValue(urlDoc);
-    }
-  } catch(e) {
-    console.error('generarDocAudi:', e);
+  const urlDoc = generarDocumentoAudi(datos, cfg);
+  if (urlDoc) {
+    const ss = SpreadsheetApp.openById(cfg.SPREADSHEET_ID);
+    ss.getSheetByName(sheetName).getRange(fila, colDoc).setValue(urlDoc);
   }
   return { ok: true, urlDoc: urlDoc };
 }
