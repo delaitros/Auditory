@@ -224,10 +224,12 @@ function generarDocumentoAudi(datos, cfg) {
     const doc   = DocumentApp.openById(copia.getId());
     const partes = [doc.getBody(), doc.getHeader(), doc.getFooter()];
 
+    const obraExtra = datos.extras.filter(function(e){ return e.label === 'Obra'; })[0];
     const marcadores = {
       'formulario':          datos.formNombre,
       'empresa':             datos.empresa,
       'establecimiento':     datos.establecimiento,
+      'obra':                obraExtra ? obraExtra.valor : (datos.establecimiento || ''),
       'sector':              datos.sector,
       'campo_extra':         campoExtra,
       'auditor':             datos.auditor,
