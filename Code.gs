@@ -56,6 +56,7 @@ const FORMULARIOS = [
   { id: 'audi32', nombre: 'AUDI 32 — Escaleras' },
   { id: 'audi33', nombre: 'AUDI 33 — Mantenimiento Preventivo' },
   { id: 'audi34', nombre: 'AUDI 34 — Otras Resoluciones Legales' },
+  { id: 'audi_obra', nombre: 'CONSTANCIA VISITA A OBRA' },
 ];
 
 // -----------------------------------------------------------
