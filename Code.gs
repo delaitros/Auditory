@@ -193,7 +193,7 @@ function procesarAudi(datos) {
   return generarDocAudi(datos, r.sheetName, r.fila, r.colDoc);
 }
 
-function generarDocVisitaObra(datos, cfg) {
+function generarDocVisitaObra_DEPRECATED(datos, cfg) {
   const fecha    = datos.fecha || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
   const fechaStr = fecha.replace(/-/g, '');
   const fechaLeg = fecha.split('-').reverse().join('/');
@@ -314,7 +314,6 @@ function generarDocVisitaObra(datos, cfg) {
 }
 
 function generarDocumentoAudi(datos, cfg) {
-  if (datos.formId === 'audi_obra') return generarDocVisitaObra(datos, cfg);
   const fecha      = datos.fecha || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
   const fechaStr   = fecha.replace(/-/g, '');
   const fechaLeg   = fecha.split('-').reverse().join('/');
@@ -337,28 +336,32 @@ function generarDocumentoAudi(datos, cfg) {
   // Campo extra (Herramienta, Máquina, etc.) como texto
   const campoExtra = datos.extras.map(function(e) { return e.label + ': ' + e.valor; }).join(' | ') || '';
 
-  // Usar plantilla AUDI si está configurada, si no, generar por código
-  const templateId = cfg.AUDI_TEMPLATE_DOC_ID;
+  // Usar plantilla AUDI correspondiente
+  const templateId = (datos.formId === 'audi_obra') ? cfg.AUDI_OBRA_TEMPLATE_DOC_ID : cfg.AUDI_TEMPLATE_DOC_ID;
   if (templateId) {
     // ── Modo plantilla: copiar y reemplazar marcadores ──
     const copia = DriveApp.getFileById(templateId).makeCopy(nombreBase, carpeta);
     const doc   = DocumentApp.openById(copia.getId());
     const partes = [doc.getBody(), doc.getHeader(), doc.getFooter()];
 
-    const obraExtra = datos.extras.filter(function(e){ return e.label === 'Obra'; })[0];
+    const obraExtra         = datos.extras.filter(function(e){ return e.label === 'Obra'; })[0];
+    const trabajadoresExtra = datos.extras.filter(function(e){ return e.label === 'Trabajadores en altura habilitados'; })[0];
     const marcadores = {
-      'formulario':          datos.formNombre,
-      'empresa':             datos.empresa,
-      'establecimiento':     datos.establecimiento,
-      'obra':                obraExtra ? obraExtra.valor : (datos.establecimiento || ''),
-      'sector':              datos.sector,
-      'campo_extra':         campoExtra,
-      'auditor':             datos.auditor,
-      'fecha_de_la_visita':  fechaLeg,
-      'respuestas':          respuestasTexto,
-      'observaciones':       datos.comentarios || datos.observaciones || '',
-      'comentarios':         datos.comentarios || datos.observaciones || '',
-      '__fila__':            numRegistro,
+      'formulario':           datos.formNombre,
+      'empresa':              datos.empresa,
+      'establecimiento':      datos.establecimiento,
+      'obra':                 obraExtra ? obraExtra.valor : (datos.establecimiento || ''),
+      'sector':               datos.sector,
+      'campo_extra':          campoExtra,
+      'auditor':              datos.auditor,
+      'fecha':                fechaLeg,
+      'fecha_de_la_visita':   fechaLeg,
+      'trabajadores':         trabajadoresExtra ? trabajadoresExtra.valor : '',
+      'respuestas':           respuestasTexto,
+      'observaciones':        datos.comentarios || datos.observaciones || '',
+      'comentarios':          datos.comentarios || datos.observaciones || '',
+      'numRegistro':          numRegistro,
+      '__fila__':             numRegistro,
       '__fecha_generacion__': Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm'),
     };
 
@@ -448,7 +451,8 @@ function getConfig() {
   const props = PropertiesService.getScriptProperties().getProperties();
   return {
     TEMPLATE_DOC_ID:      props.TEMPLATE_DOC_ID      || '1BhVRm-XSz8a3koPOA9QnQLAL2E2cqATIvqXnwShA3yU',
-    AUDI_TEMPLATE_DOC_ID: props.AUDI_TEMPLATE_DOC_ID || '1G4fKnijZafWGN4EMejAVlGAXcR3YJFsNyr93EyP4L58',
+    AUDI_TEMPLATE_DOC_ID:      props.AUDI_TEMPLATE_DOC_ID      || '1G4fKnijZafWGN4EMejAVlGAXcR3YJFsNyr93EyP4L58',
+    AUDI_OBRA_TEMPLATE_DOC_ID: props.AUDI_OBRA_TEMPLATE_DOC_ID || '1-Njw9p9SvQw9Ve3I5SFi87x3UlrrzpxaMKsQVkgmXhc',
     OUTPUT_FOLDER_ID:  props.OUTPUT_FOLDER_ID  || '1pPxD8Viwpe3VRfXKkUJoaQxQwRsQQQ4D',
     SPREADSHEET_ID:    props.SPREADSHEET_ID    || '1iLuTS5s5xgQprIA9vwcEAUDvn25FjuKM660nuEf-zXU',
     SHEET_NAME:        props.SHEET_NAME        || 'Constancias',
