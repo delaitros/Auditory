@@ -193,7 +193,128 @@ function procesarAudi(datos) {
   return generarDocAudi(datos, r.sheetName, r.fila, r.colDoc);
 }
 
+function generarDocVisitaObra(datos, cfg) {
+  const fecha    = datos.fecha || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  const fechaStr = fecha.replace(/-/g, '');
+  const fechaLeg = fecha.split('-').reverse().join('/');
+  const carpeta  = DriveApp.getFolderById(cfg.OUTPUT_FOLDER_ID);
+  const nombreBase = 'CONSTANCIA VISITA A OBRA — ' + datos.empresa + ' — ' + fechaStr;
+
+  const ss     = SpreadsheetApp.openById(cfg.SPREADSHEET_ID);
+  let shName   = datos.formNombre.replace(/[\/\\?*\[\]:]/g, '-');
+  if (shName.length > 100) shName = shName.substring(0, 100);
+  const sheet  = ss.getSheetByName(shName);
+  const numReg = sheet ? String(Math.max(sheet.getLastRow() - 1, 1)) : '1';
+
+  function getExtra(label) {
+    const e = datos.extras.filter(function(x){ return x.label === label; })[0];
+    return e ? e.valor : '';
+  }
+  const obraVal        = getExtra('Obra') || datos.establecimiento || '';
+  const trabajadoresVal = getExtra('Trabajadores en altura habilitados');
+
+  const ETIQUETAS = { 'cumple': 'CUMPLE', 'no cumple': 'NO CUMPLE', 'no aplica': 'NO APLICA' };
+  const COLORES   = { 'cumple': '#137333', 'no cumple': '#c5221f', 'no aplica': '#3949ab' };
+  const TEAL      = '#00838f';
+  const CENTER    = DocumentApp.HorizontalAlignment.CENTER;
+  const LEFT      = DocumentApp.HorizontalAlignment.LEFT;
+  const A         = DocumentApp.Attribute;
+
+  const doc  = DocumentApp.create(nombreBase);
+  const body = doc.getBody();
+  body.setMarginTop(28).setMarginBottom(36).setMarginLeft(50).setMarginRight(50);
+
+  // ── Cabecera compacta ──
+  var attrs8 = {}; attrs8[A.FONT_SIZE] = 8; attrs8[A.SPACING_AFTER] = 1; attrs8[A.SPACING_BEFORE] = 0;
+  var attrsTeal = {}; attrsTeal[A.FONT_SIZE] = 11; attrsTeal[A.BOLD] = true;
+    attrsTeal[A.FOREGROUND_COLOR] = TEAL; attrsTeal[A.SPACING_AFTER] = 1; attrsTeal[A.SPACING_BEFORE] = 0;
+
+  body.appendParagraph('Félix Raúl Vidal').setAttributes(attrsTeal);
+  body.appendParagraph('Ingeniero Químico mat. CPIT 1461 / CPIQ 2848 | Especialista en Higiene y Seguridad Laboral RUGU 1853 COHSECH P007').setAttributes(attrs8);
+  body.appendParagraph('Consultor Ambiental Reg. SAyCDS 358 | Especialista en Desgasificación de Buques (PNA) | Especialista en instalaciones de gases medicinales').setAttributes(attrs8);
+  body.appendParagraph('Especialista en aparatos sometidos a presión | Especialista en equipos de izaje | Tel: 2804581369 | felixraul@gmail.com').setAttributes(attrs8);
+
+  var attrsShs = {}; attrsShs[A.FONT_SIZE] = 12; attrsShs[A.BOLD] = true;
+    attrsShs[A.FOREGROUND_COLOR] = TEAL; attrsShs[A.SPACING_AFTER] = 2; attrsShs[A.SPACING_BEFORE] = 6;
+  body.appendParagraph('SERVICIO DE HIGIENE Y SEGURIDAD').setAttributes(attrsShs).setAlignment(CENTER);
+
+  var attrsEmp = {}; attrsEmp[A.FONT_SIZE] = 10; attrsEmp[A.SPACING_AFTER] = 4; attrsEmp[A.SPACING_BEFORE] = 0;
+  body.appendParagraph(datos.empresa).setAttributes(attrsEmp).setAlignment(CENTER);
+
+  // ── Título ──
+  var attrsTit = {}; attrsTit[A.FONT_SIZE] = 14; attrsTit[A.BOLD] = true;
+    attrsTit[A.SPACING_AFTER] = 2; attrsTit[A.SPACING_BEFORE] = 4;
+  body.appendParagraph('CONSTANCIA DE VISITA').setAttributes(attrsTit).setAlignment(CENTER);
+
+  var attrsSubTit = {}; attrsSubTit[A.FONT_SIZE] = 10; attrsSubTit[A.SPACING_AFTER] = 6; attrsSubTit[A.SPACING_BEFORE] = 0;
+  body.appendParagraph('CONSTANCIA VISITA A OBRA').setAttributes(attrsSubTit).setAlignment(CENTER);
+
+  // ── Datos de la visita ──
+  function campo(label, value) {
+    const p   = body.appendParagraph('');
+    const txt = label + ': ' + (value || '—');
+    p.editAsText().insertText(0, txt);
+    p.editAsText().setBold(0, label.length, true);
+    var a = {}; a[A.FONT_SIZE] = 10; a[A.SPACING_AFTER] = 2; a[A.SPACING_BEFORE] = 0;
+    p.setAttributes(a);
+  }
+  campo('Empresa', datos.empresa);
+  campo('Obra', obraVal);
+  campo('Sector', datos.sector);
+  campo('Auditor', datos.auditor);
+  campo('Fecha de la visita', fechaLeg);
+  if (trabajadoresVal) campo('Trabajadores en altura habilitados', trabajadoresVal);
+
+  // ── Respuestas ──
+  var attrsSec = {}; attrsSec[A.FONT_SIZE] = 10; attrsSec[A.BOLD] = true;
+    attrsSec[A.FOREGROUND_COLOR] = TEAL; attrsSec[A.SPACING_BEFORE] = 6; attrsSec[A.SPACING_AFTER] = 4;
+  body.appendParagraph('ACTIVIDADES DESARROLLADAS / RESPUESTAS').setAttributes(attrsSec);
+
+  var attrsResp = {}; attrsResp[A.FONT_SIZE] = 10; attrsResp[A.SPACING_AFTER] = 2; attrsResp[A.SPACING_BEFORE] = 0;
+  datos.respuestas.forEach(function(r, i) {
+    const etq = ' → ' + (ETIQUETAS[r.valor] || r.valor.toUpperCase());
+    const txt = (i + 1) + '. ' + r.pregunta + etq;
+    const p   = body.appendParagraph(txt);
+    const st  = txt.length - etq.length;
+    p.editAsText().setForegroundColor(st, txt.length - 1, COLORES[r.valor] || '#000000');
+    p.editAsText().setBold(st, txt.length - 1, true);
+    p.setAttributes(attrsResp);
+  });
+
+  // ── Desvíos para corregir ──
+  body.appendParagraph('DESVÍOS PARA CORREGIR').setAttributes(attrsSec);
+  var attrsTxt = {}; attrsTxt[A.FONT_SIZE] = 10; attrsTxt[A.SPACING_AFTER] = 4; attrsTxt[A.SPACING_BEFORE] = 0;
+  body.appendParagraph(datos.comentarios || datos.observaciones || '').setAttributes(attrsTxt);
+
+  // ── Comentarios (en blanco para escribir) ──
+  body.appendParagraph('COMENTARIOS').setAttributes(attrsSec);
+  var attrsBlank = {}; attrsBlank[A.FONT_SIZE] = 10; attrsBlank[A.SPACING_AFTER] = 36; attrsBlank[A.SPACING_BEFORE] = 0;
+  body.appendParagraph('').setAttributes(attrsBlank);
+
+  // ── Firma ──
+  body.appendParagraph('_________________________________').setAlignment(LEFT).setSpacingAfter(2).setSpacingBefore(0);
+  var attrsFirma = {}; attrsFirma[A.FONT_SIZE] = 10; attrsFirma[A.BOLD] = true; attrsFirma[A.SPACING_AFTER] = 1; attrsFirma[A.SPACING_BEFORE] = 0;
+  body.appendParagraph('Firma del auditor:').setAttributes(attrsFirma);
+  body.appendParagraph(datos.auditor).setSpacingAfter(0).setSpacingBefore(0);
+
+  // ── Pie ──
+  const fechaGen = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm');
+  var attrsPie = {}; attrsPie[A.FONT_SIZE] = 8; attrsPie[A.FOREGROUND_COLOR] = '#888888';
+    attrsPie[A.SPACING_BEFORE] = 6; attrsPie[A.SPACING_AFTER] = 0;
+  body.appendParagraph('Nro. de registro: ' + numReg + '   Fecha: ' + fechaGen + '   ' + datos.auditor).setAttributes(attrsPie).setAlignment(CENTER);
+
+  doc.saveAndClose();
+  const archivo = DriveApp.getFileById(doc.getId());
+  carpeta.addFile(archivo);
+  DriveApp.getRootFolder().removeFile(archivo);
+  if (cfg.GENERAR_PDF) {
+    carpeta.createFile(archivo.getAs('application/pdf')).setName(nombreBase + '.pdf');
+  }
+  return archivo.getUrl();
+}
+
 function generarDocumentoAudi(datos, cfg) {
+  if (datos.formId === 'audi_obra') return generarDocVisitaObra(datos, cfg);
   const fecha      = datos.fecha || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
   const fechaStr   = fecha.replace(/-/g, '');
   const fechaLeg   = fecha.split('-').reverse().join('/');
